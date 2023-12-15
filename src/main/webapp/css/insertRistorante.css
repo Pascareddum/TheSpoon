@@ -1,0 +1,65 @@
+.booking-form {
+    width: 500px;
+    margin: 0 auto;
+    padding: 50px;
+    background: #fff;
+}
+body{
+    background: linear-gradient(to right, #dc6709, #67300d) !important;
+}
+div.elem-group {
+    margin: 20px 0;
+}
+
+.cd__main{
+    margin-top:50px;
+}
+div.elem-group.inlined {
+    width: 49%;
+    display: inline-block;
+    float: left;
+    margin-left: 1%;
+}
+
+label {
+    display: block;
+    padding-bottom: 10px;
+    font-size: 1.25em;
+}
+
+input, select, textarea {
+    border-radius: 2px;
+    border: 2px solid #777;
+    box-sizing: border-box;
+    font-size: 1.25em;
+    width: 100%;
+    padding: 10px;
+}
+
+div.elem-group.inlined input {
+    width: 95%;
+    display: inline-block;
+}
+
+textarea {
+    height: 250px;
+}
+
+hr {
+    border: 1px dotted #ccc;
+}
+
+button {
+    height: 50px;
+    background: #dc6709;
+    border: none;
+    color: white;
+    font-size: 1.25em;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0 12px;
+}
+
+button:hover {
+    background: #333;
+}

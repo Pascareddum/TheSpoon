@@ -1,0 +1,36 @@
+.topnav {
+    position: relative;
+    background: linear-gradient(to right, #dc6709, #67300d) !important;
+    overflow: hidden;
+}
+
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.topnav-centered a {
+    float: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.topnav-centered a:hover{
+    background: none;
+    color:white;
+}
+
+.topnav-right {
+    float: right;
+    display:flex;
+}
+
+.topnav-right a{
+    background: none;
+}
