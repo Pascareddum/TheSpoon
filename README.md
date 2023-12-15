@@ -43,7 +43,7 @@ Build with Java, Javascript, MySQL and love :heart:
 * [HTML5](https://en.wikipedia.org/wiki/HTML5) - The markup language used for the front-end. 
 * [Javascript](https://ecma-international.org/publications-and-standards/standards/ecma-262/) - The programming language used for the front-end development.
 * [Bootsrap](https://getbootstrap.com) - The framework used for the front-end.
-* [MySQL](https://dev.mysql.com/doc/) - The RDMS used for the persistent data.
+* [MySQL](https://dev.mysql.com/doc/) - The RDBMS used for the persistent data.
 * **Love** :heart:
 
 ## Contributors
