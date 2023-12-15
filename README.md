@@ -1,7 +1,7 @@
 # The Spoon
 
 <p align="center">
-<img src="https://github.com/Pascareddum/TheSpoon/blob/master/Static/Image/logo_The_Spoon.png" width="200" height="200"/>
+<img src="https://github.com/Pascareddum/TheSpoon/blob/master/Static/Image/logo_The_Spoon.png" width="200" height="300"/>
 </p>
 
 <p align = "center">
