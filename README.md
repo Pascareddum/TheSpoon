@@ -4,6 +4,16 @@
 <img src="https://github.com/Pascareddum/TheSpoon/blob/master/Static/Image/logo_The_Spoon.png" width="200"/>
 </p>
 
+<p align = "center">
+  🍕 Cloud-Based Reservation and Food Order System 🍕
+  <br>
+  A project for
+  <br>
+  Software Engineering 
+  <br>
+  courses of Computer Science at University of Salerno.
+</p>
+
 ## Introduction 
 
 "The Spoon" is a web-application based on Java Spring that provides a cloud-based reservation and food order system. It integrates Telegram and POS APIs, was created for the Software Engineering Exam project at the Univerisity of Salerno.
