@@ -8,7 +8,7 @@
 
 "The Spoon" is a web-application based on Java Spring that provides a cloud-based reservation and food order system. It integrates Telegram and POS APIs, was created for the Software Engineering Exam project at the Univerisity of Salerno.
 
-This WebApp allow users to reserve a table or order food in their favorite restaurants, thanks to the integration with Telegram API all the notifications regarding food order or reservations can be smoothly sent through one of the most popular messaging apps, furthermore, thanks to the integration with the POS APIs, users will be able to pay for their order conveniently from the TheSpoon totem or on their devices.
+This WebApp allow users to reserve a table or order food in their favorite restaurants, thanks to the integration with Telegram API all the notifications regarding food order or reservations can be smoothly sent through one of the most popular messaging apps, furthermore, by using the POS APIs, users will be able to pay for their order conveniently from the TheSpoon totem or on their devices.
 
 Build with Java, Javascript, MySQL and love :heart:
 
