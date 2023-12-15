@@ -31,7 +31,7 @@ Build with Java, Javascript, MySQL and love :heart:
 * [Spring Framework](https://spring.io) - The java framework used (MVC/Web).
 * [HTML5](https://en.wikipedia.org/wiki/HTML5) - The markup language used for the front-end. 
 * [Javascript](https://ecma-international.org/publications-and-standards/standards/ecma-262/) - The programming language used for the front-end development.
-* [Bootsrap](https://getboostrap.com) - The framework used for the front-end.
+* [Bootsrap](https://getbootstrap.com) - The framework used for the front-end.
 * **Love** :heart:
 
 ## Contributors
