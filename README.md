@@ -23,6 +23,7 @@ This WebApp allow users to reserve a table or order food in their favorite resta
 Build with Java, Javascript, MySQL and love :heart:
 
 ## Authors
+
 * **Alessandro Pascarella** - *Developer* - [Pascareddum](https://github.com/Pascareddum)
 * **Jacopo Gennaro Esposito** - *Developer* - [jacopoesposito](https://github.com/jacopoesposito)
 * **Vincenzo Catone** - *Developer* - [v1n555](https://github.com/v1n55)
