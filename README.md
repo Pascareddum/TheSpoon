@@ -19,7 +19,7 @@ Build with Java, Javascript, MySQL and love :heart:
 
 ## Documentation
 
-* Process documentation can be found in *DOC*  directory. (**In Italian :italy:**)
+* Process documentation can be found in *DOC*  directory. (**In Italian :it:**)
 
 ## Requirements
 
