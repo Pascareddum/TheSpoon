@@ -25,7 +25,7 @@ import java.io.IOException;
 
 /**
  * @author Jacopo Gennaro Esposito
- * Classe che rappresenta il "filtro" per l'autenticazione via JWT
+ * Classe che implementa il "filtro" per l'autenticazione via JWT
  * */
 @Component
 @RequiredArgsConstructor
