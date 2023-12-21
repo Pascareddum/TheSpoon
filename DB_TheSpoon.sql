@@ -3,7 +3,7 @@ CREATE DATABASE thespoon;
 use thespoon;
 
 CREATE TABLE Ristoratore (
-Id INT primary key not null auto_increment,
+Id INT(10) primary key not null auto_increment,
 Password VARCHAR(30) not null,
 Nome VARCHAR(20) not null,
 Cognome VARCHAR(20) not null,
@@ -38,20 +38,14 @@ Capacita INT(2) not null
 );
 
 CREATE TABLE PrenotazioneTavolo (
+IdRistorante INT(10),
 IdPrenotazione INT(10),
 NumeroTavolo VARCHAR(2),
-FOREIGN KEY (NumeroTavolo) REFERENCES Tavolo(NumeroTavolo),
-FOREIGN KEY (IdPrenotazione) REFERENCES Prenotazione(IdPrenotazione)
-);
+FOREIGN KEY (IdRistorante) REFERENCES Ristorante(IdRistorante),
+FOREIGN KEY (IdPrenotazione) REFERENCES Prenotazione(IdPrenotazione),
+FOREIGN KEY (NumeroTavolo) REFERENCES Tavolo(NumeroTavolo)
 
-CREATE TABLE Ordine (  
-IdOrdine INT(10) primary key not null,
-Tipologia BOOLEAN not null,
-Ora TIME,
-Nr_Tavolo CHAR(2),
-Totale DECIMAL(10,2) not null
 );
-
 CREATE TABLE Menu ( 
 IdMenu INT(10) primary key not null auto_increment,
 Nome CHAR(30) not null,
@@ -59,17 +53,45 @@ Categoria CHAR(30) not null
 );
 
 CREATE TABLE Prodotto (
-IdProdotto INT primary key not null auto_increment,
+IdProdotto INT(10) primary key not null auto_increment,
 Nome CHAR(30) not null,
 Descrizione VARCHAR(2000) not null,
 Prezzo DECIMAL(10,2) not null
 );
 
+CREATE TABLE Ordine (
+IdRistorante INT(10) not null,
+IdOrdine INT(10) primary key not null,
+Tipologia BOOLEAN not null,
+Ora TIME,
+Nr_Tavolo CHAR(2),
+IdProdotto INT(10) not null,
+Quantita INT(2) not null,
+Totale DECIMAL(10,2) not null,
+foreign key (IdRistorante) references Ristorante(IdRistorante),
+foreign key (IdProdotto) references Prodotto(IdProdotto)
+);
+
 CREATE TABLE MenuProdotto (
 IdProdotto int not null,
 IdMenu int not null,
-foreign key (IdProdotto) references prodotto(IdProdotto),
+foreign key (IdProdotto) references Prodotto(IdProdotto),
 foreign key(IdMenu) references Menu(IdMenu)
+);
+
+CREATE TABLE Prenota (
+IdPrenotazione INT(10) not null,
+IdRistorante INT(10) not null,
+foreign key (IdPrenotazione) references Prenotazione(IdPrenotazione),
+foreign key (IdRistorante) references Ristorante(IdRistorante)
+
+);
+
+CREATE TABLE Possiede (
+IdRistorante INT(10) not null,
+Id INT(10) not null,
+foreign key (IdRistorante) references Ristorante(IdRistorante),
+foreign key (Id) references Ristoratore(Id)
 );
 
 -- Inserimento di valori casuali nella tabella Ristoratore
@@ -106,21 +128,12 @@ INSERT INTO Tavolo (NumeroTavolo, Stato, Capacita) VALUES
 (5, TRUE, 5);
 
 -- Inserimento di valori casuali nella tabella PrenotazioneTavolo
-INSERT INTO PrenotazioneTavolo (IdPrenotazione, NumeroTavolo) VALUES
-(1, '4'),
-(2, '5'),
-(3, '3'),
-(4, '1'),
-(5, '2');
-
-
--- Inserimento di valori casuali nella tabella Ordine (Tipologia 0: Ordine al tavolo, Tipologia 1: Ordine da asporto)
-INSERT INTO Ordine (IdOrdine, Tipologia, Ora, Nr_Tavolo, Totale) VALUES
-  (1, 1, '12:30:00', '', 45.75),
-  (2, 0, '', 3, 28.50),
-  (3, 1, '20:15:00', '', 62.20),
-  (4, 0, '', 1, 35.90),
-  (5, 1, '19:30:00', '', 50.00);
+INSERT INTO PrenotazioneTavolo (IdRistorante, IdPrenotazione, NumeroTavolo) VALUES
+(5, 1, '4'),
+(4, 2, '5'),
+(2, 3, '3'),
+(1, 4, '1'),
+(3, 5, '2');
 
 -- Inserimento di valori casuali nella tabella Menù
 INSERT INTO Menu (Nome, Categoria) VALUES 
@@ -161,6 +174,14 @@ INSERT INTO Prodotto (Nome, Descrizione, Prezzo) VALUES
   ('Quattro Stagioni','Pomodoro, mozzarella, carciofi, funghi, prosciutto cotto, olive',13.99),
   ('Mortazza','Mozzarella, crema di tartufo, funghi, parmigiano.',14.99);
   
+  -- Inserimento di valori casuali nella tabella Ordine (Tipologia 0: Ordine al tavolo, Tipologia 1: Ordine da asporto)
+INSERT INTO Ordine (IdRistorante, IdOrdine, Tipologia, Ora, Nr_Tavolo, IdProdotto, Quantita, Totale) VALUES
+	(5, 1, 1, '12:30:00', '', 5, 2, 45.75),
+	(3, 2, 0, '', 3, 8, 3, 28.50),
+	(4, 3, 1, '20:15:00', '', 11, 4, 62.20),
+	(1, 4, 0, '', 1, 14, 1, 35.90),
+	(2, 5, 1, '19:30:00', '', 17, 5, 50.00);
+  
   INSERT INTO MenuProdotto (IdProdotto, IdMenu) VALUES
   (1, 1),
   (2, 1),
@@ -193,17 +214,10 @@ INSERT INTO Prodotto (Nome, Descrizione, Prezzo) VALUES
 (29, 3),
 (30, 3);  
 
-
-    
-
-
-
-
-
-
-
-
-
-  
-
-
+-- Inserimento di valori casuali nella tabella Possiede
+INSERT INTO Possiede (IdRistorante, Id) VALUES
+(1, 5),
+(2, 4),
+(3, 3),
+(2, 4),
+(5, 1);
