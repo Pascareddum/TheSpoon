@@ -2,6 +2,8 @@ package it.unisa.thespoon.model.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -15,14 +17,20 @@ public class SignupRequest {
     @jakarta.validation.constraints.Email
     private String Email;
     @NotNull
+    @Size(min = 8, message = "La password deve avere una lunghezza di almeno 8 caratteri")
     private String Password;
     @NotNull
     private String rePassword;
     @NotNull
+    @Size(min = 2, message = "Il nome deve avere una lunghezza compresa fra 2 e 30")
+    @Size(max = 30, message = "Il nome deve avere una lunghezza compresa fra 2 e 30")
     private String Nome;
     @NotNull
+    @Size(min = 2, message = "Il cognome deve avere una lunghezza compresa fra 2 e 30")
+    @Size(max = 30, message = "Il cognome deve avere una lunghezza compresa fra 2 e 30")
     private String Cognome;
     @NotNull
+    @Pattern(regexp = "^(\\((00|\\+)39\\)|(00|\\+)39)?(38[890]|34[7-90]|36[680]|33[3-90]|32[89])\\d{7}$", message = "Numero di telefono non valido, inserire un numero italiano")
     private String Telefono;
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "YYYY-MM-DD")

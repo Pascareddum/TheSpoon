@@ -1,9 +1,8 @@
 package it.unisa.thespoon.config;
 
 import it.unisa.thespoon.filters.JwtAuthenticationFilter;
-import it.unisa.thespoon.login.service.LoginServiceImpl;
-
 import it.unisa.thespoon.login.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
