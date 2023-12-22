@@ -4,8 +4,8 @@ import it.unisa.thespoon.login.service.LoginServiceImpl;
 import it.unisa.thespoon.model.request.SignupRequest;
 import it.unisa.thespoon.model.response.JwtAuthenticationResponse;
 import it.unisa.thespoon.model.request.LoginRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Jacopo Gennaro Esposito
  * Controller contenente gli endpoint delle API di TheSpoon per il sottosistema di login
  * */
+@Validated
 @RestController
 @RequestMapping("/auth")
 public class LoginController {
@@ -24,19 +25,13 @@ public class LoginController {
 
     //POST http://localhost:8080/login
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthenticationResponse> Login(@RequestBody LoginRequest loginRequest){
-        JwtAuthenticationResponse r = loginService.login(loginRequest);
-
-        return ResponseEntity.status(HttpStatus.OK).body(r);
+    public JwtAuthenticationResponse Login(@Valid @RequestBody LoginRequest loginRequest){
+        return loginService.login(loginRequest);
     }
 
 
     @PostMapping("/signup")
-    public ResponseEntity<JwtAuthenticationResponse> SignUp(@RequestBody SignupRequest signupRequest){
-        JwtAuthenticationResponse r = loginService.signUP(signupRequest);
-        if(r != null){
-            return ResponseEntity.status(HttpStatus.OK).body(r);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    public JwtAuthenticationResponse SignUp(@Valid @RequestBody SignupRequest signupRequest){
+        return loginService.signUP(signupRequest);
     }
 }

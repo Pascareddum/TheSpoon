@@ -6,12 +6,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
- * @Author Jacopo Gennaro Esposito
+ * @author Jacopo Gennaro Esposito
  * Classe che rappresenta l'entit&agrave; ristoratore di TheSpoon
  * */
 @Entity
@@ -25,12 +25,12 @@ public class Ristoratore implements UserDetails {
     private String Cognome;
     private String Email;
     private String Telefono;
-    private Date Data_Nascita;
+    private LocalDate Data_Nascita;
 
     @Enumerated(EnumType.STRING)
     Role role;
 
-    public Ristoratore(Integer Id, String Password, String Nome, String Cognome, String Email, String Telefono, Date Data_Nascita, Role role) {
+    public Ristoratore(Integer Id, String Password, String Nome, String Cognome, String Email, String Telefono, LocalDate Data_Nascita, Role role) {
         this.Id = Id;
         this.Password = Password;
         this.Nome = Nome;
@@ -65,7 +65,7 @@ public class Ristoratore implements UserDetails {
         return Telefono;
     }
 
-    public Date getData_Nascita() {
+    public LocalDate getData_Nascita() {
         return Data_Nascita;
     }
 

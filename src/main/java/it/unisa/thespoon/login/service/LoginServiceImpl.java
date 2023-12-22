@@ -1,5 +1,6 @@
 package it.unisa.thespoon.login.service;
 
+import it.unisa.thespoon.exceptionhandler.PasswordDontMatchException;
 import it.unisa.thespoon.jwt.service.JwtService;
 import it.unisa.thespoon.model.dao.RistoratoreDAO;
 import it.unisa.thespoon.model.entity.Ristoratore;
@@ -10,10 +11,13 @@ import it.unisa.thespoon.model.request.LoginRequest;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 /**
  * @author Jacopo Gennaro Esposito
@@ -55,8 +59,12 @@ public class LoginServiceImpl implements LoginService{
      * @param signupRequest Oggetto che rappresenta una richiesta di registrazione
      * @return JwtAuthenticationResponse Token di autenticazioen
      */
+    @SneakyThrows
     @Override
     public JwtAuthenticationResponse signUP(SignupRequest signupRequest) {
+        if(!Objects.equals(signupRequest.getPassword(), signupRequest.getRePassword())){
+            throw new PasswordDontMatchException("Le password inserite non corrispondono", new Throwable("Le password inserite non corrispondono"));
+        }
         var user = Ristoratore
                 .builder()
                 .Nome(signupRequest.getNome())
