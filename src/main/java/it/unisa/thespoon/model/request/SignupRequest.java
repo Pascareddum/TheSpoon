@@ -30,7 +30,7 @@ public class SignupRequest {
     @Size(max = 30, message = "Il cognome deve avere una lunghezza compresa fra 2 e 30")
     private String Cognome;
     @NotNull
-    @Pattern(regexp = "^(\\((00|\\+)39\\)|(00|\\+)39)?(38[890]|34[7-90]|36[680]|33[3-90]|32[89])\\d{7}$", message = "Numero di telefono non valido, inserire un numero italiano")
+    @Pattern(regexp = "^(\\((00|\\+)39\\)|(00|\\+)39)?(38[890]|34[24-90]|36[680]|33[13-90]|32[890]|35[013]|37[0139]|39[23])\\d{6,7}$", message = "Numero di telefono non valido, inserire un numero italiano")
     private String Telefono;
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "YYYY-MM-DD")
