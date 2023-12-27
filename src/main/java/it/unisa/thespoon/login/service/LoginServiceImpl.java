@@ -1,5 +1,6 @@
 package it.unisa.thespoon.login.service;
 
+import it.unisa.thespoon.exceptionhandler.InvalidAuthCredentials;
 import it.unisa.thespoon.exceptionhandler.PasswordDontMatchException;
 import it.unisa.thespoon.jwt.service.JwtService;
 import it.unisa.thespoon.model.dao.RistoratoreDAO;
@@ -43,12 +44,13 @@ public class LoginServiceImpl implements LoginService{
      * @param loginRequest Oggetto che rappresenta una richiesta di login
      * @return JwtAuthenticationResponse Token di autenticazioen
      */
+    @SneakyThrows
     @Override
     public JwtAuthenticationResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         var user = ristoratoreDAO.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+                .orElseThrow(() -> new InvalidAuthCredentials("Invalid email or password.", new Throwable("Invalid email or password.")));
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).build();
     }

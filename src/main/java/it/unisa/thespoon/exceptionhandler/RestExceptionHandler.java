@@ -83,7 +83,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * handleUserAlreadyExistException, gestisce l'errore causato da un'utente già registrato che richiede di iscriversi
+     * handleUserAlreadyExistException, gestisce l'errore causato da un'utente già
+     * registrato che richiede di iscriversi
      *
      * @param ex UserAlreadyExistsException
      * @return oggetto ApiError
@@ -113,7 +114,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * handleUserAlreadyExistException, gestisce l'errore causato dalla mancata corrispondenza fra il campo Password e rePassword
+     * handleUserAlreadyExistException, gestisce l'errore causato
+     * dalla mancata corrispondenza fra il campo Password e rePassword
      *
      * @param ex PasswordDontMatchException
      * @return oggetto ApiError
@@ -121,5 +123,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(PasswordDontMatchException.class)
     protected ResponseEntity<Object> handlePasswordDontMatchException(PasswordDontMatchException ex, WebRequest request){
         return buildResponseEntity(new ApiError(BAD_REQUEST, ex.getMessage(), ex.getCause()));
+    }
+
+    @ExceptionHandler(InvalidAuthCredentials.class)
+    protected ResponseEntity<Object> handleInvalidAuthCredentials(InvalidAuthCredentials ex, WebRequest request){
+        return buildResponseEntity(new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex.getCause()));
     }
 }
