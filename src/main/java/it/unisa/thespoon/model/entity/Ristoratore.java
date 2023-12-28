@@ -2,6 +2,7 @@ package it.unisa.thespoon.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Jacopo Gennaro Esposito
  * Classe che rappresenta l'entit&agrave; ristoratore di TheSpoon
  * */
+@Setter
 @Entity
 @Builder
 public class Ristoratore implements UserDetails {
@@ -69,11 +71,13 @@ public class Ristoratore implements UserDetails {
         return Data_Nascita;
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return Password;
     }
 
-    public Role getRole(){return role;}
+    public Role getRole() {
+        return role;
+    }
 
     @Override
     public String getUsername() {
@@ -104,4 +108,17 @@ public class Ristoratore implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
+
+    /**
+     * JpaProjections per recuperare dal DB solo i dati
+     * necessari alla visualizzazione dei dettagli del ristoratore
+     * */
+    public interface RistoratoreDataDisplay{
+        String getNome();
+        String getCognome();
+        String getEmail();
+        String getTelefono();
+        LocalDate getData_Nascita();
+    }
+
 }

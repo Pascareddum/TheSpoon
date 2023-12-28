@@ -29,7 +29,7 @@ public class JwtService {
 
     /** Setto la scadenza del token*/
     @Value("${token.expirationms}")
-    String jwtExpirationMS;
+    Long jwtExpirationMS;
 
     /**
      * Metodo per estrarre l'Username dal token
@@ -83,7 +83,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+jwtExpirationMS))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
