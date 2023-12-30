@@ -45,7 +45,7 @@ Some examples of error codes you may encounter using the API
 
 The request contains some errors. The data must be corrected before reattempting the query.
 
-## **Example of Errors**:
+#### **Example of Errors**:
 
 - Validation error
 - Password mismatch error
