@@ -31,6 +31,7 @@ Build with Java, Javascript, MySQL and love :heart:
 ## Documentation
 
 * Process documentation can be found in *DOC*  directory. (**In Italian :it:**)
+* TheSpoonAPI documentation can be found [here](https://github.com/Pascareddum/TheSpoon/blob/develop/DOC/TheSpoonAPI.md) directory. (**In English :uk:**)
 
 ## Requirements
 
