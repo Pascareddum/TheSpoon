@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -128,5 +129,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidAuthCredentials.class)
     protected ResponseEntity<Object> handleInvalidAuthCredentials(InvalidAuthCredentials ex, WebRequest request){
         return buildResponseEntity(new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex.getCause()));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    protected ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request){
+        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), ex.getCause()));
     }
 }

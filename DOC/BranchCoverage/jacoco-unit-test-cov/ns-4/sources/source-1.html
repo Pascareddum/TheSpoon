@@ -1,0 +1,191 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > LoginServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.unisa.thespoon.login.service</a>
+</div>
+
+<h1>Coverage Summary for Class: LoginServiceImpl (it.unisa.thespoon.login.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LoginServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95,7%
+  </span>
+  <span class="absValue">
+    (22/23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.unisa.thespoon.login.service;
+&nbsp;
+&nbsp;import it.unisa.thespoon.exceptionhandler.InvalidAuthCredentials;
+&nbsp;import it.unisa.thespoon.exceptionhandler.PasswordDontMatchException;
+&nbsp;import it.unisa.thespoon.jwt.service.JwtService;
+&nbsp;import it.unisa.thespoon.model.dao.RistoratoreDAO;
+&nbsp;import it.unisa.thespoon.model.entity.Ristoratore;
+&nbsp;import it.unisa.thespoon.model.entity.Role;
+&nbsp;import it.unisa.thespoon.model.request.SignupRequest;
+&nbsp;import it.unisa.thespoon.model.response.JwtAuthenticationResponse;
+&nbsp;import it.unisa.thespoon.model.request.LoginRequest;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;
+&nbsp;import lombok.SneakyThrows;
+&nbsp;import org.springframework.security.authentication.AuthenticationManager;
+&nbsp;import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.Objects;
+&nbsp;
+&nbsp;/**
+&nbsp; * @author Jacopo Gennaro Esposito
+&nbsp; * Impmenta la classe che esplicita i metodi dell&#39;interfaccia di Servizio per
+&nbsp; * il sottosistema di login, che gestice l&#39;autenticazione
+&nbsp; * */
+&nbsp;@Service
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class LoginServiceImpl implements LoginService{
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Si occupa delle operazioni crud per il ristoratore
+&nbsp;     */
+&nbsp;    private final RistoratoreDAO ristoratoreDAO;
+&nbsp;    private final PasswordEncoder passwordEncoder;
+&nbsp;    private final UserService userService;
+&nbsp;    private final JwtService jwtService;
+&nbsp;    private final AuthenticationManager authenticationManager;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Metodo adibito ad effettuare il login dell&#39;utente registrato
+&nbsp;     *
+&nbsp;     * @param loginRequest Oggetto che rappresenta una richiesta di login
+&nbsp;     * @return JwtAuthenticationResponse Token di autenticazioen
+&nbsp;     */
+<b class="fc">&nbsp;    @SneakyThrows</b>
+&nbsp;    @Override
+&nbsp;    public JwtAuthenticationResponse login(LoginRequest loginRequest) {
+<b class="fc">&nbsp;        authenticationManager.authenticate(</b>
+<b class="fc">&nbsp;                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));</b>
+<b class="fc">&nbsp;        var user = ristoratoreDAO.findByEmail(loginRequest.getEmail())</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new InvalidAuthCredentials(&quot;Invalid email or password.&quot;, new Throwable(&quot;Invalid email or password.&quot;)));</b>
+<b class="fc">&nbsp;        var jwt = jwtService.generateToken(user);</b>
+<b class="fc">&nbsp;        return JwtAuthenticationResponse.builder().token(jwt).build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Metodo adibito ad effettuare la registrazione dell&#39;utente
+&nbsp;     *
+&nbsp;     * @param signupRequest Oggetto che rappresenta una richiesta di registrazione
+&nbsp;     * @return JwtAuthenticationResponse Token di autenticazioen
+&nbsp;     */
+<b class="fc">&nbsp;    @SneakyThrows</b>
+&nbsp;    @Override
+&nbsp;    public JwtAuthenticationResponse signUP(SignupRequest signupRequest) {
+<b class="fc">&nbsp;        if(!Objects.equals(signupRequest.getPassword(), signupRequest.getRePassword())){</b>
+<b class="nc">&nbsp;            throw new PasswordDontMatchException(&quot;Le password inserite non corrispondono&quot;, new Throwable(&quot;Le password inserite non corrispondono&quot;));</b>
+&nbsp;        }
+&nbsp;        var user = Ristoratore
+<b class="fc">&nbsp;                .builder()</b>
+<b class="fc">&nbsp;                .Nome(signupRequest.getNome())</b>
+<b class="fc">&nbsp;                .Cognome(signupRequest.getCognome())</b>
+<b class="fc">&nbsp;                .Email(signupRequest.getEmail())</b>
+<b class="fc">&nbsp;                .Password(passwordEncoder.encode(signupRequest.getPassword()))</b>
+<b class="fc">&nbsp;                .Telefono(signupRequest.getTelefono())</b>
+<b class="fc">&nbsp;                .Data_Nascita(signupRequest.getData_Nascita())</b>
+<b class="fc">&nbsp;                .role(Role.ROLE_RISTORATORE)</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;
+<b class="fc">&nbsp;        user = userService.save(user);</b>
+<b class="fc">&nbsp;        var jwt = jwtService.generateToken(user);</b>
+<b class="fc">&nbsp;        return JwtAuthenticationResponse.builder().token(jwt).build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-30 01:17</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,181 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.unisa.thespoon.login.service</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (it.unisa.thespoon.login.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserService$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,9%
+  </span>
+  <span class="absValue">
+    (8/9)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package it.unisa.thespoon.login.service;
+&nbsp;
+&nbsp;import it.unisa.thespoon.exceptionhandler.UserAlreadyExistsException;
+&nbsp;import it.unisa.thespoon.model.dao.RistoratoreDAO;
+&nbsp;import it.unisa.thespoon.model.entity.Ristoratore;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;
+&nbsp;import lombok.SneakyThrows;
+&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+&nbsp;import org.springframework.security.core.userdetails.UserDetailsService;
+&nbsp;import org.springframework.security.core.userdetails.UsernameNotFoundException;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * @author Jacopo Gennaro Esposito
+&nbsp; * Classe che implementa i metodi per recuperare i dettagli dell&#39;utente e salvare l&#39;utente nel DB
+&nbsp; * */
+&nbsp;@Service
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class UserService {
+&nbsp;
+&nbsp;    private final RistoratoreDAO ristoratoreDAO;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Metodo per recuperare i dettagli di un&#39;Utente
+&nbsp;     * */
+&nbsp;    public UserDetailsService userDetailsService(){
+<b class="fc">&nbsp;        return new UserDetailsService() {</b>
+&nbsp;            @Override
+&nbsp;            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+<b class="nc">&nbsp;                return ristoratoreDAO.findByEmail(username).orElseThrow(() -&gt; new UsernameNotFoundException(&quot;User not found&quot;));</b>
+&nbsp;            }
+&nbsp;        };
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Metodo per salvare un utente nel DB
+&nbsp;     * */
+<b class="fc">&nbsp;    @SneakyThrows</b>
+&nbsp;    public Ristoratore save(Ristoratore newUser) {
+<b class="fc">&nbsp;        Optional&lt;Ristoratore&gt; r = ristoratoreDAO.findByEmail(newUser.getEmail());</b>
+<b class="fc">&nbsp;        if (r.isPresent()) {</b>
+<b class="fc">&nbsp;            throw new UserAlreadyExistsException(&quot;Account already registered to TheSpoon&quot;, new Throwable(&quot;Account already registered to TheSpoon&quot;));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return ristoratoreDAO.save(newUser);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-30 01:17</div>
+</div>
+</body>
+</html>
