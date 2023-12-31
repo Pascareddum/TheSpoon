@@ -61,6 +61,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/dashboard/ristoratoreDetails").hasRole("RISTORATORE")
                         .requestMatchers(HttpMethod.POST, "/dashboard/**").hasRole("RISTORATORE")
+                        .requestMatchers(HttpMethod.POST, "/ristorante/insertRistorante").hasRole("RISTORATORE")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

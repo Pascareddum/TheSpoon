@@ -2,6 +2,7 @@ package it.unisa.thespoon.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,12 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Jacopo Gennaro Esposito
  * Classe che rappresenta l'entit&agrave; ristoratore di TheSpoon
  * */
 @Setter
+@Getter
 @Entity
 @Builder
 public class Ristoratore implements UserDetails {
@@ -32,7 +35,16 @@ public class Ristoratore implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
 
-    public Ristoratore(Integer Id, String Password, String Nome, String Cognome, String Email, String Telefono, LocalDate Data_Nascita, Role role) {
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "possiede",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_ristorante")
+    )
+    Set<Ristorante> ristoranti;
+
+    public Ristoratore(Integer Id, String Password, String Nome, String Cognome, String Email,
+                       String Telefono, LocalDate Data_Nascita, Role role, Set<Ristorante> ristoranti) {
         this.Id = Id;
         this.Password = Password;
         this.Nome = Nome;
@@ -41,6 +53,7 @@ public class Ristoratore implements UserDetails {
         this.Telefono = Telefono;
         this.Data_Nascita = Data_Nascita;
         this.role = role;
+        this.ristoranti = ristoranti;
     }
 
     public Ristoratore() {
