@@ -1,5 +1,7 @@
 package it.unisa.thespoon.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +37,8 @@ public class Ristoratore implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(
             name = "possiede",
             joinColumns = @JoinColumn(name = "id"),
@@ -54,6 +57,18 @@ public class Ristoratore implements UserDetails {
         this.Data_Nascita = Data_Nascita;
         this.role = role;
         this.ristoranti = ristoranti;
+    }
+
+    public Ristoratore(Integer Id, String Password, String Nome, String Cognome, String Email,
+                       String Telefono, LocalDate Data_Nascita, Role role) {
+        this.Id = Id;
+        this.Password = Password;
+        this.Nome = Nome;
+        this.Cognome = Cognome;
+        this.Email = Email;
+        this.Telefono = Telefono;
+        this.Data_Nascita = Data_Nascita;
+        this.role = role;
     }
 
     public Ristoratore() {

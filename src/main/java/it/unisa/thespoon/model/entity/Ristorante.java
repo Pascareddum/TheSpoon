@@ -1,12 +1,13 @@
 package it.unisa.thespoon.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,7 +31,8 @@ public class Ristorante {
     private String Provincia;
     private String Telefono;
 
-    @ManyToMany(mappedBy = "ristoranti", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "ristoranti", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     Set<Ristoratore> Owners;
 
 
@@ -78,3 +80,4 @@ public class Ristorante {
         return Telefono;
     }
 }
+

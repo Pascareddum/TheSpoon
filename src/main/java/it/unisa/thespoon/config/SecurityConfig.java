@@ -62,6 +62,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/dashboard/ristoratoreDetails").hasRole("RISTORATORE")
                         .requestMatchers(HttpMethod.POST, "/dashboard/**").hasRole("RISTORATORE")
                         .requestMatchers(HttpMethod.POST, "/ristorante/insertRistorante").hasRole("RISTORATORE")
+                        .requestMatchers(HttpMethod.GET, "/ristorante/restaurantsList/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/ristorante/getRistorante/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/ristorante/updateRistorante/**").hasRole("RISTORATORE")
+                        .requestMatchers(HttpMethod.GET, "/ristorante/ricercaRistorante/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
