@@ -100,4 +100,30 @@ public class DashboardPersonaleImpl implements DashboardPersonaleService{
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Metodo adibito ad ottennere tutti i dettagli del ristoratore
+     *
+     * @param email Stringa della email associata al ristoratore
+     * @return Ristoratore Entità ristoratore contenente i dettagli
+     */
+    @Override
+    public Ristoratore getAllRistoratoreDetails(String email) {
+        Optional<Ristoratore> ristoratore = dashboardPersonaleDAO.findAllDetailsByEmail(email);
+        if(ristoratore.isEmpty())
+            throw new UsernameNotFoundException("Account not registered at The Spoon");
+        return ristoratore.get();
+    }
+
+    /**
+     * Metodo adibito a salvare le modifiche apportate al ristoratore
+     *
+     * @param ristoratore Entità rappresentate il ristoratore
+     * @return HttpStatus codice di stato HTTP OK
+     */
+    @Override
+    public ResponseEntity<HttpStatus> saveRistoratore(Ristoratore ristoratore) {
+        dashboardPersonaleDAO.save(ristoratore);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

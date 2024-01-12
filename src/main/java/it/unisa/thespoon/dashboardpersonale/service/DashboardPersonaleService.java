@@ -20,4 +20,8 @@ public interface DashboardPersonaleService {
 
     ResponseEntity<HttpStatus> updatePassword(UpdatePasswordRequest updatePasswordRequest, String email);
 
+    Ristoratore getAllRistoratoreDetails(String email);
+
+    ResponseEntity<HttpStatus> saveRistoratore(Ristoratore ristoratore);
+
 }

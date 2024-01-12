@@ -76,6 +76,8 @@ There was an internal server error while we were processing your request.
     1. [Get Ristoratore Details](#1-get-ristoratore-details)
     1. [Update Ristoratore Details](#2-update-ristoratore-details)
     1. [Update Password](#3-update-password)
+* [Ristorante](#ristorante)
+    1. [Insert Ristorante](#1-insert-ristorante)
 
 --------
 
@@ -351,7 +353,70 @@ URL: http://localhost:8080/dashboard/updatePassword
 
 
 
+## Ristorante
+
+The following methods are related to the Ristorante subsystem and contain endpoints for inserting, updating, deleting and retrieving restaurants data.
+
+These endpoints are crucial for managing restautants data stored within TheSpoon's services.
+
+
+
+### 1. Insert Ristorante
+
+
+This endpoint allows users to insert their restaurant into TheSpoon's services.
+
+### Params
+
+| Name | Type | Description |
+| --- | --- | --- |
+| Nome | String | The restaurant's display name used for TheSpoon services |
+| N_Civico | String | The restaurant's street number |
+| Cap | Integer | The restaurant's postal code, in italian CAP (Codice di Avviamento Postale) |
+| Via | String | The restaurant's address |
+| Provincia | String | The restaurant's province |
+| Telefono | String | Italian mobile phone number associated to the restaurant |
+
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | Your authentication token is not valid |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: RAW
+URL: http://localhost:8080/ristorante/insertRistorante
+```
+
+
+
+***Body:***
+
+```js        
+{
+    "Nome": "Mr Q.",
+    "N_Civico": "107",
+    "Cap": 80146,
+    "Via": "Via Emanuele Gianturco",
+    "Provincia": "NA",
+    "Telefono": "0000000000"
+}
+```
+
+
+
 ---
 [Back to top](#thespoonapi)
 
->Generated at 2023-12-30 23:20:02 by [docgen](https://github.com/thedevsaddam/docgen)
+>Generated at 2023-12-31 22:24:57 by [docgen](https://github.com/thedevsaddam/docgen)
