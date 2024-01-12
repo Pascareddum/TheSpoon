@@ -78,6 +78,10 @@ There was an internal server error while we were processing your request.
     1. [Update Password](#3-update-password)
 * [Ristorante](#ristorante)
     1. [Insert Ristorante](#1-insert-ristorante)
+    1. [Get Ristoranti By IdRistoratore](#2-get-ristoranti-by-idristoratore)
+    1. [Update Ristorante](#3-update-ristorante)
+    1. [Search Ristorante](#4-search-ristorante)
+    1. [Get Ristorante By ID](#5-get-ristorante-by-id)
 
 --------
 
@@ -416,7 +420,266 @@ URL: http://localhost:8080/ristorante/insertRistorante
 
 
 
+### 2. Get Ristoranti By IdRistoratore
+
+
+This endpoint allows users to retrieve a list of restaurant associated with a Ristoratore ID
+
+### Params
+
+The Ristoratore ID as a path variable.
+
+### Response
+
+200 OK
+
+``` json
+[
+    {
+        "id": 11,
+        "nome": "Mumu Bubble Tea",
+        "telefono": "3516707777",
+        "n_Civico": "21",
+        "provincia": "NA",
+        "via": "Via Cesare Battisti",
+        "cap": 80134
+    },
+    {
+        "id": 12,
+        "nome": "Pizzeria Tutino",
+        "telefono": "3516707777",
+        "n_Civico": "79",
+        "provincia": "NA",
+        "via": "Via Cesare Carmignano",
+        "cap": 80142
+    },
+    {
+        "id": 14,
+        "nome": "Pizzeria la Figlia del Presidente",
+        "telefono": "00393331005060",
+        "n_Civico": "24",
+        "provincia": "NA",
+        "via": "Via del grande archi",
+        "cap": 80138
+    },
+    {
+        "id": 16,
+        "nome": "LinCal Bakery",
+        "telefono": "00393331005060",
+        "n_Civico": "2",
+        "provincia": "CD",
+        "via": "Xipu Street, Pidu District",
+        "cap": 80049
+    }
+]
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/ristorante/restaurantsList/{IdRistoratore}
+```
+
+
+
+### 3. Update Ristorante
+
+
+This endpoint allows users to update the details of their own restaurant.
+
+### Params
+
+The Restaurant ID as a path variable.
+
+All parameters are optional, and users can choose which ones to include for the fields they want to update.
+
+| Name | Type | Description |
+| --- | --- | --- |
+| Nome | String | The restaurant's display name used for TheSpoon services |
+| N_Civico | String | The restaurant's street number |
+| Cap | Integer | The restaurant's postal code, in italian CAP (Codice di Avviamento Postale) |
+| Via | String | The restaurant's address |
+| Provincia | String | The restaurant's province |
+| Telefono | String | Italian mobile phone number associated to the restaurant |
+
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 403 | Forbidden | Your authentication token is not valid |
+| 404 | Not Found | Can't find any restaurant with the given ID owned by the user that made the request |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: RAW
+URL: http://localhost:8080/ristorante/updateRistorante/{id_ristorante}
+```
+
+
+
+***Body:***
+
+```js        
+{
+    "n_Civico": "224",
+    "cap": 80028,
+    "via": "Ponte di Ferro",
+    "provincia": "NA",
+    "telefono": "00393331005060"
+}
+```
+
+
+
+### 4. Search Ristorante
+
+
+This endpoint allows users to update the details of their own restaurant.
+
+### Params
+
+The Restaurant name as a path variable.
+
+All parameters are optional, and users can choose which ones to include for the fields they want to update. The JSON must be always provided, even if empty.
+
+| Name | Type | Description |
+| --- | --- | --- |
+| N_Civico | String | The restaurant's street number |
+| Cap | Integer | The restaurant's postal code, in italian CAP (Codice di Avviamento Postale) |
+| Via | String | The restaurant's address |
+| Provincia | String | The restaurant's province |
+
+### Response
+
+200 OK
+
+``` json
+[  
+{  
+"id": 12,  
+"nome": "Pizzeria Tutino",  
+"telefono": "3516707777",  
+"n_Civico": "79",  
+"provincia": "NA",  
+"via": "Via Cesare Carmignano",  
+"cap": 80142  
+},  
+{  
+"id": 13,  
+"nome": "Pizzeria la Figlia del Presidente",  
+"telefono": "00393331005060",  
+"n_Civico": "224",  
+"provincia": "NA",  
+"via": "Ponte di Ferro",  
+"cap": 80028  
+},  
+{  
+"id": 14,  
+"nome": "Pizzeria la Figlia del Presidente",  
+"telefono": "00393331005060",  
+"n_Civico": "24",  
+"provincia": "NA",  
+"via": "Via del grande archi",  
+"cap": 80138  
+}  
+]
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: RAW
+URL: http://localhost:8080/ristorante/ricercaRistorante/"Pizzeria"
+```
+
+
+
+***Body:***
+
+```js        
+{
+    "n_Civico": "2",
+    "cap": 80049,
+    "via": "Xipu Street, Pidu District",
+    "provincia": "CD"
+}
+```
+
+
+
+### 5. Get Ristorante By ID
+
+
+This endpoint allows users to retrieve the details of a restaurant given his ID
+
+### Params
+
+The Restaurant ID as a path variable.
+
+### Response
+
+200 OK
+
+``` json
+{
+    "id": 15,
+    "nome": "LinCal Bakery",
+    "telefono": "00393331005060",
+    "n_Civico": "2",
+    "provincia": "CD",
+    "via": "Xipu Street, Pidu District",
+    "cap": 80049
+}
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/ristorante/getRistorante/{IdRistorante}
+```
+
+
+
 ---
 [Back to top](#thespoonapi)
 
->Generated at 2023-12-31 22:24:57 by [docgen](https://github.com/thedevsaddam/docgen)
+>Generated at 2024-01-12 13:15:06 by [docgen](https://github.com/thedevsaddam/docgen)
