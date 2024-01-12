@@ -7,7 +7,6 @@ import it.unisa.thespoon.model.entity.Ristorante;
 import it.unisa.thespoon.model.entity.Ristoratore;
 import it.unisa.thespoon.model.entity.Role;
 import it.unisa.thespoon.model.request.InsertRistoranteRequest;
-import it.unisa.thespoon.model.request.SearchRistoranteRequest;
 import it.unisa.thespoon.model.request.UpdateRistoranteRequest;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
