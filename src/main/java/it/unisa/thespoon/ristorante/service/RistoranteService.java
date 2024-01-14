@@ -1,9 +1,10 @@
 package it.unisa.thespoon.ristorante.service;
 
+import it.unisa.thespoon.model.entity.Menu;
+import it.unisa.thespoon.model.entity.Prodotto;
 import it.unisa.thespoon.model.entity.Ristorante;
-import it.unisa.thespoon.model.request.InsertRistoranteRequest;
-import it.unisa.thespoon.model.request.SearchRistoranteRequest;
-import it.unisa.thespoon.model.request.UpdateRistoranteRequest;
+import it.unisa.thespoon.model.entity.Tavolo;
+import it.unisa.thespoon.model.request.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -58,4 +59,83 @@ public interface RistoranteService {
      * @return ResponseEntity<Set<Ristorante>> ResponseEntity contenente la lista dei ristoranti trovati
      */
     ResponseEntity<Set<Ristorante>> searchRistorante(SearchRistoranteRequest searchRistoranteRequest, String nomeRistorante);
+
+    /**
+     * Firma del metodo per aggiungere un menu
+     *
+     * @param insertMenuRequest rappresenta la richiesta di inserimento di un menu
+     * @param email Email associata al proprietario del ristorante
+     * @return HttpStatusCode ResponseEntity Codice di stato http
+     */
+    ResponseEntity<HttpStatus> insertMenu(InsertMenuRequest insertMenuRequest, String email);
+
+    /**
+     * Firma del metodo per aggiungere un prdotto ad un menu
+     *
+     * @param idMenu ID del menu per il quale si intende aggiungere un prodotto
+     * @param idProdotto ID del prodotto da aggiungere
+     * @param idRistorante ID del ristorante
+     * @return HttpStatusCode ResponseEntity Codice di stato http
+     */
+    ResponseEntity<HttpStatus> addProductToMenu(Integer idMenu, Integer idProdotto, Integer idRistorante, String name);
+
+    /**
+     * Firma del metodo per rimuovere un prodotto ad un menu
+     *
+     * @param idMenu ID del menu per il quale si intende rimuovere un prodotto
+     * @param idProdotto ID del prodotto da rimuovere
+     * @param idRistorante ID del ristorante
+     * @return HttpStatusCode ResponseEntity Codice di stato http
+     */
+    ResponseEntity<HttpStatus> removeProductFromMenu(Integer idMenu, Integer idProdotto, Integer idRistorante, String mail);
+
+    /**
+     * Firma del metodo per ottenere i menu associati ad un ristorante
+     *
+     * @param ID Id del ristorante per il quale si vuole recuperare la lista dei menu
+     * @return ResponseEntity<Set<Menu>> ResponseEntity contenente la lista dei menu associati
+     */
+    ResponseEntity<Set<Menu>> getMenusByRistoranteID(Integer ID);
+
+    /**
+     * Firma del metodo per ottenere il menu associato ad un dato id
+     *
+     * @param idMenu Id del ristorante per il quale si vuole recuperare la lista dei menu
+     * @return ResponseEntity<Set<Menu>> ResponseEntity contenente la lista dei menu associati
+     */
+    ResponseEntity<Menu> getMenusByID(Integer idMenu);
+
+    /**
+     * Firma del metodo per ottenere i prodotti associati ad un dato menu
+     *
+     * @param idMenu Id del menu per il quale si vuole recuperare la lista dei prodotti
+     * @return ResponseEntity<Set<Prodotto>> ResponseEntity contenente la lista dei prodotti associati
+     */
+    ResponseEntity<Set<Prodotto>> getProdottiByMenuID(Integer idMenu);
+
+    /**
+     * Firma del metodo per inserire un nuovo tavolo
+     *
+     * @param insertTavoloRequest Oggetto che rappresenta una richiesta di inserimento
+     * @param email Email del ristoratore che effettua la richiesta
+     * @return ResponseEntity HttpStatus Codice di stato HTTP
+     **/
+    ResponseEntity<HttpStatus> insertTavolo(InsertTavoloRequest insertTavoloRequest, String email);
+
+    /**
+     * Firma del metodo per recuperare i tavoli associati ad un ristorante
+     *
+     * @param idRistorante ID del ristorante per il quale si vuole ottenere la lista dei tavoli
+     * @return ResponseEntity<Set<Tavolo>> Set contenente la lista dei tavoli
+     **/
+    ResponseEntity<Set<Tavolo>> getTavoliRistorante(Integer idRistorante);
+
+    /**
+     * Firma del metodo per recuperare i dettagli di un tavolo dato il suo ID
+     *
+     * @param idTavolo ID del ristorante per il quale si vuole ottenere la lista dei tavoli
+     * @param idRistorante ID del ristorante
+     * @return ResponseEntity<Tavolo>
+     **/
+    ResponseEntity<Tavolo> getTavoloByID(String idTavolo, Integer idRistorante);
 }
