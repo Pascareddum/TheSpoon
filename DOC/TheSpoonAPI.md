@@ -82,6 +82,19 @@ There was an internal server error while we were processing your request.
     1. [Update Ristorante](#3-update-ristorante)
     1. [Search Ristorante](#4-search-ristorante)
     1. [Get Ristorante By ID](#5-get-ristorante-by-id)
+    1. [Insert Menu](#6-insert-menu)
+    1. [Add Product To Menu](#7-add-product-to-menu)
+    1. [Remove Product from Menu](#8-remove-product-from-menu)
+    1. [Get Menu By ID](#9-get-menu-by-id)
+    1. [Get Menus By ID Ristorante](#10-get-menus-by-id-ristorante)
+    1. [Get Prodotti By ID Menu](#11-get-prodotti-by-id-menu)
+    1. [Insert Tavolo](#12-insert-tavolo)
+    1. [Get Tavoli By Ristorante ID](#13-get-tavoli-by-ristorante-id)
+    1. [Get Tavolo](#14-get-tavolo)
+* [Prodotto](#prodotto)
+    1. [Insert Prodotto](#1-insert-prodotto)
+    1. [Remove Prodotto](#2-remove-prodotto)
+    1. [Get Prodotto By ID Prodotto](#3-get-prodotto-by-id-prodotto)
 
 --------
 
@@ -679,7 +692,527 @@ URL: http://localhost:8080/ristorante/getRistorante/{IdRistorante}
 
 
 
+### 6. Insert Menu
+
+
+This endpoint allows users to insert their restaurant's menus into TheSpoon's services.
+
+### Params
+
+| Name | Type | Description |
+| --- | --- | --- |
+| Nome | String | The restaurant's menu display name used for TheSpoon services |
+| Descrizione | String | A description of the restaurant's menu |
+| IdRistorante | Integer | The restautant's ID |
+
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 403 | Forbidden | Your authentication token is not valid |
+| 404 | Not found | Can't find any restaurant with the given ID owned by the user that made the request |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: RAW
+URL: http://localhost:8080/ristorante/insertMenu
+```
+
+
+
+***Body:***
+
+```js        
+{
+    "nome": "All You Can Eat",
+    "descrizione": "Mangia quanto vuoi da Mumu",
+    "idRistorante": 11
+}
+```
+
+
+
+### 7. Add Product To Menu
+
+
+This endpoint allows users to add a product to the menus of their own restaurant.
+
+### Params
+
+The Menu ID, Product ID and Restaurant ID as a path variable.
+
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | Your authentication token is not valid |
+| 404 | Not Found | Can't find any restaurant with the given ID owned by the user that made the request The given menu is not associated with the restaurant The menu or the product doesn't exist |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: 
+URL: http://localhost:8080/ristorante/addProductToMenu/{id_menu}/{id_prodotto}/{id_ristorante}
+```
+
+
+
+### 8. Remove Product from Menu
+
+
+This endpoint allows users to remove a product from the menus of their own restaurant.
+
+### Params
+
+The Menu ID, Product ID and Restaurant ID as a path variable.
+
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | Your authentication token is not valid |
+| 404 | Not Found | Can't find any restaurant with the given ID owned by the user that made the request The given menu is not associated with the restaurant The menu or the product doesn't exist |
+
+
+***Endpoint:***
+
+```bash
+Method: DELETE
+Type: 
+URL: http://localhost:8080/ristorante/removeProductMenu/1/1/11
+```
+
+
+
+### 9. Get Menu By ID
+
+
+This endpoint allows users to retrieve the details of a menu given his ID
+
+### Params
+
+The Menu ID as a path variable.
+
+### Response
+
+200 OK
+
+``` json
+{
+    "id": 1,
+    "nome": "All You Can Eat",
+    "categoria": "Mangia quanto vuoi da Mumu"
+}
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 404 | Not Found | Can't find any menu with the given ID |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/ristorante/getMenuByID/1
+```
+
+
+
+### 10. Get Menus By ID Ristorante
+
+
+This endpoint allows users to retrieve the menus given the Restaurant's ID
+
+### Params
+
+The Restaurant's ID as a path variable.
+
+### Response
+
+200 OK
+
+``` json
+[
+    {
+        "nome": "All You Can Eat",
+        "categoria": "Mangia quanto vuoi da Mumu",
+        "id": 1
+    },
+    {
+        "nome": "Menu alla carta",
+        "categoria": "Pay as you eat",
+        "id": 2
+    }
+]
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/ristorante/getMenuByIDRistorante/{IdRistorante}
+```
+
+
+
+### 11. Get Prodotti By ID Menu
+
+
+This endpoint allows users to retrieve the products associated within a menu given a menu ID
+
+### Params
+
+The Menu's ID as a path variable.
+
+### Response
+
+200 OK
+
+``` json
+[
+    {
+        "nome": "Bubble Tea Taro",
+        "descrizione": "Bubble Tea gusto taro, con palline di tapioca.",
+        "prezzo": 5.5,
+        "id": 1
+    },
+    {
+        "nome": "Pizza Fritta con cicoli",
+        "descrizione": "Pizza fritta con pomodoro, mozzarella, ricotta, cicoli e doppio olio",
+        "prezzo": 5.5,
+        "id": 4
+    }
+]
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 404 | Not Found | Can't find any menus with the given ID |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/ristorante/getProdottiByIDMenu/{IdMenu}
+```
+
+
+
+### 12. Insert Tavolo
+
+
+This endpoint allows users to add a table to their restaurant into TheSpoon's services.
+
+### Params
+
+| Name | Type | Description |
+| --- | --- | --- |
+| Numero Tavolo | String | The number of the table, used also as table ID |
+| Stato | Byte | table status, 0 available, 1 occupied |
+| Capacita | Integer | The table capacity |
+| idRistorante | String | The restaurant's ID |
+
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | Your authentication token is not valid |
+| 404 | Not Found | Restaurant not found or not owned by the users that made the request |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: RAW
+URL: http://localhost:8080/ristorante/insertTavolo
+```
+
+
+
+***Body:***
+
+```js        
+{
+    "numeroTavolo": "2",
+    "stato": "0",
+    "capacita": 4,
+    "idRistorante": 11
+}
+```
+
+
+
+### 13. Get Tavoli By Ristorante ID
+
+
+This endpoint allows users to retrieve all the restaurant's tables given his ID
+
+### Params
+
+The restaurant's ID as a path variable.
+
+### Response
+
+200 OK
+
+``` json
+[
+    {
+        "numeroTavolo": "1",
+        "capacita": 4,
+        "stato": 0
+    },
+    {
+        "numeroTavolo": "2",
+        "capacita": 4,
+        "stato": 0
+    }
+]
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 404 | Not Found | Can't find any restaurants with the given ID |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: 
+```
+
+
+
+### 14. Get Tavolo
+
+
+This endpoint allows users to retrieve the details of a table given his ID and the restaurant's ID
+
+### Params
+
+The Menu ID, the restaurant's ID as a path variable.
+
+### Response
+
+200 OK
+
+``` json
+{
+    "numeroTavolo": "1",
+    "capacita": 4,
+    "stato": 0
+}
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 404 | Not Found | Can't find any table with the given IDs |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/ristorante/getTavoloById/{numero_tavolo}/{id_ristorante}
+```
+
+
+
+## Prodotto
+
+The following methods are related to the Prodotto subsystem and contain endpoints for inserting, updating, deleting and retrieving data products.
+
+These endpoints are crucial for managing products data stored within TheSpoon's services.
+
+
+
+### 1. Insert Prodotto
+
+
+This endpoint allows users to add a product into TheSpoon's services.
+
+### Params
+
+| Name | Type | Description |
+| --- | --- | --- |
+| Nome | String | The product name |
+| Descrizione | String | A description of the product |
+| Prezzo | Float | The product's price |
+
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | Your authentication token is not valid |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: RAW
+URL: http://localhost:8080/prodotto/insertProdotto
+```
+
+
+
+***Body:***
+
+```js        
+{
+    "nome": "Pizza Fritta con cicoli",
+    "descrizione": "Pizza fritta con pomodoro, mozzarella, ricotta, cicoli e doppio olio",
+    "prezzo": 5.50
+}
+```
+
+
+
+### 2. Remove Prodotto
+
+
+This endpoint allows users to remove a product from TheSpoon's services.
+
+### Params
+
+The product's ID as path variable.
+
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | Your authentication token is not valid |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: DELETE
+Type: 
+URL: http://localhost:8080/prodotto/removeProdotto/4
+```
+
+
+
+### 3. Get Prodotto By ID Prodotto
+
+
+This endpoint allows users to retrieve the details of a product given his ID.
+
+### Params
+
+The Product ID as a path variable.
+
+### Response
+
+200 OK
+
+``` json
+{
+    "id": 5,
+    "nome": "Bubble Tea The Verde",
+    "prezzo": 5.5,
+    "descrizione": "Bubble Tea, gusto the verde con palline di tapioca"
+}
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 404 | Not Found | Can't find any product with the given ID |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/prodotto/getProdotto/{id_prodotto}
+```
+
+
+
 ---
 [Back to top](#thespoonapi)
 
->Generated at 2024-01-12 13:15:06 by [docgen](https://github.com/thedevsaddam/docgen)
+>Generated at 2024-01-14 23:48:51 by [docgen](https://github.com/thedevsaddam/docgen)

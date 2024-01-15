@@ -1,14 +1,18 @@
 package it.unisa.thespoon.prodotto.controller;
 
+import it.unisa.thespoon.model.entity.Prodotto;
 import it.unisa.thespoon.model.request.InsertProdottoRequest;
 import it.unisa.thespoon.prodotto.service.ProdottoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 /**
  * @author Jacopo Gennaro Esposito
@@ -31,5 +35,14 @@ public class ProdottoController {
     @DeleteMapping("/removeProdotto/{id_prodotto}")
     public ResponseEntity<HttpStatus> RemoveProdotto(@PathVariable(value = "id_prodotto") Integer idProdotto){
         return prodottoService.removeProdotto(idProdotto);
+    }
+
+    @GetMapping("/getProdotto/{id_prodotto}")
+    public ResponseEntity<Prodotto> GetProdotto(@PathVariable(value = "id_prodotto") Integer idProdotto){
+        Optional<Prodotto> prodotto = prodottoService.getProdotto(idProdotto);
+        if(prodotto.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(prodotto.get(), HttpStatus.OK);
     }
 }

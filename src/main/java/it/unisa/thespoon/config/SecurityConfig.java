@@ -76,6 +76,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/ristorante/getTavoloById/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "prodotto/**").hasRole("RISTORATORE")
                         .requestMatchers(HttpMethod.DELETE, "prodotto/removeProdotto/**").hasRole("RISTORATORE")
+                        .requestMatchers(HttpMethod.GET, "prodotto/getProdotto/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/ristorante/ricercaRistorante/**").permitAll()
                         .anyRequest().authenticated()
                 )
