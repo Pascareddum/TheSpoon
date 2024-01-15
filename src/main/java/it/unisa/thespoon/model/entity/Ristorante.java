@@ -35,6 +35,13 @@ public class Ristorante {
     @JsonIgnore
     Set<Ristoratore> Owners;
 
+    @OneToMany(mappedBy = "ristorante", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Menu> Menus;
+
+    @OneToMany(mappedBy = "ristoranteProp", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Tavolo> Tables;
+
+
 
     public Ristorante(Integer id, String nome, String n_Civico, Integer cap, String via, String provincia, String telefono,
                       Set<Ristoratore> owners) {
@@ -46,6 +53,31 @@ public class Ristorante {
         Provincia = provincia;
         Telefono = telefono;
         Owners = owners;
+    }
+
+    public Ristorante(Integer id, String nome, String n_Civico, Integer cap, String via, String provincia, String telefono, Set<Ristoratore> owners, Set<Menu> menus) {
+        Id = id;
+        Nome = nome;
+        N_Civico = n_Civico;
+        Cap = cap;
+        Via = via;
+        Provincia = provincia;
+        Telefono = telefono;
+        Owners = owners;
+        Menus = menus;
+    }
+
+    public Ristorante(Integer id, String nome, String n_Civico, Integer cap, String via, String provincia, String telefono, Set<Ristoratore> owners, Set<Menu> menus, Set<Tavolo> tables) {
+        Id = id;
+        Nome = nome;
+        N_Civico = n_Civico;
+        Cap = cap;
+        Via = via;
+        Provincia = provincia;
+        Telefono = telefono;
+        Owners = owners;
+        Menus = menus;
+        Tables = tables;
     }
 
     public Ristorante(){

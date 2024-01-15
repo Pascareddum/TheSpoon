@@ -2,12 +2,16 @@ package it.unisa.thespoon.ristorante.service;
 
 import it.unisa.thespoon.dashboardpersonale.service.DashboardPersonaleService;
 import it.unisa.thespoon.login.service.UserService;
+import it.unisa.thespoon.model.dao.MenuDAO;
+import it.unisa.thespoon.model.dao.ProdottoDAO;
 import it.unisa.thespoon.model.dao.RistoranteDAO;
-import it.unisa.thespoon.model.entity.Ristorante;
-import it.unisa.thespoon.model.entity.Ristoratore;
-import it.unisa.thespoon.model.entity.Role;
+import it.unisa.thespoon.model.dao.TavoloDAO;
+import it.unisa.thespoon.model.entity.*;
+import it.unisa.thespoon.model.request.InsertMenuRequest;
 import it.unisa.thespoon.model.request.InsertRistoranteRequest;
+import it.unisa.thespoon.model.request.InsertTavoloRequest;
 import it.unisa.thespoon.model.request.UpdateRistoranteRequest;
+import it.unisa.thespoon.prodotto.service.ProdottoService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -27,11 +32,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@DirtiesContext
 @ExtendWith(MockitoExtension.class)
 class RistoranteServiceImplTest {
 
     @Autowired
     private RistoranteDAO ristoranteDAO;
+
+    @Autowired
+    private MenuDAO menuDAO;
+
+    @Autowired
+    private TavoloDAO tavoloDAO;
+
+    @Autowired
+    private ProdottoDAO prodottoDAO;
 
     @Autowired
     private UserService userService;
@@ -41,14 +56,23 @@ class RistoranteServiceImplTest {
     @Autowired
     private DashboardPersonaleService dashboardPersonaleService;
 
+    @Autowired
+    private ProdottoService prodottoService;
+
     private Set<Ristoratore> RisSet;
 
     private Set<Ristorante> Ristoranti;
+
+    private Set<Tavolo> Tables;
+
+    private Set<Menu> Menus;
     @BeforeEach
     void setUp(){
         RisSet = new HashSet<Ristoratore>();
         Ristoranti = new HashSet<Ristorante>();
-        this.underTest = new RistoranteServiceImpl(ristoranteDAO, dashboardPersonaleService);
+        Tables = new HashSet<Tavolo>();
+        Menus = new HashSet<Menu>();
+        this.underTest = new RistoranteServiceImpl(ristoranteDAO, menuDAO, tavoloDAO, dashboardPersonaleService, prodottoService);
     }
 
     @AfterEach
@@ -56,6 +80,8 @@ class RistoranteServiceImplTest {
         ristoranteDAO.deleteAll();
         RisSet = new HashSet<Ristoratore>();
         Ristoranti = new HashSet<Ristorante>();
+        Tables = new HashSet<Tavolo>();
+        Menus = new HashSet<Menu>();
     }
 
     /** Testa la funzionalità di inserimento di un nuovo ristorante
@@ -140,6 +166,231 @@ class RistoranteServiceImplTest {
         assertEquals(ristorante.getNome(), response.getBody().getNome());
     }
 
+    /**
+     * Testa la funzionalità di inserimento di un menu in un ristorante
+     */
+    @Test
+    void insertMenu(){
+        Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
+        Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
+        ristoranteDAO.save(ristorante);
+        proprietario.getRistoranti().add(ristorante);
+
+        dashboardPersonaleService.saveRistoratore(proprietario);
+
+        //When
+        ResponseEntity<HttpStatus> response = underTest.insertMenu(new InsertMenuRequest("Menu Pizza", "Pizza", ristorante.getId()), proprietario.getEmail());
+
+        //Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    /** Testa la funzionalità di aggiunta di un prodotto ad un menu
+     * con parametri validi
+     */
+    @Test
+    void addProductToMenu(){
+        Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
+        Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
+
+        ristoranteDAO.save(ristorante);
+        Prodotto pro = prodottoDAO.save(newProdotto);
+        newMenu.setRistorante(ristorante);
+        Menu menu = menuDAO.save(newMenu);
+
+        proprietario.getRistoranti().add(ristorante);
+        ristorante.getOwners().add(proprietario);
+        ristorante.getMenus().add(newMenu);
+
+        Ristorante ris = ristoranteDAO.save(ristorante);
+        dashboardPersonaleService.saveRistoratore(proprietario);
+
+        //when
+        ResponseEntity<HttpStatus> response = underTest.addProductToMenu(menu.getId(), pro.getId(), ris.getId(), "shen@yue.it");
+
+        //Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    /**
+     * Testa la funzionalità di rimozione di un prodotto dal menu
+     *
+     */
+    @Test
+    void removeProductFromMenu(){
+        Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
+        Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
+
+        ristoranteDAO.save(ristorante);
+        prodottoDAO.save(newProdotto);
+        newMenu.setRistorante(ristorante);
+        Menu menu = menuDAO.save(newMenu);
+
+
+        proprietario.getRistoranti().add(ristorante);
+        ristorante.getOwners().add(proprietario);
+        ristorante.getMenus().add(newMenu);
+        newProdotto.getContained().add(newMenu);
+
+
+        Ristorante ris = ristoranteDAO.save(ristorante);
+        Prodotto np = prodottoDAO.save(newProdotto);
+        dashboardPersonaleService.saveRistoratore(proprietario);
+
+        //When
+        ResponseEntity<HttpStatus> response = underTest.removeProductFromMenu(menu.getId(), np.getId(), ris.getId(), "shen@yue.it");
+
+        //Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    /**
+     * Testa la funzionalità per ottenere i menu associati ad un dato ristorante
+     * */
+    @Test
+    void getMenusByRestaurantID(){
+        Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
+        Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
+
+        ristoranteDAO.save(ristorante);
+        prodottoDAO.save(newProdotto);
+        newMenu.setRistorante(ristorante);
+        Menu menu = menuDAO.save(newMenu);
+
+
+        proprietario.getRistoranti().add(ristorante);
+        ristorante.getOwners().add(proprietario);
+        ristorante.getMenus().add(newMenu);
+        newProdotto.getContained().add(newMenu);
+
+
+        Ristorante ris = ristoranteDAO.save(ristorante);
+        Prodotto np = prodottoDAO.save(newProdotto);
+        dashboardPersonaleService.saveRistoratore(proprietario);
+
+        //When
+        ResponseEntity<Set<Menu>> response = underTest.getMenusByRistoranteID(ris.getId());
+
+        //Then
+        assertEquals(menu.getNome(), response.getBody().iterator().next().getNome());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
+
+    /**
+     * Testa la funzionalità per ottenere un menu dato il suo ID
+     */
+    @Test
+    void MenusByID(){
+        Ristorante ristorante = new Ristorante(3, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
+        Menu newMenu = new Menu(3, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
+
+        ristoranteDAO.save(ristorante);
+        newMenu.setRistorante(ristorante);
+        Menu menu = menuDAO.save(newMenu);
+
+        //When
+        ResponseEntity<Menu> response = underTest.getMenusByID(menu.getId());
+
+        //Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(menu.getNome(), response.getBody().getNome());
+    }
+
+    /**
+     * Testa la funzionalità per ottenere la lista di prodotti associati ad un menu dato il suo ID
+     */
+    @Test
+    void prodottiByIDMenu(){
+        Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
+
+        ristoranteDAO.save(ristorante);
+        prodottoDAO.save(newProdotto);
+        newMenu.setRistorante(ristorante);
+        newMenu.getProdottiMenu().add(newProdotto);
+        Menu menu = menuDAO.save(newMenu);
+
+
+        ristorante.getMenus().add(newMenu);
+        newProdotto.getContained().add(newMenu);
+
+
+        ristoranteDAO.save(ristorante);
+        prodottoDAO.save(newProdotto);
+
+        //When
+        ResponseEntity<Set<Prodotto>> response = underTest.getProdottiByMenuID(menu.getId());
+
+        //Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(newProdotto.getNome(), response.getBody().iterator().next().getNome());
+    }
+
+    /**
+     * Testa la funzionalità per aggiungere un tavolo ad un ristorante
+     */
+    @Test
+    void insertTavolo(){
+        Ristoratore ristoratore = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
+        Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
+
+        ristoratore.getRistoranti().add(ristorante);
+        ristorante.getOwners().add(ristoratore);
+        dashboardPersonaleService.saveRistoratore(ristoratore);
+        ristoranteDAO.save(ristorante);
+
+        //When
+        ResponseEntity<HttpStatus> response = underTest.insertTavolo(new InsertTavoloRequest("1", null, 2, ristorante.getId()), ristoratore.getEmail());
+
+        //Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    /**
+     * Testa la funzionalità per recuperare i tavoli associati ad un ristorante
+     */
+    @Test
+    void TavoliRistorante(){
+        Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
+        Tavolo tavolo = new Tavolo("1", null, 2, ristorante);
+
+        ristorante.getTables().add(tavolo);
+        ristoranteDAO.save(ristorante);
+        tavoloDAO.save(tavolo);
+
+        //When
+        ResponseEntity<Set<Tavolo>> response = underTest.getTavoliRistorante(ristorante.getId());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(tavolo.getNumeroTavolo(), response.getBody().iterator().next().getNumeroTavolo());
+    }
+
+    /**
+     * Testa la funzionalità per ottenere i dettagli di un tavolo dato il suo ID
+     */
+    @Test
+    void TavoloByID(){
+        Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
+        Tavolo tavolo = new Tavolo("1", null, 2, ristorante);
+
+        ristorante.getTables().add(tavolo);
+        Ristorante ris = ristoranteDAO.save(ristorante);
+        tavoloDAO.save(tavolo);
+        //When
+        ResponseEntity<Tavolo> response = underTest.getTavoloByID(tavolo.getNumeroTavolo(), ris.getId());
+
+        //Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(tavolo.getNumeroTavolo(), response.getBody().getNumeroTavolo());
+    }
     /**
      * Testa la funzionalità di inserimento ristorante inserendo una mail non associata
      * a nessun ristoratore
