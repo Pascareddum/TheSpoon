@@ -70,4 +70,14 @@ public class ProdottoServiceImpl implements ProdottoService {
     public Optional<Prodotto> getProdotto(Integer Id){
         return prodottoDAO.findById(Id);
     }
+
+    /**
+     * Metodo per salvare i prodotti
+     * @param prodotto
+     * @return
+     */
+    @Override
+    public Prodotto saveProdotto(Prodotto prodotto) {
+        return prodottoDAO.save(prodotto);
+    }
 }
