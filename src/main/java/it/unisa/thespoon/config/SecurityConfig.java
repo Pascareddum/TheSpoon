@@ -18,6 +18,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 /**
  * @author Jacopo Gennaro Esposito
@@ -50,10 +55,22 @@ public class SecurityConfig {
     }
 
     @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
+                configuration.setAllowedMethods(Arrays.asList("GET","POST","DELETE"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
                 .csrf(csrf -> csrf
                         .disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -78,6 +95,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "prodotto/removeProdotto/**").hasRole("RISTORATORE")
                         .requestMatchers(HttpMethod.GET, "prodotto/getProdotto/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/ristorante/ricercaRistorante/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/ordini/insertOrdine").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/ordini/confermaOrdine/").hasRole("RISTORATORE")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,12 +32,26 @@ public class Prodotto {
     @JsonIgnore
     Set<Menu> Contained;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "prodotto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @BatchSize(size = 10)
+    List<ProdottoOrdine> ContainedOrders;
+
     public Prodotto(Integer id, String nome, String descrizione, Float prezzo, Set<Menu> contained) {
         Id = id;
         Nome = nome;
         Descrizione = descrizione;
         Prezzo = prezzo;
         Contained = contained;
+    }
+
+    public Prodotto(Integer id, String nome, String descrizione, Float prezzo, Set<Menu> contained, List<ProdottoOrdine> containedOrders) {
+        Id = id;
+        Nome = nome;
+        Descrizione = descrizione;
+        Prezzo = prezzo;
+        Contained = contained;
+        ContainedOrders = containedOrders;
     }
 
     public Prodotto() {
