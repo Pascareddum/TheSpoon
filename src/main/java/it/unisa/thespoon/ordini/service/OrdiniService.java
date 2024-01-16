@@ -1,12 +1,13 @@
 package it.unisa.thespoon.ordini.service;
 
 import it.unisa.thespoon.model.entity.Ordine;
-import it.unisa.thespoon.model.entity.Prodotto;
 import it.unisa.thespoon.model.request.InsertOrdineRequest;
+import it.unisa.thespoon.model.response.ProdottoOrdineInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  @author Jacopo Gennaro Esposito
@@ -46,7 +47,17 @@ public interface OrdiniService {
      *
      * @param idRistorante Identificativo del ristorante
      * @param idOrdine Identificativo dell'ordine
+     * @param email Email del ristoratore che effettua la richiesta
      * @return ResponseEntity <List<Prodotto> Response contenente i dettagli dei prodotti associati ad un ordine
      * */
-    ResponseEntity<List<Prodotto>> getOrdiniByID(Integer idRistorante, Integer idOrdine, String name);
+    ResponseEntity<List<ProdottoOrdineInfo>> getProdottiByIdOrdineIdRistorante(Integer idRistorante, Integer idOrdine, String email);
+
+    /**
+     * Firma del metodo per ottenere i dettagli di un ordine dato il suo ID e l'id del ristorante
+     *
+     * @param idOrdine Identificativo del ristorante
+     * @param idRistorante Identificativo dell'ordine
+     * @return Ordine
+     */
+    Optional<Ordine> getOrdineByIdOrdinedAndIdRistorante(Integer idOrdine, Integer idRistorante);
 }

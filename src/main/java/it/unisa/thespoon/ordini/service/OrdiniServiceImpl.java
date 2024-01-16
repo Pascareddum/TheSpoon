@@ -5,11 +5,10 @@ import it.unisa.thespoon.model.dao.RistoranteDAO;
 import it.unisa.thespoon.model.dao.RistoratoreDAO;
 import it.unisa.thespoon.model.entity.*;
 import it.unisa.thespoon.model.request.InsertOrdineRequest;
+import it.unisa.thespoon.model.response.ProdottoOrdineInfo;
 import it.unisa.thespoon.prodotto.service.ProdottoService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -67,18 +66,29 @@ public class OrdiniServiceImpl implements OrdiniService{
             else {
                 prodotto = newProdotto.get();
             }
-            totale+=prodotto.getPrezzo();
-            ProdottoOrdineID prodottoOrdineID = new ProdottoOrdineID();
-            prodottoOrdineID.setIdOrdine(newOrdine.getIdordine());
-            prodottoOrdineID.setIdProdotto(prodotto.getId());
 
-            ProdottoOrdine prodottoOrdine = new ProdottoOrdine();
-            prodottoOrdine.setId(prodottoOrdineID);
-            prodottoOrdine.setProdotto(prodotto);
-            prodottoOrdine.setOrdine(newOrdine);
+            Optional<ProdottoOrdine> existingProductOrder = newOrdine.getProducts().stream()
+                    .filter(po -> po.getProdotto().getId().equals(newProdotto.get().getId()))
+                    .findFirst();
 
-            newOrdine.getProducts().add(prodottoOrdine);
-            prodotto.getContainedOrders().add(prodottoOrdine);
+            if (existingProductOrder.isPresent()) {
+                existingProductOrder.get().setQuantita(existingProductOrder.get().getQuantita() + 1);
+            } else {
+
+                totale += prodotto.getPrezzo();
+                ProdottoOrdineID prodottoOrdineID = new ProdottoOrdineID();
+                prodottoOrdineID.setIdOrdine(newOrdine.getIdordine());
+                prodottoOrdineID.setIdProdotto(prodotto.getId());
+
+                ProdottoOrdine prodottoOrdine = new ProdottoOrdine();
+                prodottoOrdine.setId(prodottoOrdineID);
+                prodottoOrdine.setProdotto(prodotto);
+                prodottoOrdine.setOrdine(newOrdine);
+                prodottoOrdine.setQuantita(1);
+
+                newOrdine.getProducts().add(prodottoOrdine);
+                prodotto.getContainedOrders().add(prodottoOrdine);
+            }
         }
 
 
@@ -153,7 +163,7 @@ public class OrdiniServiceImpl implements OrdiniService{
      * @return ResponseEntity <List<Prodotto> Response contenente i dettagli dei prodotti associati ad un ordine
      */
     @Override
-    public ResponseEntity<List<Prodotto>> getOrdiniByID(Integer idRistorante, Integer idOrdine, String email) {
+    public ResponseEntity<List<ProdottoOrdineInfo>> getProdottiByIdOrdineIdRistorante(Integer idRistorante, Integer idOrdine, String email) {
         Optional<Ordine> ordine = ordiniDAO.findById(idOrdine);
         if(ordine.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -166,9 +176,21 @@ public class OrdiniServiceImpl implements OrdiniService{
         if(ristorante.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        List<Prodotto> prodotti = ordiniDAO.getProdottiByIdOrdineAndIdRistorante(idRistorante, idOrdine);
+        List<ProdottoOrdineInfo> prodotti = ordiniDAO.getProdottiByIdOrdineAndIdRistorante(idRistorante, idOrdine);
 
         return new ResponseEntity<>(prodotti, HttpStatus.OK);
+    }
+
+    /**
+     * Metodo per ottenere i dettagli di un ordine dato il suo ID e l'id del ristorante
+     *
+     * @param idOrdine     Identificativo del ristorante
+     * @param idRistorante Identificativo dell'ordine
+     * @return Ordine
+     */
+    @Override
+    public Optional<Ordine> getOrdineByIdOrdinedAndIdRistorante(Integer idOrdine, Integer idRistorante) {
+        return ordiniDAO.getByIdordineAndIdristorante(idOrdine, idRistorante);
     }
 
 

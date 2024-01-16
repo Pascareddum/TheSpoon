@@ -18,4 +18,18 @@ public class ProdottoOrdineID implements Serializable {
     @Column(name = "idordine")
     private Integer idOrdine;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProdottoOrdineID)) return false;
+        ProdottoOrdineID that = (ProdottoOrdineID) o;
+        return Objects.equals(getIdProdotto(), that.getIdProdotto()) &&
+                Objects.equals(getIdOrdine(), that.getIdOrdine());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdProdotto(), getIdOrdine());
+    }
+
 }

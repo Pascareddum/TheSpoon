@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.aspectj.weaver.ast.Or;
-import org.hibernate.id.factory.spi.GenerationTypeStrategy;
 
-import java.util.Objects;
 
 /**
  * @author Jacopo Gennaro Esposito
@@ -31,13 +28,16 @@ public class ProdottoOrdine {
     @JoinColumn(name = "id_prodotto")
     private Prodotto prodotto;
 
+    private Integer Quantita;
+
     public ProdottoOrdine() {
 
     }
 
-    public ProdottoOrdine(ProdottoOrdineID id, Ordine ordine, Prodotto prodotto) {
+    public ProdottoOrdine(ProdottoOrdineID id, Ordine ordine, Prodotto prodotto, Integer Quantita) {
         this.id = id;
         this.ordine = ordine;
         this.prodotto = prodotto;
+        this.Quantita = Quantita;
     }
 }

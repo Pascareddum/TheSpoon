@@ -1,8 +1,8 @@
 package it.unisa.thespoon.ordini.controller;
 
 import it.unisa.thespoon.model.entity.Ordine;
-import it.unisa.thespoon.model.entity.Prodotto;
 import it.unisa.thespoon.model.request.InsertOrdineRequest;
+import it.unisa.thespoon.model.response.ProdottoOrdineInfo;
 import it.unisa.thespoon.ordini.service.OrdiniService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +42,9 @@ public class OrdiniController {
     }
 
     @GetMapping("/prodottiByIdRisAndIdOrd/{id_ristorante}/{id_ordine}")
-    public ResponseEntity<List<Prodotto>> GetOrdiniByID(@PathVariable(name = "id_ristorante") Integer idRistorante,
-                                                        @PathVariable(name = "id_ordine") Integer idOrdine,
-                                                        Authentication authentication){
-        return ordiniService.getOrdiniByID(idRistorante, idOrdine, authentication.getName());
+    public ResponseEntity<List<ProdottoOrdineInfo>> GetOrdiniByID(@PathVariable(name = "id_ristorante") Integer idRistorante,
+                                                                  @PathVariable(name = "id_ordine") Integer idOrdine,
+                                                                  Authentication authentication){
+        return ordiniService.getProdottiByIdOrdineIdRistorante(idRistorante, idOrdine, authentication.getName());
     }
 }
