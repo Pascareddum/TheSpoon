@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jacopo Gennato Esposito
  * Classe che rappresenta una richiesta di inserimento prodotto
@@ -21,9 +23,9 @@ public class InsertProdottoRequest {
 
     @NotNull
     @PositiveOrZero
-    Float prezzo;
+    BigDecimal prezzo;
 
-    public InsertProdottoRequest(String nome, String descrizione, Float prezzo) {
+    public InsertProdottoRequest(String nome, String descrizione, BigDecimal prezzo) {
         Nome = nome;
         Descrizione = descrizione;
         this.prezzo = prezzo;
@@ -37,7 +39,7 @@ public class InsertProdottoRequest {
         return Descrizione;
     }
 
-    public Float getPrezzo() {
+    public BigDecimal getPrezzo() {
         return prezzo;
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.*;
@@ -43,7 +44,7 @@ public class OrdiniServiceImpl implements OrdiniService{
     @Override
     @Transactional
     public ResponseEntity<Ordine> insertOrdine(InsertOrdineRequest insertOrdineRequest) {
-        float totale = 0.0F;
+        BigDecimal totale = new BigDecimal(0);
         Byte stato = 0;
         Prodotto prodotto;
 
@@ -75,9 +76,10 @@ public class OrdiniServiceImpl implements OrdiniService{
 
             if (existingProductOrder.isPresent()) {
                 existingProductOrder.get().setQuantita(existingProductOrder.get().getQuantita() + 1);
+                totale = totale.add(prodotto.getPrezzo());
             } else {
 
-                totale += prodotto.getPrezzo();
+                totale = totale.add(prodotto.getPrezzo());
                 ProdottoOrdineID prodottoOrdineID = new ProdottoOrdineID();
                 prodottoOrdineID.setIdOrdine(newOrdine.getIdordine());
                 prodottoOrdineID.setIdProdotto(prodotto.getId());

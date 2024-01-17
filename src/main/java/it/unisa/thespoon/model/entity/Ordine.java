@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class Ordine {
     @Column(name = "chatid")
     Integer ChatId;
     Byte Stato;
-    Float Totale;
+    BigDecimal Totale;
 
     /*
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -53,7 +54,7 @@ public class Ordine {
     @BatchSize(size = 10)
     private List<ProdottoOrdine> products;
 
-    public Ordine(Integer idordine, Integer idristorante, Byte tipologia, Time ora, String nr_Tavolo, Integer quantita, Integer chatId, Byte stato, Float totale, List<ProdottoOrdine> products) {
+    public Ordine(Integer idordine, Integer idristorante, Byte tipologia, Time ora, String nr_Tavolo, Integer quantita, Integer chatId, Byte stato, BigDecimal totale, List<ProdottoOrdine> products) {
         this.idordine = idordine;
         Idristorante = idristorante;
         Tipologia = tipologia;
