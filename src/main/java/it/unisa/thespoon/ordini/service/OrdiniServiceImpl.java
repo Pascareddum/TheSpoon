@@ -6,6 +6,7 @@ import it.unisa.thespoon.model.dao.RistoratoreDAO;
 import it.unisa.thespoon.model.entity.*;
 import it.unisa.thespoon.model.request.InsertOrdineRequest;
 import it.unisa.thespoon.model.response.ProdottoOrdineInfo;
+import it.unisa.thespoon.notifiche.service.TelegramAdapter;
 import it.unisa.thespoon.prodotto.service.ProdottoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class OrdiniServiceImpl implements OrdiniService{
     private final OrdiniDAO ordiniDAO;
 
     private final ProdottoService prodottoService;
+    private final TelegramAdapter telegramAdapter;
 
     /**
      * Metodo per inserire un nuovo ordine
@@ -127,6 +129,8 @@ public class OrdiniServiceImpl implements OrdiniService{
 
         ordine.get().setStato(stato);
         ordiniDAO.save(ordine.get());
+        telegramAdapter.inviaMessaggioNotifica(ordine.get().getChatId(), "Ordine Numero:" + ordine.get().getIdordine() + " Prezzo: "
+                + ordine.get().getTotale() + "                             Puoi ritirare il tuo ordine presso: " + ristorante.get().getNome());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
