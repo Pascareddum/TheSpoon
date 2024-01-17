@@ -6,13 +6,16 @@ import it.unisa.thespoon.model.dao.RistoratoreDAO;
 import it.unisa.thespoon.model.entity.*;
 import it.unisa.thespoon.model.request.InsertOrdineRequest;
 import it.unisa.thespoon.model.response.ProdottoOrdineInfo;
+import it.unisa.thespoon.notifiche.service.TelegramAdapter;
 import it.unisa.thespoon.prodotto.service.ProdottoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.*;
@@ -31,6 +34,10 @@ public class OrdiniServiceImpl implements OrdiniService{
     private final OrdiniDAO ordiniDAO;
 
     private final ProdottoService prodottoService;
+    private final TelegramAdapter telegramAdapter;
+
+    @Autowired
+    private OrdineObserverService ordineObserverService;
 
     /**
      * Metodo per inserire un nuovo ordine
@@ -41,7 +48,7 @@ public class OrdiniServiceImpl implements OrdiniService{
     @Override
     @Transactional
     public ResponseEntity<Ordine> insertOrdine(InsertOrdineRequest insertOrdineRequest) {
-        float totale = 0.0F;
+        BigDecimal totale = new BigDecimal(0);
         Byte stato = 0;
         Prodotto prodotto;
 
@@ -73,9 +80,10 @@ public class OrdiniServiceImpl implements OrdiniService{
 
             if (existingProductOrder.isPresent()) {
                 existingProductOrder.get().setQuantita(existingProductOrder.get().getQuantita() + 1);
+                totale = totale.add(prodotto.getPrezzo());
             } else {
 
-                totale += prodotto.getPrezzo();
+                totale = totale.add(prodotto.getPrezzo());
                 ProdottoOrdineID prodottoOrdineID = new ProdottoOrdineID();
                 prodottoOrdineID.setIdOrdine(newOrdine.getIdordine());
                 prodottoOrdineID.setIdProdotto(prodotto.getId());
@@ -93,6 +101,7 @@ public class OrdiniServiceImpl implements OrdiniService{
 
 
         if(insertOrdineRequest.getNumeroTavolo()!=null) {
+            System.out.println("QUI ENTRO");
             newOrdine.setNr_Tavolo(insertOrdineRequest.getNumeroTavolo());
         }
 
@@ -117,6 +126,8 @@ public class OrdiniServiceImpl implements OrdiniService{
         if(ordine.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+        ordine.get().setOrdineObserverService(ordineObserverService);
+
         Optional<Ristoratore> ristoratore = ristoratoreDAO.findByEmail(email);
         if(ristoratore.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -127,6 +138,8 @@ public class OrdiniServiceImpl implements OrdiniService{
 
         ordine.get().setStato(stato);
         ordiniDAO.save(ordine.get());
+
+        ordine.get().setStato(stato, ristorante.get());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

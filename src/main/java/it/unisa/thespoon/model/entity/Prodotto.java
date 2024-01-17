@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +27,7 @@ public class Prodotto {
     private Integer Id;
     private String Nome;
     private String Descrizione;
-    private Float Prezzo;
+    private BigDecimal Prezzo;
 
     @ManyToMany(mappedBy = "prodottiMenu", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
@@ -37,7 +38,7 @@ public class Prodotto {
     @BatchSize(size = 10)
     List<ProdottoOrdine> ContainedOrders;
 
-    public Prodotto(Integer id, String nome, String descrizione, Float prezzo, Set<Menu> contained) {
+    public Prodotto(Integer id, String nome, String descrizione, BigDecimal prezzo, Set<Menu> contained) {
         Id = id;
         Nome = nome;
         Descrizione = descrizione;
@@ -45,7 +46,7 @@ public class Prodotto {
         Contained = contained;
     }
 
-    public Prodotto(Integer id, String nome, String descrizione, Float prezzo, Set<Menu> contained, List<ProdottoOrdine> containedOrders) {
+    public Prodotto(Integer id, String nome, String descrizione, BigDecimal prezzo, Set<Menu> contained, List<ProdottoOrdine> containedOrders) {
         Id = id;
         Nome = nome;
         Descrizione = descrizione;
@@ -70,7 +71,7 @@ public class Prodotto {
         return Descrizione;
     }
 
-    public Float getPrezzo() {
+    public BigDecimal getPrezzo() {
         return Prezzo;
     }
 

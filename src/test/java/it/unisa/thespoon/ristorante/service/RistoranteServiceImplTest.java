@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -192,7 +193,7 @@ class RistoranteServiceImplTest {
     void addProductToMenu(){
         Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
         Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
-        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", new BigDecimal(3.30), Menus);
         Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
 
         ristoranteDAO.save(ristorante);
@@ -222,7 +223,7 @@ class RistoranteServiceImplTest {
     void removeProductFromMenu(){
         Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
         Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
-        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", new BigDecimal(3.30), Menus);
         Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
 
         ristoranteDAO.save(ristorante);
@@ -255,7 +256,7 @@ class RistoranteServiceImplTest {
     void getMenusByRestaurantID(){
         Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
         Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
-        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", new BigDecimal(3.30), Menus);
         Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
 
         ristoranteDAO.save(ristorante);
@@ -309,7 +310,7 @@ class RistoranteServiceImplTest {
     @Test
     void prodottiByIDMenu(){
         Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
-        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", new BigDecimal(3.30), Menus);
         Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
 
         ristoranteDAO.save(ristorante);

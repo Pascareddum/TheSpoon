@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -273,7 +274,7 @@ class RistoranteControllerTest {
     void addProductToMenu() throws Exception {
         Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
         Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
-        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", new BigDecimal(3.30), Menus);
         Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
 
         ristoranteDAO.save(ristorante);
@@ -308,7 +309,7 @@ class RistoranteControllerTest {
     void removeProductFromMenu() throws Exception {
         Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
         Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
-        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", new BigDecimal(3.30), Menus);
         Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
 
         ristoranteDAO.save(ristorante);
@@ -347,7 +348,7 @@ class RistoranteControllerTest {
     void getMenusByRestaurantID() throws Exception {
         Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
         Ristoratore proprietario = new Ristoratore(1, "ShenYuePass", "Yue", "Shen", "shen@yue.it", "0000000000", LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);
-        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", new BigDecimal(3.30), Menus);
         Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
 
         ristoranteDAO.save(ristorante);
@@ -441,7 +442,7 @@ class RistoranteControllerTest {
     @Test
     void prodottiByIDMenu() throws Exception {
         Ristorante ristorante = new Ristorante(1, "Pizzeria Civico 7", "7A", 84084, "Giovanni De Martino", "SA", "3339001212", RisSet, Menus, Tables);
-        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", 3.30F, Menus);
+        Prodotto newProdotto = new Prodotto(1, "Pizza", "Pizza Fritta", new BigDecimal(3.30), Menus);
         Menu newMenu = new Menu(1, "Menu Pizzeria", "Menu Pizzeria", new HashSet<Prodotto>(), ristorante);
 
         ristoranteDAO.save(ristorante);
