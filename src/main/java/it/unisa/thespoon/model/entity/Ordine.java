@@ -2,11 +2,13 @@ package it.unisa.thespoon.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.unisa.thespoon.ordini.service.OrdineObserverService;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.sql.Time;
@@ -54,6 +56,10 @@ public class Ordine {
     @BatchSize(size = 10)
     private List<ProdottoOrdine> products;
 
+    @Transient // Evita la persistenza di questo campo
+    @JsonIgnore
+    private OrdineObserverService ordineObserverService;
+
     public Ordine(Integer idordine, Integer idristorante, Byte tipologia, Time ora, String nr_Tavolo, Integer quantita, Integer chatId, Byte stato, BigDecimal totale, List<ProdottoOrdine> products) {
         this.idordine = idordine;
         Idristorante = idristorante;
@@ -67,8 +73,33 @@ public class Ordine {
         this.products = products;
     }
 
+    public Ordine(Integer idordine, Integer idristorante, Byte tipologia, Time ora, String nr_Tavolo, Integer quantita, Integer chatId, Byte stato, BigDecimal totale, List<ProdottoOrdine> products, OrdineObserverService ordineObserverService) {
+        this.idordine = idordine;
+        Idristorante = idristorante;
+        Tipologia = tipologia;
+        Ora = ora;
+        Nr_Tavolo = nr_Tavolo;
+        Quantita = quantita;
+        ChatId = chatId;
+        Stato = stato;
+        Totale = totale;
+        this.products = products;
+        this.ordineObserverService = ordineObserverService;
+    }
+
+
     public Ordine() {
         products = new ArrayList<>();
     }
 
+    public void setStato(Byte stato, Ristorante ristorante) {
+        Stato = stato;
+        if (ordineObserverService != null) {
+            ordineObserverService.notifyObservers(this, ristorante);
+        }
+    }
+
+    public void setOrdineObserverService(OrdineObserverService ordineObserverService) {
+        this.ordineObserverService = ordineObserverService;
+    }
 }

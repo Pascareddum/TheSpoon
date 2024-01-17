@@ -10,6 +10,7 @@ import it.unisa.thespoon.notifiche.service.TelegramAdapter;
 import it.unisa.thespoon.prodotto.service.ProdottoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class OrdiniServiceImpl implements OrdiniService{
 
     private final ProdottoService prodottoService;
     private final TelegramAdapter telegramAdapter;
+
+    @Autowired
+    private OrdineObserverService ordineObserverService;
 
     /**
      * Metodo per inserire un nuovo ordine
@@ -97,6 +101,7 @@ public class OrdiniServiceImpl implements OrdiniService{
 
 
         if(insertOrdineRequest.getNumeroTavolo()!=null) {
+            System.out.println("QUI ENTRO");
             newOrdine.setNr_Tavolo(insertOrdineRequest.getNumeroTavolo());
         }
 
@@ -121,6 +126,8 @@ public class OrdiniServiceImpl implements OrdiniService{
         if(ordine.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+        ordine.get().setOrdineObserverService(ordineObserverService);
+
         Optional<Ristoratore> ristoratore = ristoratoreDAO.findByEmail(email);
         if(ristoratore.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -131,8 +138,8 @@ public class OrdiniServiceImpl implements OrdiniService{
 
         ordine.get().setStato(stato);
         ordiniDAO.save(ordine.get());
-        telegramAdapter.inviaMessaggioNotifica(ordine.get().getChatId(), "Ordine Numero:" + ordine.get().getIdordine() + " Prezzo: "
-                + ordine.get().getTotale() + "                             Puoi ritirare il tuo ordine presso: " + ristorante.get().getNome());
+
+        ordine.get().setStato(stato, ristorante.get());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
