@@ -1,3 +1,9 @@
+/**
+ * @author Jacopo Gennaro Esposito
+ * Implementa la classe che esplicita i metodi dell'interfaccia di Servizio per
+ * il sottosistema ordini, che gestice gli ordini
+ * */
+
 package it.unisa.thespoon.ordini.service;
 
 import it.unisa.thespoon.model.dao.OrdiniDAO;
@@ -21,10 +27,10 @@ import java.time.LocalTime;
 import java.util.*;
 
 /**
+ *
+ * Classe che implementa i metodi del sottosistema Prodotto
  * @author Jacopo Gennaro Esposito
- * Implementa la classe che esplicita i metodi dell'interfaccia di Servizio per
- * il sottosistema ordini, che gestice gli ordini
- * */
+ */
 @Service
 @RequiredArgsConstructor
 public class OrdiniServiceImpl implements OrdiniService{
@@ -43,7 +49,7 @@ public class OrdiniServiceImpl implements OrdiniService{
      * Metodo per inserire un nuovo ordine
      *
      * @param insertOrdineRequest Oggetto che rappresenta una richiesta di inserimento ordine
-     * @return ResponseEntity <Ordine> Response contenente i dettagli dell'ordine
+     * @return ResponseEntity Response contenente i dettagli dell'ordine
      **/
     @Override
     @Transactional
@@ -117,7 +123,7 @@ public class OrdiniServiceImpl implements OrdiniService{
      *
      * @param idOrdine ID dell'ordine che si intende confermare
      * @param email    Email del ristoratore che effettua la richiesta
-     * @return ResponseEntity <Ordine> Response contenente i dettagli dell'ordine
+     * @return ResponseEntity Response contenente i dettagli dell'ordine
      **/
     @Override
     public ResponseEntity<HttpStatus> confermaOrdine(Integer idOrdine, String email) {
@@ -149,7 +155,7 @@ public class OrdiniServiceImpl implements OrdiniService{
      *
      * @param idRistorante Identificativo dell'ordine
      * @param email
-     * @return ResponseEntity <Ordine> Response contenente i dettagli dell'ordine
+     * @return ResponseEntity Response contenente i dettagli dell'ordine
      **/
     @Override
     public ResponseEntity<List<Ordine>> ordiniByRistorante(Integer idRistorante, String email) {
@@ -173,7 +179,7 @@ public class OrdiniServiceImpl implements OrdiniService{
      * @param idRistorante Identificativo del ristorante
      * @param idOrdine     Identificativo dell'ordine
      * @param email
-     * @return ResponseEntity <List<Prodotto> Response contenente i dettagli dei prodotti associati ad un ordine
+     * @return ResponseEntity Response contenente i dettagli dei prodotti associati ad un ordine
      */
     @Override
     public ResponseEntity<List<ProdottoOrdineInfo>> getProdottiByIdOrdineIdRistorante(Integer idRistorante, Integer idOrdine, String email) {
@@ -204,6 +210,19 @@ public class OrdiniServiceImpl implements OrdiniService{
     @Override
     public Optional<Ordine> getOrdineByIdOrdinedAndIdRistorante(Integer idOrdine, Integer idRistorante) {
         return ordiniDAO.getByIdordineAndIdristorante(idOrdine, idRistorante);
+    }
+
+    /**
+     * Metodo che permette di aggiornare lo stato di un ordine sul db, chiamato
+     * da altri sottosistemi
+     *
+     * @param stato Stato da aggiornare
+     * @param ordine Ordine per il quale aggiornare lo stato
+     */
+    @Override
+    public void setStato(Byte stato, Ordine ordine) {
+        ordine.setStato(stato);
+        ordiniDAO.save(ordine);
     }
 
 

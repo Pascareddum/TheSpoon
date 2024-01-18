@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- @author Jacopo Gennaro Esposito
  Interfaccia per i metodi del sottosistema DashboardPersonale
+ @author Jacopo Gennaro Esposito
  **/
 public interface DashboardPersonaleService {
 

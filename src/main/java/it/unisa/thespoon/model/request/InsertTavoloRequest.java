@@ -4,6 +4,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Classe che rappresenta una richiesta di inserimento tavolo
+ * indirizzata al sottosistema ristorante
+ * @author Jacopo Gennaro Esposito
+ * */
 public class InsertTavoloRequest {
 
     @NotNull

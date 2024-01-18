@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Implementa la classe che esplicita i metodi dell'interfaccia di Servizio per
  * il sottosistema prodotto, che gestice i singoli prodotti
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 @RequiredArgsConstructor
@@ -46,8 +46,8 @@ public class ProdottoServiceImpl implements ProdottoService {
     /**
      * Metodo adibito alla rimozione di un nuovo prodotto dal sistema
      *
-     * @param Id
-     * @return
+     * @param Id Identificativo dell'ordine che si intende rimuovere
+     * @return ResponseEntity Codice di risposta HTTP
      */
     @Override
     public ResponseEntity<HttpStatus> removeProdotto(Integer Id) {
@@ -64,8 +64,8 @@ public class ProdottoServiceImpl implements ProdottoService {
     /**
      * Metodo per recuperare un prodotto dato il suo ID
      *
-     * @param Id
-     * @return
+     * @param Id Identificativo dell'ordine che si intende recuperare
+     * @return Optional Optional contenente il prodotto recuperato
      */
     public Optional<Prodotto> getProdotto(Integer Id){
         return prodottoDAO.findById(Id);
@@ -73,8 +73,8 @@ public class ProdottoServiceImpl implements ProdottoService {
 
     /**
      * Metodo per salvare i prodotti
-     * @param prodotto
-     * @return
+     * @param prodotto Prodotto che si intende salvare nel db
+     * @return Prodotto Istanza del prodotto appena salvata
      */
     @Override
     public Prodotto saveProdotto(Prodotto prodotto) {

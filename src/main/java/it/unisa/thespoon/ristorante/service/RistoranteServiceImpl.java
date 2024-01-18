@@ -16,9 +16,9 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Impmenta la classe che esplicita i metodi dell'interfaccia di Servizio per
  * il sottosistema ristorante, che gestice tutti gli aspetti inerenti i ristoranti
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 @RequiredArgsConstructor
@@ -99,7 +99,7 @@ public class RistoranteServiceImpl implements RistoranteService{
      * Metodo per recuperare tutti i ristoranti associati ad un dato ristoratore
      *
      * @param idRistoratore rappresenta l'id del ristoratore per il quale si vuole recuperare la lista dei ristoranti
-     * @return ResponseEntity<Set < Ristorante>> ResponseEntity contenente la lista dei ristoranti associati
+     * @return ResponseEntity ResponseEntity contenente la lista dei ristoranti associati
      */
     @Override
     public ResponseEntity<Set<Ristorante>> getAllRistorantiByRistoratore(Integer idRistoratore) {
@@ -115,7 +115,7 @@ public class RistoranteServiceImpl implements RistoranteService{
      * Firma del metodo per recuperare i dettagli di un ristorante
      *
      * @param idRistorante rappresenta l'id del ristorante per il quale si vuole recuperarne i dettagli
-     * @return ResponseEntity<Ristorante> ResponseEntity contenente i dettagli del ristorante
+     * @return ResponseEntity ResponseEntity contenente i dettagli del ristorante
      */
     @Override
     public ResponseEntity<Ristorante> getRistoranteByID(Integer idRistorante) {
@@ -132,7 +132,7 @@ public class RistoranteServiceImpl implements RistoranteService{
      *
      * @param searchRistoranteRequest rappresenta la richiesta di ricerca di un ristorante
      * @param nomeRistorante          nome del ristorante da cercare
-     * @return ResponseEntity<Set < Ristorante>> ResponseEntity contenente la lista dei ristoranti trovati
+     * @return ResponseEntity ResponseEntity contenente la lista dei ristoranti trovati
      */
     @Override
     public ResponseEntity<Set<Ristorante>> searchRistorante(SearchRistoranteRequest searchRistoranteRequest, String nomeRistorante) {
@@ -149,8 +149,8 @@ public class RistoranteServiceImpl implements RistoranteService{
      * Metodo per aggiungere un menu ad un ristorante
      *
      * @param insertMenuRequest rappresenta la richiesta di inserimento di un menu
-     * @param email
-     * @return
+     * @param email Email del ristoratore
+     * @return ResponseEntity codice di risposta HTTP
      */
     @Override
     public ResponseEntity<HttpStatus> insertMenu(InsertMenuRequest insertMenuRequest, String email) {
@@ -251,7 +251,7 @@ public class RistoranteServiceImpl implements RistoranteService{
      * Metodo per ottenere i menu associati ad un ristorante
      *
      * @param ID Id del ristorante per il quale si vuole recuperare la lista dei menu
-     * @return ResponseEntity<Set < Menu>> ResponseEntity contenente la lista dei menu associati
+     * @return ResponseEntity ResponseEntity contenente la lista dei menu associati
      */
     @Override
     public ResponseEntity<Set<Menu>> getMenusByRistoranteID(Integer ID) {
@@ -267,7 +267,7 @@ public class RistoranteServiceImpl implements RistoranteService{
      * Metodo per ottenere il menu associato ad un dato id
      *
      * @param idMenu Id del ristorante per il quale si vuole recuperare la lista dei menu
-     * @return ResponseEntity<Set < Menu>> ResponseEntity contenente la lista dei menu associati
+     * @return ResponseEntity ResponseEntity contenente la lista dei menu associati
      */
     @Override
     public ResponseEntity<Menu> getMenusByID(Integer idMenu) {
@@ -283,7 +283,7 @@ public class RistoranteServiceImpl implements RistoranteService{
      * Metodo per ottenere i prodotti associati ad un dato menu
      *
      * @param idMenu Id del menu per il quale si vuole recuperare la lista dei prodotti
-     * @return ResponseEntity<Set < Prodotto>> ResponseEntity contenente la lista dei prodotti associati
+     * @return ResponseEntity ResponseEntity contenente la lista dei prodotti associati
      */
     @Override
     public ResponseEntity<Set<Prodotto>> getProdottiByMenuID(Integer idMenu) {
@@ -331,7 +331,7 @@ public class RistoranteServiceImpl implements RistoranteService{
      * Metodo per recuperare i tavoli associati ad un ristorante
      *
      * @param idRistorante ID del ristorante per il quale si vuole ottenere la lista dei tavoli
-     * @return ResponseEntity<Set < Tavolo>> Set contenente la lista dei tavoli
+     * @return ResponseEntity Set contenente la lista dei tavoli
      **/
     @Override
     public ResponseEntity<Set<Tavolo>> getTavoliRistorante(Integer idRistorante) {
@@ -353,7 +353,7 @@ public class RistoranteServiceImpl implements RistoranteService{
      *
      * @param idTavolo     ID del ristorante per il quale si vuole ottenere la lista dei tavoli
      * @param idRistorante ID del ristorante
-     * @return ResponseEntity<Tavolo>
+     * @return ResponseEntity Response Entity contenente i dettagli del tavolo
      **/
     @Override
     public ResponseEntity<Tavolo> getTavoloByID(String idTavolo, Integer idRistorante) {

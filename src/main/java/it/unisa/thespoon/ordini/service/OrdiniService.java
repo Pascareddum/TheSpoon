@@ -10,16 +10,17 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- @author Jacopo Gennaro Esposito
- Interfaccia per i metodi del sottosistema Prodotto
- **/
+ *
+ * Interfaccia per i metodi del sottosistema Prodotto
+ * @author Jacopo Gennaro Esposito
+ */
 public interface OrdiniService {
 
      /**
       * Firma del metodo per inserire un nuovo ordine
       *
       * @param insertOrdineRequest Oggetto che rappresenta una richiesta di inserimento ordine
-      * @return ResponseEntity <Ordine> Response contenente i dettagli dell'ordine
+      * @return ResponseEntity Response contenente i dettagli dell'ordine
       **/
     ResponseEntity<Ordine> insertOrdine(InsertOrdineRequest insertOrdineRequest);
 
@@ -29,7 +30,7 @@ public interface OrdiniService {
      *
      * @param idOrdine ID dell'ordine che si intende confermare
      * @param email Email del ristoratore che effettua la richiesta
-     * @return ResponseEntity <Ordine> Response contenente i dettagli dell'ordine
+     * @return ResponseEntity Response contenente i dettagli dell'ordine
      **/
     ResponseEntity<HttpStatus> confermaOrdine(Integer idOrdine, String email);
 
@@ -37,7 +38,7 @@ public interface OrdiniService {
      * Firma del metodo per ottenere gli ordini associati ad un ristorante
      *
      * @param idOrdine Identificativo dell'ordine
-     * @return ResponseEntity <Ordine> Response contenente i dettagli dell'ordine
+     * @return ResponseEntity Response contenente i dettagli dell'ordine
      **/
     ResponseEntity<List<Ordine>> ordiniByRistorante(Integer idOrdine, String name);
 
@@ -48,7 +49,7 @@ public interface OrdiniService {
      * @param idRistorante Identificativo del ristorante
      * @param idOrdine Identificativo dell'ordine
      * @param email Email del ristoratore che effettua la richiesta
-     * @return ResponseEntity <List<Prodotto> Response contenente i dettagli dei prodotti associati ad un ordine
+     * @return ResponseEntity Response contenente i dettagli dei prodotti associati ad un ordine
      * */
     ResponseEntity<List<ProdottoOrdineInfo>> getProdottiByIdOrdineIdRistorante(Integer idRistorante, Integer idOrdine, String email);
 
@@ -60,4 +61,6 @@ public interface OrdiniService {
      * @return Ordine
      */
     Optional<Ordine> getOrdineByIdOrdinedAndIdRistorante(Integer idOrdine, Integer idRistorante);
+
+    void setStato(Byte stato, Ordine ordine);
 }

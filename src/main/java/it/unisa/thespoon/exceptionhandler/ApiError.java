@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che rappresenta un errore generato da una chiamata alle API
+ * @author Jacopo Gennaro Esposito
  * */
 @Setter
 @Getter

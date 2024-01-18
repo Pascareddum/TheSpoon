@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Controller contenente gli endpoint delle API di TheSpoon per il sottosistema Ristorante
+ * @author Jacopo Gennaro Esposito
  * */
 @Validated
 @RestController

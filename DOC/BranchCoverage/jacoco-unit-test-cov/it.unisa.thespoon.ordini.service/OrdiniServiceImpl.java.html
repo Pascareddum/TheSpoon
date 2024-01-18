@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrdiniServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TestAll Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.unisa.thespoon.ordini.service</a> &gt; <span class="el_source">OrdiniServiceImpl.java</span></div><h1>OrdiniServiceImpl.java</h1><pre class="source lang-java linenums">package it.unisa.thespoon.ordini.service;
+
+import it.unisa.thespoon.model.dao.OrdiniDAO;
+import it.unisa.thespoon.model.dao.RistoranteDAO;
+import it.unisa.thespoon.model.dao.RistoratoreDAO;
+import it.unisa.thespoon.model.entity.*;
+import it.unisa.thespoon.model.request.InsertOrdineRequest;
+import it.unisa.thespoon.model.response.ProdottoOrdineInfo;
+import it.unisa.thespoon.notifiche.service.TelegramAdapter;
+import it.unisa.thespoon.prodotto.service.ProdottoService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.sql.Time;
+import java.time.LocalTime;
+import java.util.*;
+
+/**
+ * @author Jacopo Gennaro Esposito
+ * Implementa la classe che esplicita i metodi dell'interfaccia di Servizio per
+ * il sottosistema ordini, che gestice gli ordini
+ * */
+@Service
+<span class="fc" id="L29">@RequiredArgsConstructor</span>
+public class OrdiniServiceImpl implements OrdiniService{
+
+    private final RistoranteDAO ristoranteDAO;
+    private final RistoratoreDAO ristoratoreDAO;
+    private final OrdiniDAO ordiniDAO;
+
+    private final ProdottoService prodottoService;
+    private final TelegramAdapter telegramAdapter;
+
+    @Autowired
+    private OrdineObserverService ordineObserverService;
+
+    /**
+     * Metodo per inserire un nuovo ordine
+     *
+     * @param insertOrdineRequest Oggetto che rappresenta una richiesta di inserimento ordine
+     * @return ResponseEntity &lt;Ordine&gt; Response contenente i dettagli dell'ordine
+     **/
+    @Override
+    @Transactional
+    public ResponseEntity&lt;Ordine&gt; insertOrdine(InsertOrdineRequest insertOrdineRequest) {
+<span class="fc" id="L51">        BigDecimal totale = new BigDecimal(0);</span>
+<span class="fc" id="L52">        Byte stato = 0;</span>
+        Prodotto prodotto;
+
+<span class="fc" id="L55">        Ordine newOrdine = new Ordine();</span>
+
+<span class="fc" id="L57">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findById(insertOrdineRequest.getIdRistorante());</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if(ristorante.isEmpty())</span>
+<span class="fc" id="L59">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L61">        newOrdine.setChatId(insertOrdineRequest.getChatID());</span>
+<span class="fc" id="L62">        newOrdine.setOra(Time.valueOf(LocalTime.now()));</span>
+<span class="fc" id="L63">        newOrdine.setTipologia(insertOrdineRequest.getTipologia());</span>
+<span class="fc" id="L64">        newOrdine.setStato(stato);</span>
+<span class="fc" id="L65">        newOrdine.setIdristorante(insertOrdineRequest.getIdRistorante());</span>
+<span class="fc" id="L66">        newOrdine.setTotale(totale);</span>
+
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        for(Integer product : insertOrdineRequest.getProductsIDs()){</span>
+<span class="fc" id="L69">            Optional&lt;Prodotto&gt; newProdotto = prodottoService.getProdotto(product);</span>
+
+<span class="fc bfc" id="L71" title="All 2 branches covered.">            if(newProdotto.isEmpty())</span>
+<span class="fc" id="L72">                return new ResponseEntity&lt;&gt;(HttpStatus.OK);</span>
+            else {
+<span class="fc" id="L74">                prodotto = newProdotto.get();</span>
+            }
+
+<span class="fc" id="L77">            Optional&lt;ProdottoOrdine&gt; existingProductOrder = newOrdine.getProducts().stream()</span>
+<span class="pc" id="L78">                    .filter(po -&gt; po.getProdotto().getId().equals(newProdotto.get().getId()))</span>
+<span class="fc" id="L79">                    .findFirst();</span>
+
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">            if (existingProductOrder.isPresent()) {</span>
+<span class="nc" id="L82">                existingProductOrder.get().setQuantita(existingProductOrder.get().getQuantita() + 1);</span>
+<span class="nc" id="L83">                totale = totale.add(prodotto.getPrezzo());</span>
+            } else {
+
+<span class="fc" id="L86">                totale = totale.add(prodotto.getPrezzo());</span>
+<span class="fc" id="L87">                ProdottoOrdineID prodottoOrdineID = new ProdottoOrdineID();</span>
+<span class="fc" id="L88">                prodottoOrdineID.setIdOrdine(newOrdine.getIdordine());</span>
+<span class="fc" id="L89">                prodottoOrdineID.setIdProdotto(prodotto.getId());</span>
+
+<span class="fc" id="L91">                ProdottoOrdine prodottoOrdine = new ProdottoOrdine();</span>
+<span class="fc" id="L92">                prodottoOrdine.setId(prodottoOrdineID);</span>
+<span class="fc" id="L93">                prodottoOrdine.setProdotto(prodotto);</span>
+<span class="fc" id="L94">                prodottoOrdine.setOrdine(newOrdine);</span>
+<span class="fc" id="L95">                prodottoOrdine.setQuantita(1);</span>
+
+<span class="fc" id="L97">                newOrdine.getProducts().add(prodottoOrdine);</span>
+<span class="fc" id="L98">                prodotto.getContainedOrders().add(prodottoOrdine);</span>
+            }
+<span class="fc" id="L100">        }</span>
+
+
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        if(insertOrdineRequest.getNumeroTavolo()!=null) {</span>
+<span class="nc" id="L104">            System.out.println(&quot;QUI ENTRO&quot;);</span>
+<span class="nc" id="L105">            newOrdine.setNr_Tavolo(insertOrdineRequest.getNumeroTavolo());</span>
+        }
+
+<span class="fc" id="L108">        newOrdine.setTotale(totale);</span>
+<span class="fc" id="L109">        ordiniDAO.save(newOrdine);</span>
+
+
+<span class="fc" id="L112">        return new ResponseEntity&lt;&gt;(newOrdine, HttpStatus.OK);</span>
+    }
+
+    /**
+     * Firma del metodo per confermare un nuovo ordine
+     *
+     * @param idOrdine ID dell'ordine che si intende confermare
+     * @param email    Email del ristoratore che effettua la richiesta
+     * @return ResponseEntity &lt;Ordine&gt; Response contenente i dettagli dell'ordine
+     **/
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; confermaOrdine(Integer idOrdine, String email) {
+<span class="fc" id="L124">        Byte stato = 1;</span>
+<span class="fc" id="L125">        Optional&lt;Ordine&gt; ordine = ordiniDAO.findById(idOrdine);</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if(ordine.isEmpty())</span>
+<span class="fc" id="L127">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L129">        ordine.get().setOrdineObserverService(ordineObserverService);</span>
+
+<span class="fc" id="L131">        Optional&lt;Ristoratore&gt; ristoratore = ristoratoreDAO.findByEmail(email);</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if(ristoratore.isEmpty())</span>
+<span class="nc" id="L133">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L135">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findByIdAndAndOwnersID(ordine.get().getIdristorante(), ristoratore.get().getId());</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if(ristorante.isEmpty())</span>
+<span class="nc" id="L137">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L139">        ordine.get().setStato(stato);</span>
+<span class="fc" id="L140">        ordiniDAO.save(ordine.get());</span>
+
+<span class="fc" id="L142">        ordine.get().setStato(stato, ristorante.get());</span>
+
+<span class="fc" id="L144">        return new ResponseEntity&lt;&gt;(HttpStatus.OK);</span>
+    }
+
+    /**
+     * Firma del metodo per ottenere i dettagli di un ordine
+     *
+     * @param idRistorante Identificativo dell'ordine
+     * @param email
+     * @return ResponseEntity &lt;Ordine&gt; Response contenente i dettagli dell'ordine
+     **/
+    @Override
+    public ResponseEntity&lt;List&lt;Ordine&gt;&gt; ordiniByRistorante(Integer idRistorante, String email) {
+<span class="fc" id="L156">        Optional&lt;Ristoratore&gt; ristoratore = ristoratoreDAO.findByEmail(email);</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">        if(ristoratore.isEmpty())</span>
+<span class="fc" id="L158">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="nc" id="L160">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findByIdAndAndOwnersID(idRistorante, ristoratore.get().getId());</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if(ristorante.isEmpty())</span>
+<span class="nc" id="L162">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="nc" id="L164">        List&lt;Ordine&gt; ordini = ordiniDAO.findAllByIdRistorante(idRistorante);</span>
+
+<span class="nc" id="L166">        return new ResponseEntity&lt;&gt;(ordini, HttpStatus.OK);</span>
+    }
+
+    /**
+     * Firma del metodo per ottenere i dettagli dei prodotti
+     * associati ad un ordine dato il suo id e l'id del ristorante
+     *
+     * @param idRistorante Identificativo del ristorante
+     * @param idOrdine     Identificativo dell'ordine
+     * @param email
+     * @return ResponseEntity &lt;List&lt;Prodotto&gt; Response contenente i dettagli dei prodotti associati ad un ordine
+     */
+    @Override
+    public ResponseEntity&lt;List&lt;ProdottoOrdineInfo&gt;&gt; getProdottiByIdOrdineIdRistorante(Integer idRistorante, Integer idOrdine, String email) {
+<span class="fc" id="L180">        Optional&lt;Ordine&gt; ordine = ordiniDAO.findById(idOrdine);</span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">        if(ordine.isEmpty())</span>
+<span class="fc" id="L182">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="nc" id="L184">        Optional&lt;Ristoratore&gt; ristoratore = ristoratoreDAO.findByEmail(email);</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if(ristoratore.isEmpty())</span>
+<span class="nc" id="L186">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="nc" id="L188">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findByIdAndAndOwnersID(ordine.get().getIdristorante(), ristoratore.get().getId());</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        if(ristorante.isEmpty())</span>
+<span class="nc" id="L190">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="nc" id="L192">        List&lt;ProdottoOrdineInfo&gt; prodotti = ordiniDAO.getProdottiByIdOrdineAndIdRistorante(idRistorante, idOrdine);</span>
+
+<span class="nc" id="L194">        return new ResponseEntity&lt;&gt;(prodotti, HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per ottenere i dettagli di un ordine dato il suo ID e l'id del ristorante
+     *
+     * @param idOrdine     Identificativo del ristorante
+     * @param idRistorante Identificativo dell'ordine
+     * @return Ordine
+     */
+    @Override
+    public Optional&lt;Ordine&gt; getOrdineByIdOrdinedAndIdRistorante(Integer idOrdine, Integer idRistorante) {
+<span class="nc" id="L206">        return ordiniDAO.getByIdordineAndIdristorante(idOrdine, idRistorante);</span>
+    }
+
+    /**
+     * @param stato
+     */
+    @Override
+    public void setStato(Byte stato, Ordine ordine) {
+<span class="nc" id="L214">        ordine.setStato(stato);</span>
+<span class="nc" id="L215">        ordiniDAO.save(ordine);</span>
+<span class="nc" id="L216">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

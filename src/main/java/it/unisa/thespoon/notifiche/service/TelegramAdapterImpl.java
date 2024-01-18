@@ -6,6 +6,10 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * Adapter per le API di Telegram
+ * @author Jacopo Gennaro Esposito
+ */
 @Service
 public class TelegramAdapterImpl implements TelegramAdapter{
     private final TelegramApiUrlBuilder telegramApiUrlBuilder;
@@ -18,8 +22,8 @@ public class TelegramAdapterImpl implements TelegramAdapter{
 
     /**
      * Metodo per inviare un messaggio attravverso le API di Telegram
-     * @param chatID
-     * @param text
+     * @param chatID Identificativo univoco della chat telegram
+     * @param text Testo del messaggio
      */
     @Override
     public void inviaMessaggioNotifica(Integer chatID, String text){

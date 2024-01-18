@@ -1,3 +1,5 @@
+
+
 package it.unisa.thespoon.config;
 
 import it.unisa.thespoon.filters.JwtAuthenticationFilter;
@@ -25,9 +27,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 /**
- * @author Jacopo Gennaro Esposito
- *
  * Configuration File per Spring Security, framework spring per gestire l'accesso alle API
+ * @author Jacopo Gennaro Esposito
  * */
 @Configuration
 @EnableWebSecurity
@@ -99,6 +100,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/ordini/insertOrdine").permitAll()
                         .requestMatchers(HttpMethod.POST, "/ordini/confermaOrdine/").hasRole("RISTORATORE")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/pagamenti/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

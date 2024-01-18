@@ -9,8 +9,8 @@ import java.nio.charset.StandardCharsets;
 
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che rappresenta un UrlBuilder per la API SendMessage di Telegram
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 public class TelegramApiUrlBuilder {
@@ -20,9 +20,9 @@ public class TelegramApiUrlBuilder {
     /**
      * Metodo che compone l'URL per effettuare la richiesta sendMessage alle API di Telegram
      *
-     * @param chatID
-     * @param text
-     * @return
+     * @param chatID Identificativo univoco della chat telegram
+     * @param text Testo del messaggio
+     * @return String Stringa contenente l'URI dell'api da contattare con il messaggio e il chatID
      */
     public String buildSendTelegramMessage(Integer chatID, String text){
         String newString = URLEncoder.encode(text, StandardCharsets.UTF_8);

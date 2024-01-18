@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
- * @author Jacopo Gennato Esposito
  * Classe che rappresenta una richiesta di modifica password indirizzata al sottosistema Dashboard Personale
+ * @author Jacopo Gennaro Esposito
  * */
 public class UpdatePasswordRequest {
     @NotNull

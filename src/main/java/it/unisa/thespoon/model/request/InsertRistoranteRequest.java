@@ -3,9 +3,9 @@ package it.unisa.thespoon.model.request;
 import jakarta.validation.constraints.*;
 
 /**
- * @author Jacopo Gennato Esposito
  * Classe che rappresenta una richiesta di inserimento ristorante
  * indirizzata al sottosistema ristorante
+ * @author Jacopo Gennaro Esposito
  * */
 public class InsertRistoranteRequest {
 

@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che rappresenta l'entit&agrave; Tavolo di TheSpoon
+ * @author Jacopo Gennaro Esposito
  * */
 @Setter
 @Getter

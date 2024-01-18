@@ -5,6 +5,11 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Classe che rappresenta una richiesta di modifica ristorante
+ * indirizzata al sottosistema ristorante
+ * @author Jacopo Gennaro Esposito
+ * */
 @Getter
 public class UpdateRistoranteRequest {
 

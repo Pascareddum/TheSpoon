@@ -9,8 +9,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 /**
- * @author Jacopo Gennato Esposito
  * Classe che rappresenta una richiesta di registrazione indirizzata al sottosistema di login
+ * @author Jacopo Gennaro Esposito
  * */
 public class SignupRequest {
     @NotNull

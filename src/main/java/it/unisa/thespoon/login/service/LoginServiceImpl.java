@@ -21,9 +21,9 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Impmenta la classe che esplicita i metodi dell'interfaccia di Servizio per
  * il sottosistema di login, che gestice l'autenticazione
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 @RequiredArgsConstructor

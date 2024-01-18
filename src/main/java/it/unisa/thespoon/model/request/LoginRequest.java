@@ -3,8 +3,8 @@ package it.unisa.thespoon.model.request;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * @author Jacopo Gennato Esposito
  * Classe che rappresenta una richiesta di login indirizzata al sottosistema di login
+ * @author Jacopo Gennaro Esposito
  * */
 public class LoginRequest {
 

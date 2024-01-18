@@ -31,6 +31,10 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Jacopo Gennaro Esposito
+ * Classe che implementa il test per la classe Ristorante
+ * */
 @SpringBootTest
 @Transactional
 @DirtiesContext
