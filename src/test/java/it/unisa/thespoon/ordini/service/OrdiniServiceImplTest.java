@@ -71,6 +71,8 @@ public class OrdiniServiceImplTest {
 
         // Then
         assert response.getStatusCode() == HttpStatus.OK;
+        assertEquals(BigDecimal.valueOf(5.50), response.getBody().getTotale());
+        assertEquals(1, response.getBody().getProducts().iterator().next().getQuantita());
     }
 
     /**
