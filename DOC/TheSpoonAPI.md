@@ -95,6 +95,13 @@ There was an internal server error while we were processing your request.
     1. [Insert Prodotto](#1-insert-prodotto)
     1. [Remove Prodotto](#2-remove-prodotto)
     1. [Get Prodotto By ID Prodotto](#3-get-prodotto-by-id-prodotto)
+* [Ordini](#ordini)
+    1. [Inserisci Ordine](#1-inserisci-ordine)
+    1. [Conferma Ordine](#2-conferma-ordine)
+    1. [Get Lista Ordini By ID Ristorante](#3-get-lista-ordini-by-id-ristorante)
+    1. [Get Prodotti By IDOrdine and IDRistorante](#4-get-prodotti-by-idordine-and-idristorante)
+* [Pagamenti](#pagamenti)
+    1. [Pay](#1-pay)
 
 --------
 
@@ -1212,7 +1219,276 @@ URL: http://localhost:8080/prodotto/getProdotto/{id_prodotto}
 
 
 
+## Ordini
+
+The following methods are related to the Ordini subsystem and contain endpoints for inserting, and retrieving data orders.
+
+These endpoints are crucial for managing orders data stored within TheSpoon's services.
+
+
+
+### 1. Inserisci Ordine
+
+
+This endpoint allows users to add an order to a restautant.
+
+### Params
+
+The numeroTavolo is optional.
+
+| Name | Type | Description |
+| --- | --- | --- |
+| ProductsIDs | List(Integer) | List of product IDs to insert in the order |
+| NumeroTavolo | String | The table number of the restaurant |
+| ChatID | Integer | The ChatID of the conversation between the User and TheSpoonBot |
+| IdRistorante | Integer | The Restaurant's ID at which the user is placing the order |
+| Tipologia | Integer | Type of order: 0 Takeaway, 1 At table |
+
+### Response
+
+200 OK
+
+``` json
+{
+    "idordine": 48,
+    "tipologia": 0,
+    "quantita": null,
+    "idristorante": 16,
+    "nr_Tavolo": "20",
+    "totale": 5.50,
+    "stato": 0,
+    "chatId": 111367823,
+    "ora": "13:16:08"
+}
+```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 404 | Not Found | Can't find any restaurant or products with the associated IDs |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: RAW
+URL: http://localhost:8080/ordini/insertOrdine
+```
+
+
+
+***Body:***
+
+```js        
+{
+  "productsIDs": [1],
+  "numeroTavolo": "2",
+  "chatID": 123456789,
+  "idRistorante": 11,
+  "tipologia": 0
+}
+
+```
+
+
+
+### 2. Conferma Ordine
+
+
+This endpoint allows restaurant's owner to confirm an order to their restautant.
+
+### Params
+
+The Order ID as path variable.  
+Authentication token inside the header's authentication field.
+
+Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | Authentication token inside the header's authentication field. |
+| 404 | Not Found | Can't find any product or restaurants with the associated IDs.  <br>The restaurant is not owned by the user that made the request |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: 
+URL: http://localhost:8080/ordini/confermaOrdine/{id_ordine}
+```
+
+
+
+### 3. Get Lista Ordini By ID Ristorante
+
+
+This endpoint allows users to retrieve a list of orders associated with a Ristorante ID
+
+### Params
+
+The Ristorante ID as a path variable.
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+```json  
+[  
+{  
+"idordine": 1,  
+"chatId": 000000000,  
+"stato": 0,  
+"ora": "17:23:48",  
+"totale": 5.50,  
+"nr_Tavolo": null,  
+"tipologia": 0,  
+"quantita": null,  
+"idristorante": 16  
+},  
+{  
+"idordine": 2,  
+"chatId": 00000000,  
+"stato": 0,  
+"ora": "18:37:08",  
+"totale": 0.00,  
+"nr_Tavolo": null,  
+"tipologia": 0,  
+"quantita": null,  
+"idristorante": 16  
+}  
+]
+```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | Authentication token inside the header's authentication field. |
+| 404 | Not Found | Can't find any Ristoratore or Restaurant with the associated IDs.  <br>The restaurant is not owned by the user that made the request |
+
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/ordini/ordiniByRistorante/16
+```
+
+
+
+### 4. Get Prodotti By IDOrdine and IDRistorante
+
+
+This endpoint allows users to retrieve a list of products associated with a Ordine ID and a Restaurant ID
+
+### Params
+
+The Ordine ID as a path variable.  
+The Restaurant ID as a path variable.  
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+``` json
+[
+    {
+        "id": 5,
+        "prezzo": 5.5,
+        "nome": "Bubble Tea The Verde",
+        "quantita": 2,
+        "descrizione": "Bubble Tea, gusto the verde con palline di tapioca"
+    },
+    {
+        "id": 4,
+        "prezzo": 5.5,
+        "nome": "Pizza Fritta con cicoli",
+        "quantita": 1,
+        "descrizione": "Pizza fritta con pomodoro, mozzarella, ricotta, cicoli e doppio olio"
+    },
+    {
+        "id": 6,
+        "prezzo": 7.49,
+        "nome": "Bubble Tea The Verde Grande",
+        "quantita": 1,
+        "descrizione": "Bubble Tea, gusto the verde con palline di tapioca, grande"
+    }
+]
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | Authentication token inside the header's authentication field. |
+| 404 | Not Found | Can't find any Ristoratore or Restaurant with the associated IDs.  <br>The restaurant is not owned by the user that made the request  <br>Can't find any Order associated with the restaurant |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/ordini/prodottiByIdRisAndIdOrd/{id_ristorante}/{id_ordine}
+```
+
+
+
+## Pagamenti
+
+The following methods are related to the Pagamenti subsystem and contain endpoints for paying orders using Stripe Checkout API.
+
+These endpoints are crucial for paying orders within TheSpoon's services.
+
+
+
+### 1. Pay
+
+
+This endpoint allows users to pay their order, 
+
+### Params
+
+The Ordine ID as a path variable.  
+The Restaurant ID as a path variable.  
+
+### Response
+
+200 OK
+Session ID String used by Stripe Checkout API
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 404 | Not Found | Can't find any Restaurant with the associated IDs. <br>Can't find any Order associated with the restaurant |
+| 500 | Internal Server Error | Error within Stripe Checkout API |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: 
+URL: http://localhost:8080/pagamenti/pay/{id_ordine}/{id_ristorante}
+```
+
+
+
 ---
 [Back to top](#thespoonapi)
 
->Generated at 2024-01-14 23:48:51 by [docgen](https://github.com/thedevsaddam/docgen)
+>Generated at 2024-01-18 20:16:18 by [docgen](https://github.com/thedevsaddam/docgen)

@@ -75,7 +75,7 @@ public class OrdiniServiceImpl implements OrdiniService{
             Optional<Prodotto> newProdotto = prodottoService.getProdotto(product);
 
             if(newProdotto.isEmpty())
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             else {
                 prodotto = newProdotto.get();
             }
