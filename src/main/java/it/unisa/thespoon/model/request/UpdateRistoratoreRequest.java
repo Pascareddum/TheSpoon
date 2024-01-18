@@ -10,8 +10,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 /**
- * @author Jacopo Gennato Esposito
  * Classe che rappresenta una richiesta di modifica dati personali indirizzata al sottosistema Dashboard Personale
+ * @author Jacopo Gennaro Esposito
  * */
 public class UpdateRistoratoreRequest {
 

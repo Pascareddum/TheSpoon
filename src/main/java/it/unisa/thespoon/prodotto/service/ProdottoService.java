@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 
 /**
- @author Jacopo Gennaro Esposito
  Interfaccia per i metodi del sottosistema Prodotto
+ @author Jacopo Gennaro Esposito
  **/
 public interface ProdottoService {
     ResponseEntity<HttpStatus> insertProdotto(InsertProdottoRequest insertProdottoRequest);

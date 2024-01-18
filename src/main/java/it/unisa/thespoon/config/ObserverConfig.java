@@ -8,13 +8,13 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+
 /**
  * Configuration class per la gestione centralizzata degli
  * observer.
  * Configura e registra gli observer necessari al momento dell'inizializzazione dell'applicazione.
- *
  * @author Jacopo Gennaro Esposito
- * */
+ */
 @Configuration
 public class ObserverConfig {
 

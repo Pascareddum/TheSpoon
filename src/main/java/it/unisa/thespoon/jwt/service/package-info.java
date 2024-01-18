@@ -1,5 +1,6 @@
 /**
- * @author Jacopo Gennaro Esposito
+ * @author Jacopo Gennaro Esposito */
+/**
 * Package dei service del JWT
  */
 

@@ -1,3 +1,4 @@
+
 package it.unisa.thespoon.dashboardpersonale.controller;
 
 import it.unisa.thespoon.dashboardpersonale.service.DashboardPersonaleService;
@@ -16,8 +17,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Controller contenente gli endpoint delle API di TheSpoon per il sottosistema Dashboard Personale
+ * @author Jacopo Gennaro Esposito
  * */
 @Validated
 @RestController

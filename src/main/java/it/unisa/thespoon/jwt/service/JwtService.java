@@ -17,8 +17,8 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che implementa il "servizio" per l'autenticazione via JWT
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 public class JwtService {

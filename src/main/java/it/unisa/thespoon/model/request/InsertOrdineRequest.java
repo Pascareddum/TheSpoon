@@ -4,6 +4,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
+/**
+ * Classe che rappresenta una richiesta di inserimento ordine
+ * indirizzata al sottosistema ordine
+ * @author Jacopo Gennaro Esposito
+ * */
 public class InsertOrdineRequest {
 
     @NotNull

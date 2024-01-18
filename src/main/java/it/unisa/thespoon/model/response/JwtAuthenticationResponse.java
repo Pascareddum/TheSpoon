@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author Jacopo Gennato Esposito
  * Classe che rappresenta una response JWTAuthentication
+ * @author Jacopo Gennaro Esposito
  * */
 @Data
 @Builder

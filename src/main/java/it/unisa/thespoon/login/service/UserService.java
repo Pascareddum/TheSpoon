@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che implementa i metodi per recuperare i dettagli dell'utente e salvare l'utente nel DB
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 @RequiredArgsConstructor

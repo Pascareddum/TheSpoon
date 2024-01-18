@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che rappresenta l'entit&agrave; prodotto di TheSpoon
+ * @author Jacopo Gennaro Esposito
  * */
 
 @Setter

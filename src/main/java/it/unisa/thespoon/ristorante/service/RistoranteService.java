@@ -12,8 +12,8 @@ import org.springframework.security.core.Authentication;
 import java.util.Set;
 
 /**
- @author Jacopo Gennaro Esposito
  Interfaccia per i metodi del sottosistema ristorante
+ @author Jacopo Gennaro Esposito
  **/
 public interface RistoranteService {
 

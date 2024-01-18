@@ -13,6 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller contenente gli endpoint delle API di TheSpoon per il sottosistema Pagamento
+ *  @author Jacopo Gennaro Esposito
+ * */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pagamenti")

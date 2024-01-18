@@ -23,6 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ *
+ * Classe che implementa i metodi del sottosistema Pagamento
+ * @author Jacopo Gennaro Esposito
+ */
 @Service
 @RequiredArgsConstructor
 public class PagamentiServiceImpl implements PagamentiService {

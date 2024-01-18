@@ -3,8 +3,8 @@ package it.unisa.thespoon.exceptionhandler;
 import lombok.NoArgsConstructor;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che implementa l'eccezione UserAlreadyExists
+ * @author Jacopo Gennaro Esposito
  * */
 @NoArgsConstructor
 public class UserAlreadyExistsException extends Exception{

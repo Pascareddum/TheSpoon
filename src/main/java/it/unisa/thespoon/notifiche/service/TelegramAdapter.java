@@ -1,9 +1,8 @@
 package it.unisa.thespoon.notifiche.service;
 
 /**
- * @author Jacopo Gennaro Esposito
- *
  * Adapter per le API di Telegram
+ * @author Jacopo Gennaro Esposito
  */
 public interface TelegramAdapter {
 

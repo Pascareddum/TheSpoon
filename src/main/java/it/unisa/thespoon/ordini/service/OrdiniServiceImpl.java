@@ -26,7 +26,11 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.*;
 
-
+/**
+ *
+ * Classe che implementa i metodi del sottosistema Prodotto
+ * @author Jacopo Gennaro Esposito
+ */
 @Service
 @RequiredArgsConstructor
 public class OrdiniServiceImpl implements OrdiniService{

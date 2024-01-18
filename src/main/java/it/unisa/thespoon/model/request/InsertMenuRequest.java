@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
- * @author Jacopo Gennato Esposito
  * Classe che rappresenta una richiesta di inserimento menu
  * indirizzata al sottosistema ristorante
+ * @author Jacopo Gennaro Esposito
  * */
 public class InsertMenuRequest {
 

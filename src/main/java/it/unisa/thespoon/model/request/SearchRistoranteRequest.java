@@ -4,6 +4,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
+/**
+ * Classe che rappresenta una richiesta di ricerca ristoranti
+ * indirizzata al sottosistema ristorante
+ * @author Jacopo Gennaro Esposito
+ * */
 @Getter
 public class SearchRistoranteRequest {
 

@@ -16,9 +16,9 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Impmenta la classe che esplicita i metodi dell'interfaccia di Servizio per
  * il sottosistema ristorante, che gestice tutti gli aspetti inerenti i ristoranti
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 @RequiredArgsConstructor

@@ -9,8 +9,10 @@ abstract class ApiSubError {
 }
 
 /**
+ *
+ * Classe che estende ApiSubError e rappresenta gli erorri di validazione incontrati durante le chiamate REST
  * @author Jacopo Gennaro Esposito
- * Classe che estende ApiSubError e rappresenta gli erorri di validazione incontrati durante le chiamate REST */
+ * */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor

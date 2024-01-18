@@ -7,9 +7,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * @author Jacopo Gennaro Esposito
  *
  * Bean del BCryptPasswordEncoder usato dai servizi di autenticazione
+ *
+ * @author Jacopo Gennaro Esposito
  * */
 @Configuration
 @NoArgsConstructor

@@ -9,8 +9,8 @@ import java.nio.charset.StandardCharsets;
 
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che rappresenta un UrlBuilder per la API SendMessage di Telegram
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 public class TelegramApiUrlBuilder {

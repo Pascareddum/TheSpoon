@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Implementa la classe che esplicita i metodi dell'interfaccia di Servizio per
  * il sottosistema prodotto, che gestice i singoli prodotti
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 @RequiredArgsConstructor

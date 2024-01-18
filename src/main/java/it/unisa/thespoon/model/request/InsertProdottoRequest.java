@@ -7,9 +7,9 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 /**
- * @author Jacopo Gennato Esposito
  * Classe che rappresenta una richiesta di inserimento prodotto
  * indirizzata al sottosistema prodotto
+ * @author Jacopo Gennaro Esposito
  * */
 public class InsertProdottoRequest {
 

@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- @author Jacopo Gennaro Esposito
- Interfaccia per i metodi del sottosistema Prodotto
- **/
+ *
+ * Interfaccia per i metodi del sottosistema Prodotto
+ * @author Jacopo Gennaro Esposito
+ */
 public interface OrdiniService {
 
      /**

@@ -6,10 +6,10 @@ import it.unisa.thespoon.notifiche.service.TelegramAdapter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * @author Jacopo Gennaro Esposito
  * OrdineObserver che costituisce il Subscriber, dichiara il metodo
  * onOrdineStatoChanged che permette di passare i dettagli dell'evento (l'ordine)
  * da notificare.
+ * @author Jacopo Gennaro Esposito
  */
 @RequiredArgsConstructor
 public class OrdineStatoObserver implements OrdineObserver{

@@ -25,8 +25,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che implementa il "filtro" per l'autenticazione via JWT
+ * @author Jacopo Gennaro Esposito
  * */
 @Component
 @RequiredArgsConstructor

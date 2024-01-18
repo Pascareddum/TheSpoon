@@ -1,5 +1,6 @@
 /**
- * @author Jacopo Gennaro Esposito
+ * @author Jacopo Gennaro Esposito */
+/**
  * Package contenente le classi request del sistema
  * */
 

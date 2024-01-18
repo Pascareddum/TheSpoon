@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
+ Interfaccia per i metodi del sottosistema Pagamento
  @author Jacopo Gennaro Esposito
- Interfaccia per i metodi del sottosistema Prodotto
  **/
 public interface PagamentiService {
 

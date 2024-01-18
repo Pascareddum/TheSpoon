@@ -5,8 +5,8 @@ import it.unisa.thespoon.model.response.JwtAuthenticationResponse;
 import it.unisa.thespoon.model.request.LoginRequest;
 
 /**
-@author Jacopo Gennaro Esposito
 Interfaccia per i metodi del sottosistema di login
+ @author Jacopo Gennaro Esposito
  **/
 public interface LoginService {
 

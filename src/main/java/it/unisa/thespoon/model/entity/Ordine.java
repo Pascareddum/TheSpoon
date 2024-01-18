@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che rappresenta l'entit&agrave; ordini di TheSpoon
+ * @author Jacopo Gennaro Esposito
  * */
 
 @Setter

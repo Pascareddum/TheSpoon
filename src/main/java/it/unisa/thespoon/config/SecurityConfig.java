@@ -1,3 +1,5 @@
+
+
 package it.unisa.thespoon.config;
 
 import it.unisa.thespoon.filters.JwtAuthenticationFilter;
@@ -25,9 +27,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 /**
- * @author Jacopo Gennaro Esposito
- *
  * Configuration File per Spring Security, framework spring per gestire l'accesso alle API
+ * @author Jacopo Gennaro Esposito
  * */
 @Configuration
 @EnableWebSecurity

@@ -21,9 +21,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Classe che implementa il RestExceptionHandler, ovvero l'handler che gestisce tutte le eccezioni generate dalle
  * chiamate alle API
+ *  @author Jacopo Gennaro Esposito
  * */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice

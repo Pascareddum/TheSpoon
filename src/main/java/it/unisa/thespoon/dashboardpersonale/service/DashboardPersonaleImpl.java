@@ -17,9 +17,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Implementa la classe che esplicita i metodi dell'interfaccia di Servizio per
  * il sottosistema DashboardPersonale, che gestice l'area utente del ristoratore
+ * @author Jacopo Gennaro Esposito
  * */
 @Service
 @RequiredArgsConstructor

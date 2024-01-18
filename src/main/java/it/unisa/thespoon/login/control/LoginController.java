@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
- * @author Jacopo Gennaro Esposito
  * Controller contenente gli endpoint delle API di TheSpoon per il sottosistema di login
+ * @author Jacopo Gennaro Esposito
  * */
 @Validated
 @RestController

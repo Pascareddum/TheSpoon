@@ -6,6 +6,10 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * Adapter per le API di Telegram
+ * @author Jacopo Gennaro Esposito
+ */
 @Service
 public class TelegramAdapterImpl implements TelegramAdapter{
     private final TelegramApiUrlBuilder telegramApiUrlBuilder;

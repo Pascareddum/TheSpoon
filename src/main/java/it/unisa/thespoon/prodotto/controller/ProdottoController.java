@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 /**
- * @author Jacopo Gennaro Esposito
  * Controller contenente gli endpoint delle API di TheSpoon per il sottosistema Prodotto
+ * @author Jacopo Gennaro Esposito
  * */
 
 @Validated
