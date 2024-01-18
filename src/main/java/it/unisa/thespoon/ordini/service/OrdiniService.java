@@ -60,4 +60,6 @@ public interface OrdiniService {
      * @return Ordine
      */
     Optional<Ordine> getOrdineByIdOrdinedAndIdRistorante(Integer idOrdine, Integer idRistorante);
+
+    void setStato(Byte stato, Ordine ordine);
 }

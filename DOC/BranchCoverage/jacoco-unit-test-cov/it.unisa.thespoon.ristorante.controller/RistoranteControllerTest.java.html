@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RistoranteControllerTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TestAll Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.unisa.thespoon.ristorante.controller</a> &gt; <span class="el_source">RistoranteControllerTest.java</span></div><h1>RistoranteControllerTest.java</h1><pre class="source lang-java linenums">package it.unisa.thespoon.ristorante.controller;
+
+import it.unisa.thespoon.dashboardpersonale.service.DashboardPersonaleService;
+import it.unisa.thespoon.exceptionhandler.RestExceptionHandler;
+import it.unisa.thespoon.jwt.service.JwtService;
+import it.unisa.thespoon.login.service.UserService;
+import it.unisa.thespoon.model.dao.*;
+import it.unisa.thespoon.model.entity.*;
+import it.unisa.thespoon.prodotto.service.ProdottoService;
+import it.unisa.thespoon.ristorante.service.RistoranteServiceImpl;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+/**
+ * @author Jacopo Gennaro Esposito
+ * La classe si occupa di testare gli enpoint delle API del
+ * sottosistema ristorante
+ * */
+@SpringBootTest
+@AutoConfigureMockMvc
+@Transactional
+@Rollback
+@Import(RestExceptionHandler.class)
+@ExtendWith(MockitoExtension.class)
+<span class="fc" id="L54">class RistoranteControllerTest {</span>
+
+    @Autowired
+    private RistoranteController ristoranteController;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private RistoranteDAO ristoranteDAO;
+
+    @Autowired
+    private MenuDAO menuDAO;
+
+    @Autowired
+    private TavoloDAO tavoloDAO;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RistoratoreDAO ristoratoreDAO;
+
+    @Autowired
+    private ProdottoDAO prodottoDAO;
+
+    @Autowired
+    private ProdottoService prodottoService;
+
+    @Mock
+    private DashboardPersonaleService dashboardPersonaleService;
+
+    private RistoranteController underTest;
+
+    @Autowired
+    MockMvc mockMvc;
+
+    private Set&lt;Ristoratore&gt; RisSet;
+
+    private Set&lt;Ristorante&gt; Ristoranti;
+
+    private Set&lt;Tavolo&gt; Tables;
+
+    private Set&lt;Menu&gt; Menus;
+
+
+    @BeforeEach
+    void setUp() {
+<span class="fc" id="L102">        RisSet = new HashSet&lt;Ristoratore&gt;();</span>
+<span class="fc" id="L103">        Ristoranti = new HashSet&lt;Ristorante&gt;();</span>
+<span class="fc" id="L104">        Tables = new HashSet&lt;Tavolo&gt;();</span>
+<span class="fc" id="L105">        Menus = new HashSet&lt;Menu&gt;();</span>
+<span class="fc" id="L106">        this.underTest = new RistoranteController(new RistoranteServiceImpl(ristoranteDAO, menuDAO, tavoloDAO, dashboardPersonaleService, prodottoService));</span>
+<span class="fc" id="L107">    }</span>
+
+    @AfterEach
+    void tearDown() {
+<span class="fc" id="L111">        ristoranteDAO.deleteAll();</span>
+<span class="fc" id="L112">        ristoratoreDAO.deleteAll();</span>
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * Testa l'endpoint di inserimento ristorante effettuando una richiesta con
+     * parametri validi
+     * */
+    @Test
+    void insertRistorante() throws Exception {
+        //Given
+<span class="fc" id="L122">        Ristoratore ristoratore = new Ristoratore(1, &quot;KimDami98&quot;, &quot;Jacopo&quot;</span>
+<span class="fc" id="L123">                , &quot;Espsosito&quot;, &quot;shen@yue.it&quot;, &quot;3510857328&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+<span class="fc" id="L124">        userService.save(ristoratore);</span>
+
+<span class="fc" id="L126">        var tokenString = jwtService.generateToken(ristoratore);</span>
+
+<span class="fc" id="L128">        String jsonString = &quot;{ \&quot;nome\&quot;: \&quot;LinCal Bakery\&quot;,&quot; +</span>
+                &quot; \&quot;n_Civico\&quot;: \&quot;2\&quot;, &quot; +
+                &quot;\&quot;cap\&quot;: 80049, &quot; +
+                &quot;\&quot;via\&quot;: \&quot;Xipu Street, Pidu District\&quot;, &quot; +
+                &quot;\&quot;provincia\&quot;: \&quot;CD\&quot;, &quot; +
+                &quot;\&quot;telefono\&quot;: \&quot;00393331005060\&quot; }&quot;;
+
+<span class="fc" id="L135">        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(&quot;/ristorante/insertRistorante&quot;)</span>
+<span class="fc" id="L136">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L137">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L138">                .content(jsonString)</span>
+<span class="fc" id="L139">                .characterEncoding(&quot;utf-8&quot;)</span>
+<span class="fc" id="L140">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L143">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L146">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L147">    }</span>
+
+    /**
+     * Testa l'endpoint di getRistorante tramite id effettuando una richiesta con
+     * parametri validi
+     * */
+    @Test
+    void getRistorante() throws Exception {
+<span class="fc" id="L155">        Ristorante ristorante = new Ristorante(10, &quot;Pizzeria Tuino&quot;, &quot;12&quot;, 80056, &quot;Via E Caianiello&quot;, &quot;SA&quot;, &quot;003930090004356&quot;, null);</span>
+
+<span class="fc" id="L157">        ristoranteDAO.save(ristorante);</span>
+
+<span class="fc" id="L159">        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(&quot;/ristorante/getRistorante/{idRistorante}&quot;, ristorante.getId())</span>
+<span class="fc" id="L160">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L163">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L166">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L167">    }</span>
+
+
+    /**
+     * Testa l'endpoint di getRistoranti associati ad un ristoratore effettuando una richiesta con
+     * parametri validi
+     * */
+    @Test
+    void getAllRistorantiByRistoratore() throws Exception {
+<span class="fc" id="L176">        Ristoratore ristoratore = new Ristoratore(1, &quot;KimDami98&quot;, &quot;Jacopo&quot;</span>
+<span class="fc" id="L177">                , &quot;Espsosito&quot;, &quot;shen@yue.it&quot;, &quot;3510857328&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+
+
+<span class="fc" id="L180">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Tuino&quot;, &quot;12&quot;, 80056, &quot;Via E Caianiello&quot;, &quot;SA&quot;, &quot;003930090004356&quot;, RisSet);</span>
+
+<span class="fc" id="L182">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L183">        ristoratore.getRistoranti().add(ristorante);</span>
+
+<span class="fc" id="L185">        userService.save(ristoratore);</span>
+
+<span class="fc" id="L187">        var tokenString = jwtService.generateToken(ristoratore);</span>
+
+<span class="fc" id="L189">        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(&quot;/ristorante/restaurantsList/{idRistoratore}&quot;, ristoratore.getId())</span>
+<span class="fc" id="L190">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L191">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L192">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L195">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L198">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+
+<span class="fc" id="L200">    }</span>
+
+    /**
+     * Testa l'endpoint di modifica dati di un ristorante effettuando una richiesta con
+     * parametri validi
+     * */
+    @Test
+    void updateRistorante() throws Exception {
+<span class="fc" id="L208">        Ristoratore ristoratore = new Ristoratore(1, &quot;KimDami98&quot;, &quot;Jacopo&quot;</span>
+<span class="fc" id="L209">                , &quot;Espsosito&quot;, &quot;shen@yue.it&quot;, &quot;3510857328&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+
+
+<span class="fc" id="L212">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Tuino&quot;, &quot;12&quot;, 80056, &quot;Via E Caianiello&quot;, &quot;SA&quot;, &quot;003930090004356&quot;, RisSet);</span>
+
+<span class="fc" id="L214">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L215">        ristoratore.getRistoranti().add(ristorante);</span>
+
+<span class="fc" id="L217">        userService.save(ristoratore);</span>
+
+<span class="fc" id="L219">        var tokenString = jwtService.generateToken(ristoratore);</span>
+
+<span class="fc" id="L221">        String jsonString = &quot;{ \&quot;nome\&quot;: \&quot;Prova Cambio\&quot; }&quot;;</span>
+
+<span class="fc" id="L223">        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(&quot;/ristorante/updateRistorante/{idRistorante}&quot;, ristorante.getId())</span>
+<span class="fc" id="L224">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L225">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L226">                .content(jsonString)</span>
+<span class="fc" id="L227">                .characterEncoding(&quot;utf-8&quot;)</span>
+<span class="fc" id="L228">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L231">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L234">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L235">    }</span>
+
+    /**
+     * Testa l'endpoint per aggiungere un menu ad un ristorante effetuando una
+     * richiesta con parametri validi
+     * */
+    @Test
+    void AddMenu() throws Exception {
+<span class="fc" id="L243">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Civico 7&quot;, &quot;7A&quot;, 84084, &quot;Giovanni De Martino&quot;, &quot;SA&quot;, &quot;3339001212&quot;, RisSet, Menus, Tables);</span>
+<span class="fc" id="L244">        Ristoratore proprietario = new Ristoratore(1, &quot;ShenYuePass&quot;, &quot;Yue&quot;, &quot;Shen&quot;, &quot;shen@yue.it&quot;, &quot;0000000000&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+
+<span class="fc" id="L246">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L247">        proprietario.getRistoranti().add(ristorante);</span>
+
+<span class="fc" id="L249">        userService.save(proprietario);</span>
+
+<span class="fc" id="L251">        var tokenString = jwtService.generateToken(proprietario);</span>
+
+<span class="fc" id="L253">        String json = String.format(&quot;{\&quot;nome\&quot;: \&quot;Menu alla carta\&quot;, \&quot;descrizione\&quot;: \&quot;Pay as you eat\&quot;, \&quot;idRistorante\&quot;: %d}&quot;, ristorante.getId());</span>
+
+<span class="fc" id="L255">        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(&quot;http://localhost:8080/ristorante/insertMenu&quot;)</span>
+<span class="fc" id="L256">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L257">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L258">                .content(json)</span>
+<span class="fc" id="L259">                .characterEncoding(&quot;utf-8&quot;)</span>
+<span class="fc" id="L260">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L263">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L266">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L267">    }</span>
+
+    /**
+     * Testa l'endpoint per aggiungere un prodotto al Menu effettuando una richiesta con
+     * parametri validi
+     */
+    @Test
+    void addProductToMenu() throws Exception {
+<span class="fc" id="L275">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Civico 7&quot;, &quot;7A&quot;, 84084, &quot;Giovanni De Martino&quot;, &quot;SA&quot;, &quot;3339001212&quot;, RisSet, Menus, Tables);</span>
+<span class="fc" id="L276">        Ristoratore proprietario = new Ristoratore(1, &quot;ShenYuePass&quot;, &quot;Yue&quot;, &quot;Shen&quot;, &quot;shen@yue.it&quot;, &quot;0000000000&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+<span class="fc" id="L277">        Prodotto newProdotto = new Prodotto(1, &quot;Pizza&quot;, &quot;Pizza Fritta&quot;, new BigDecimal(3.30), Menus);</span>
+<span class="fc" id="L278">        Menu newMenu = new Menu(1, &quot;Menu Pizzeria&quot;, &quot;Menu Pizzeria&quot;, new HashSet&lt;Prodotto&gt;(), ristorante);</span>
+
+<span class="fc" id="L280">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L281">        Prodotto pro = prodottoDAO.save(newProdotto);</span>
+<span class="fc" id="L282">        newMenu.setRistorante(ristorante);</span>
+<span class="fc" id="L283">        Menu menu = menuDAO.save(newMenu);</span>
+
+<span class="fc" id="L285">        proprietario.getRistoranti().add(ristorante);</span>
+<span class="fc" id="L286">        ristorante.getMenus().add(newMenu);</span>
+
+<span class="fc" id="L288">        Ristorante ris = ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L289">        userService.save(proprietario);</span>
+
+<span class="fc" id="L291">        var tokenString = jwtService.generateToken(proprietario);</span>
+
+<span class="fc" id="L293">        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(&quot;/ristorante/addProductToMenu/{idMenu}/{idProdotto}/{idRistorante}&quot;, menu.getId(), pro.getId(), ristorante.getId())</span>
+<span class="fc" id="L294">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L295">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L296">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L299">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L302">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L303">    }</span>
+
+    /** Testa l'endpoint di rimozione di un prodotto dal menu
+     * effettuando una richiesta con parametri validi
+     */
+    @Test
+    void removeProductFromMenu() throws Exception {
+<span class="fc" id="L310">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Civico 7&quot;, &quot;7A&quot;, 84084, &quot;Giovanni De Martino&quot;, &quot;SA&quot;, &quot;3339001212&quot;, RisSet, Menus, Tables);</span>
+<span class="fc" id="L311">        Ristoratore proprietario = new Ristoratore(1, &quot;ShenYuePass&quot;, &quot;Yue&quot;, &quot;Shen&quot;, &quot;shen@yue.it&quot;, &quot;0000000000&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+<span class="fc" id="L312">        Prodotto newProdotto = new Prodotto(1, &quot;Pizza&quot;, &quot;Pizza Fritta&quot;, new BigDecimal(3.30), Menus);</span>
+<span class="fc" id="L313">        Menu newMenu = new Menu(1, &quot;Menu Pizzeria&quot;, &quot;Menu Pizzeria&quot;, new HashSet&lt;Prodotto&gt;(), ristorante);</span>
+
+<span class="fc" id="L315">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L316">        prodottoDAO.save(newProdotto);</span>
+<span class="fc" id="L317">        newMenu.setRistorante(ristorante);</span>
+<span class="fc" id="L318">        Menu menu = menuDAO.save(newMenu);</span>
+
+
+<span class="fc" id="L321">        proprietario.getRistoranti().add(ristorante);</span>
+<span class="fc" id="L322">        ristorante.getMenus().add(newMenu);</span>
+<span class="fc" id="L323">        newProdotto.getContained().add(newMenu);</span>
+
+
+<span class="fc" id="L326">        Ristorante ris = ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L327">        Prodotto np = prodottoDAO.save(newProdotto);</span>
+<span class="fc" id="L328">        userService.save(proprietario);</span>
+
+<span class="fc" id="L330">        var tokenString = jwtService.generateToken(proprietario);</span>
+
+<span class="fc" id="L332">        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(&quot;/ristorante/removeProductMenu/{idMenu}/{idProdotto}/{idRistorante}&quot;, menu.getId(), np.getId(), ristorante.getId())</span>
+<span class="fc" id="L333">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L334">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L335">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L338">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L341">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L342">    }</span>
+
+    /** Testa l'endpoint per ottenere i menu associati ad un ristorante
+     * effettuando una richiesta con parametri validi
+     */
+    @Test
+    void getMenusByRestaurantID() throws Exception {
+<span class="fc" id="L349">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Civico 7&quot;, &quot;7A&quot;, 84084, &quot;Giovanni De Martino&quot;, &quot;SA&quot;, &quot;3339001212&quot;, RisSet, Menus, Tables);</span>
+<span class="fc" id="L350">        Ristoratore proprietario = new Ristoratore(1, &quot;ShenYuePass&quot;, &quot;Yue&quot;, &quot;Shen&quot;, &quot;shen@yue.it&quot;, &quot;0000000000&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+<span class="fc" id="L351">        Prodotto newProdotto = new Prodotto(1, &quot;Pizza&quot;, &quot;Pizza Fritta&quot;, new BigDecimal(3.30), Menus);</span>
+<span class="fc" id="L352">        Menu newMenu = new Menu(1, &quot;Menu Pizzeria&quot;, &quot;Menu Pizzeria&quot;, new HashSet&lt;Prodotto&gt;(), ristorante);</span>
+
+<span class="fc" id="L354">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L355">        prodottoDAO.save(newProdotto);</span>
+<span class="fc" id="L356">        newMenu.setRistorante(ristorante);</span>
+<span class="fc" id="L357">        Menu menu = menuDAO.save(newMenu);</span>
+
+
+<span class="fc" id="L360">        proprietario.getRistoranti().add(ristorante);</span>
+<span class="fc" id="L361">        ristorante.getMenus().add(newMenu);</span>
+<span class="fc" id="L362">        newProdotto.getContained().add(newMenu);</span>
+
+
+<span class="fc" id="L365">        Ristorante ris = ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L366">        Prodotto np = prodottoDAO.save(newProdotto);</span>
+<span class="fc" id="L367">        userService.save(proprietario);</span>
+
+<span class="fc" id="L369">        var tokenString = jwtService.generateToken(proprietario);</span>
+
+<span class="fc" id="L371">        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(&quot;/ristorante/getMenuByIDRistorante/{idRistorante}&quot;, ristorante.getId())</span>
+<span class="fc" id="L372">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L373">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L374">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L377">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L380">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L381">    }</span>
+
+    /**
+     * Testa l'endpoint per ottenere i dettagli di un menu dato il suo id
+     * effettuando una richiesta con parametri validi
+     */
+    @Test
+    void getMenuByID() throws Exception {
+<span class="fc" id="L389">        Ristorante ristorante = new Ristorante(3, &quot;Pizzeria Civico 7&quot;, &quot;7A&quot;, 84084, &quot;Giovanni De Martino&quot;, &quot;SA&quot;, &quot;3339001212&quot;, RisSet, Menus, Tables);</span>
+<span class="fc" id="L390">        Menu newMenu = new Menu(3, &quot;Menu Pizzeria&quot;, &quot;Menu Pizzeria&quot;, new HashSet&lt;Prodotto&gt;(), ristorante);</span>
+
+<span class="fc" id="L392">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L393">        newMenu.setRistorante(ristorante);</span>
+<span class="fc" id="L394">        Menu menu = menuDAO.save(newMenu);</span>
+
+<span class="fc" id="L396">        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(&quot;/ristorante/getMenuByID/{idMenu}&quot;, menu.getId())</span>
+<span class="fc" id="L397">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L398">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L401">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L404">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L405">    }</span>
+
+    /**
+     * Testa la funzionalità per aggiungere un tavolo ad un ristorante
+     */
+    @Test
+    void insertTavolo() throws Exception {
+<span class="fc" id="L412">        Ristoratore ristoratore = new Ristoratore(1, &quot;ShenYuePass&quot;, &quot;Yue&quot;, &quot;Shen&quot;, &quot;shen@yue.it&quot;, &quot;0000000000&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+<span class="fc" id="L413">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Civico 7&quot;, &quot;7A&quot;, 84084, &quot;Giovanni De Martino&quot;, &quot;SA&quot;, &quot;3339001212&quot;, RisSet, Menus, Tables);</span>
+
+<span class="fc" id="L415">        ristoratore.getRistoranti().add(ristorante);</span>
+<span class="fc" id="L416">        userService.save(ristoratore);</span>
+<span class="fc" id="L417">        ristoranteDAO.save(ristorante);</span>
+
+<span class="fc" id="L419">        var tokenString = jwtService.generateToken(ristoratore);</span>
+
+<span class="fc" id="L421">        String json = String.format(&quot;{\&quot;numeroTavolo\&quot;: \&quot;2\&quot;, \&quot;stato\&quot;: \&quot;0\&quot;, \&quot;capacita\&quot;: 4, \&quot;idRistorante\&quot;: %d}&quot;, ristorante.getId());</span>
+
+<span class="fc" id="L423">        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(&quot;/ristorante/insertTavolo&quot;)</span>
+<span class="fc" id="L424">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L425">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L426">                .content(json)</span>
+<span class="fc" id="L427">                .characterEncoding(&quot;utf-8&quot;)</span>
+<span class="fc" id="L428">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L431">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L434">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+
+<span class="fc" id="L436">    }</span>
+
+    /**
+     * Testa l'endpoint per ottenere la lista di prodotti
+     * associati ad un menu dato il suo ID, effettuando una richiesta con parametri validi
+     */
+    @Test
+    void prodottiByIDMenu() throws Exception {
+<span class="fc" id="L444">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Civico 7&quot;, &quot;7A&quot;, 84084, &quot;Giovanni De Martino&quot;, &quot;SA&quot;, &quot;3339001212&quot;, RisSet, Menus, Tables);</span>
+<span class="fc" id="L445">        Prodotto newProdotto = new Prodotto(1, &quot;Pizza&quot;, &quot;Pizza Fritta&quot;, new BigDecimal(3.30), Menus);</span>
+<span class="fc" id="L446">        Menu newMenu = new Menu(1, &quot;Menu Pizzeria&quot;, &quot;Menu Pizzeria&quot;, new HashSet&lt;Prodotto&gt;(), ristorante);</span>
+
+<span class="fc" id="L448">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L449">        prodottoDAO.save(newProdotto);</span>
+<span class="fc" id="L450">        newMenu.setRistorante(ristorante);</span>
+<span class="fc" id="L451">        newMenu.getProdottiMenu().add(newProdotto);</span>
+<span class="fc" id="L452">        Menu menu = menuDAO.save(newMenu);</span>
+
+
+<span class="fc" id="L455">        ristorante.getMenus().add(newMenu);</span>
+<span class="fc" id="L456">        newProdotto.getContained().add(newMenu);</span>
+
+
+<span class="fc" id="L459">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L460">        prodottoDAO.save(newProdotto);</span>
+
+<span class="fc" id="L462">        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(&quot;/ristorante/getProdottiByIDMenu/{idMenu}&quot;, menu.getId())</span>
+<span class="fc" id="L463">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L464">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L467">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L470">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L471">    }</span>
+
+    /**
+     * Testa l'endpoint per recuperare i tavoli associati ad un ristorante
+     * effettuando una richiesta con parametri validi.
+     */
+    @Test
+    void TavoliRistorante() throws Exception {
+<span class="fc" id="L479">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Civico 7&quot;, &quot;7A&quot;, 84084, &quot;Giovanni De Martino&quot;, &quot;SA&quot;, &quot;3339001212&quot;, RisSet, Menus, Tables);</span>
+<span class="fc" id="L480">        Tavolo tavolo = new Tavolo(&quot;1&quot;, null, 2, ristorante);</span>
+
+<span class="fc" id="L482">        ristorante.getTables().add(tavolo);</span>
+<span class="fc" id="L483">        ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L484">        tavoloDAO.save(tavolo);</span>
+
+<span class="fc" id="L486">        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(&quot;/ristorante/getTavoliRistorante/{idRistorante}&quot;, ristorante.getId())</span>
+<span class="fc" id="L487">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L488">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L491">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L494">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L495">    }</span>
+
+    /**
+     * Testa l'endpoint per ottenere i dettagli di un tavolo dato il suo ID
+     * effettuando una richiesta con parametri validi
+     */
+    @Test
+    void TavoloByID() throws Exception {
+<span class="fc" id="L503">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Civico 7&quot;, &quot;7A&quot;, 84084, &quot;Giovanni De Martino&quot;, &quot;SA&quot;, &quot;3339001212&quot;, RisSet, Menus, Tables);</span>
+<span class="fc" id="L504">        Tavolo tavolo = new Tavolo(&quot;1&quot;, null, 2, ristorante);</span>
+
+<span class="fc" id="L506">        ristorante.getTables().add(tavolo);</span>
+<span class="fc" id="L507">        Ristorante ris = ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L508">        tavoloDAO.save(tavolo);</span>
+
+<span class="fc" id="L510">        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(&quot;/ristorante/getTavoloById/{idTavolo}/{idRistorante}&quot;, tavolo.getNumeroTavolo(), ris.getId())</span>
+<span class="fc" id="L511">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L512">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L515">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L518">        assertEquals(MockHttpServletResponse.SC_OK, result.getResponse().getStatus());</span>
+<span class="fc" id="L519">    }</span>
+
+    /**
+     * Testa l'endpoint di inserimento ristorante effettuando una richiesta con
+     * una mail non associata nessun ristoratore
+     * */
+    @Test
+    void failInsertRistorante() throws Exception {
+        //Given
+<span class="fc" id="L528">        Ristoratore ristoratore = new Ristoratore(1, &quot;KimDami98&quot;, &quot;Jacopo&quot;</span>
+<span class="fc" id="L529">                , &quot;Espsosito&quot;, &quot;shen@yue.it&quot;, &quot;3510857328&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+
+<span class="fc" id="L531">        var tokenString = jwtService.generateToken(ristoratore);</span>
+
+<span class="fc" id="L533">        String jsonString = &quot;{ \&quot;nome\&quot;: \&quot;LinCal Bakery\&quot;,&quot; +</span>
+                &quot; \&quot;n_Civico\&quot;: \&quot;2\&quot;, &quot; +
+                &quot;\&quot;cap\&quot;: 80049, &quot; +
+                &quot;\&quot;via\&quot;: \&quot;Xipu Street, Pidu District\&quot;, &quot; +
+                &quot;\&quot;provincia\&quot;: \&quot;CD\&quot;, &quot; +
+                &quot;\&quot;telefono\&quot;: \&quot;00393331005060\&quot; }&quot;;
+
+<span class="fc" id="L540">        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(&quot;/ristorante/insertRistorante&quot;)</span>
+<span class="fc" id="L541">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L542">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L543">                .content(jsonString)</span>
+<span class="fc" id="L544">                .characterEncoding(&quot;utf-8&quot;)</span>
+<span class="fc" id="L545">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L548">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L551">        assertEquals(MockHttpServletResponse.SC_UNAUTHORIZED, result.getResponse().getStatus());</span>
+<span class="fc" id="L552">    }</span>
+
+    /**
+     * Testa l'endpoint di modifica dati di un ristorante effettuando una richiesta con
+     * parametri non validi, in particolare il ristoratore non è proprietario del ristorante che si vuole modificare
+     * */
+    @Test
+    void failUpdateRistoranteNotOwner() throws Exception {
+<span class="fc" id="L560">        Ristoratore ristoratore = new Ristoratore(1, &quot;KimDami98&quot;, &quot;Jacopo&quot;</span>
+<span class="fc" id="L561">                , &quot;Espsosito&quot;, &quot;shen@yue.it&quot;, &quot;3510857328&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+
+
+<span class="fc" id="L564">        Ristorante ristorante = new Ristorante(1, &quot;Pizzeria Tuino&quot;, &quot;12&quot;, 80056, &quot;Via E Caianiello&quot;, &quot;SA&quot;, &quot;003930090004356&quot;, RisSet);</span>
+
+<span class="fc" id="L566">        ristoranteDAO.save(ristorante);</span>
+
+<span class="fc" id="L568">        userService.save(ristoratore);</span>
+
+<span class="fc" id="L570">        var tokenString = jwtService.generateToken(ristoratore);</span>
+
+<span class="fc" id="L572">        String jsonString = &quot;{ \&quot;nome\&quot;: \&quot;Prova Cambio\&quot; }&quot;;</span>
+
+<span class="fc" id="L574">        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(&quot;/ristorante/updateRistorante/{idRistorante}&quot;, ristorante.getId())</span>
+<span class="fc" id="L575">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L576">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L577">                .content(jsonString)</span>
+<span class="fc" id="L578">                .characterEncoding(&quot;utf-8&quot;)</span>
+<span class="fc" id="L579">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L582">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L585">        assertEquals(MockHttpServletResponse.SC_NOT_FOUND, result.getResponse().getStatus());</span>
+<span class="fc" id="L586">    }</span>
+
+    /**
+     * Testa l'endpoint di modifica dati di un ristorante effettuando una richiesta con
+     * parametri non validi, in particolare la mail non risulta associata ad un ristoratore
+     * */
+    @Test
+    void failUpdateRistoranteUserNotFound() throws Exception {
+<span class="fc" id="L594">        Ristoratore ristoratore = new Ristoratore(1, &quot;KimDami98&quot;, &quot;Jacopo&quot;</span>
+<span class="fc" id="L595">                , &quot;Espsosito&quot;, &quot;shen@yue.it&quot;, &quot;3510857328&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+
+
+
+<span class="fc" id="L599">        var tokenString = jwtService.generateToken(ristoratore);</span>
+
+<span class="fc" id="L601">        String jsonString = &quot;{ \&quot;nome\&quot;: \&quot;Prova Cambio\&quot; }&quot;;</span>
+
+<span class="fc" id="L603">        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(&quot;/ristorante/updateRistorante/{idRistorante}&quot;, 1)</span>
+<span class="fc" id="L604">                .accept(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L605">                .header(HttpHeaders.AUTHORIZATION, &quot;Bearer &quot; + tokenString)</span>
+<span class="fc" id="L606">                .content(jsonString)</span>
+<span class="fc" id="L607">                .characterEncoding(&quot;utf-8&quot;)</span>
+<span class="fc" id="L608">                .contentType(MediaType.APPLICATION_JSON);</span>
+
+        //When
+<span class="fc" id="L611">        MvcResult result = mockMvc.perform(requestBuilder).andDo(MockMvcResultHandlers.print()).andReturn();</span>
+
+        //Then
+<span class="fc" id="L614">        assertEquals(MockHttpServletResponse.SC_UNAUTHORIZED, result.getResponse().getStatus());</span>
+<span class="fc" id="L615">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

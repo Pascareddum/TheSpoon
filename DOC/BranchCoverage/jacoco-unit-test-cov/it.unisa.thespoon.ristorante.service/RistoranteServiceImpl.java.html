@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RistoranteServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TestAll Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.unisa.thespoon.ristorante.service</a> &gt; <span class="el_source">RistoranteServiceImpl.java</span></div><h1>RistoranteServiceImpl.java</h1><pre class="source lang-java linenums">package it.unisa.thespoon.ristorante.service;
+
+import it.unisa.thespoon.dashboardpersonale.service.DashboardPersonaleService;
+import it.unisa.thespoon.model.dao.MenuDAO;
+import it.unisa.thespoon.model.dao.RistoranteDAO;
+import it.unisa.thespoon.model.dao.TavoloDAO;
+import it.unisa.thespoon.model.entity.*;
+import it.unisa.thespoon.model.request.*;
+import it.unisa.thespoon.prodotto.service.ProdottoService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.Set;
+
+/**
+ * @author Jacopo Gennaro Esposito
+ * Impmenta la classe che esplicita i metodi dell'interfaccia di Servizio per
+ * il sottosistema ristorante, che gestice tutti gli aspetti inerenti i ristoranti
+ * */
+@Service
+<span class="fc" id="L24">@RequiredArgsConstructor</span>
+public class RistoranteServiceImpl implements RistoranteService{
+
+    private final RistoranteDAO ristoranteDAO;
+    private final MenuDAO menuDAO;
+    private final TavoloDAO tavoloDAO;
+    private final DashboardPersonaleService dashboardPersonaleService;
+    private final ProdottoService prodottoService;
+
+    /**
+     * Metodo adibito all'inserimento di un nuovo ristorante
+     *
+     * @param insertRistoranteRequest Oggetto che rappresenta una richiesta di inserimento
+     * @param email Email del ristoratore che effettua la richiesta
+     * @return ResponseEntity HttpStatus Codice di stato HTTP
+     **/
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; insertRistorante(InsertRistoranteRequest insertRistoranteRequest, String email) {
+<span class="fc" id="L42">        Ristoratore ristoratore = dashboardPersonaleService.getAllRistoratoreDetails(email);</span>
+        var ristorante = Ristorante
+<span class="fc" id="L44">                .builder()</span>
+<span class="fc" id="L45">                .Nome(insertRistoranteRequest.getNome())</span>
+<span class="fc" id="L46">                .Via(insertRistoranteRequest.getVia())</span>
+<span class="fc" id="L47">                .N_Civico(insertRistoranteRequest.getN_Civico())</span>
+<span class="fc" id="L48">                .Cap(insertRistoranteRequest.getCap())</span>
+<span class="fc" id="L49">                .Provincia(insertRistoranteRequest.getProvincia())</span>
+<span class="fc" id="L50">                .Telefono(insertRistoranteRequest.getTelefono())</span>
+<span class="fc" id="L51">                .build();</span>
+
+<span class="fc" id="L53">        Ristorante newRistorante = ristoranteDAO.save(ristorante);</span>
+<span class="fc" id="L54">        ristoratore.getRistoranti().add(newRistorante);</span>
+
+<span class="fc" id="L56">        return dashboardPersonaleService.saveRistoratore(ristoratore);</span>
+    }
+
+    /**
+     * Metodo per aggiornare i dettagli di un ristorante
+     *
+     * @param updateRistoranteRequest rappresenta la richiesta di modifica dei dettagli del ristorante
+     * @param idRistorante            Id univoco del ristorante di cui mondificare i dati
+     * @return ResponseEntity HttpStatus Codice di stato HTTP
+     */
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; updateRistorante(UpdateRistoranteRequest updateRistoranteRequest, Integer idRistorante, String email) {
+<span class="fc" id="L68">        Ristoratore ristoratore = dashboardPersonaleService.getAllRistoratoreDetails(email);</span>
+
+<span class="fc" id="L70">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findByIdAndAndOwnersID(idRistorante, ristoratore.getId());</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if(ristorante.isEmpty())</span>
+<span class="fc" id="L72">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if(updateRistoranteRequest.getNome()!=null){</span>
+<span class="fc" id="L75">            ristorante.get().setNome(updateRistoranteRequest.getNome());</span>
+        }
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if(updateRistoranteRequest.getVia()!=null){</span>
+<span class="nc" id="L78">            ristorante.get().setVia(updateRistoranteRequest.getVia());</span>
+        }
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if(updateRistoranteRequest.getN_Civico()!=null){</span>
+<span class="nc" id="L81">            ristorante.get().setN_Civico(updateRistoranteRequest.getN_Civico());</span>
+        }
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if(updateRistoranteRequest.getProvincia()!=null){</span>
+<span class="nc" id="L84">            ristorante.get().setProvincia(updateRistoranteRequest.getProvincia());</span>
+        }
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if(updateRistoranteRequest.getCap()!=null){</span>
+<span class="fc" id="L87">            ristorante.get().setCap(updateRistoranteRequest.getCap());</span>
+        }
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if(updateRistoranteRequest.getTelefono()!=null){</span>
+<span class="nc" id="L90">            ristorante.get().setTelefono(updateRistoranteRequest.getTelefono());</span>
+        }
+
+<span class="fc" id="L93">        ristoranteDAO.save(ristorante.get());</span>
+
+<span class="fc" id="L95">        return new ResponseEntity&lt;&gt;(HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per recuperare tutti i ristoranti associati ad un dato ristoratore
+     *
+     * @param idRistoratore rappresenta l'id del ristoratore per il quale si vuole recuperare la lista dei ristoranti
+     * @return ResponseEntity&lt;Set &lt; Ristorante&gt;&gt; ResponseEntity contenente la lista dei ristoranti associati
+     */
+    @Override
+    public ResponseEntity&lt;Set&lt;Ristorante&gt;&gt; getAllRistorantiByRistoratore(Integer idRistoratore) {
+<span class="fc" id="L106">        Optional&lt;Set&lt;Ristorante&gt;&gt; ristoranti = ristoranteDAO.findRistoranteByOwners(idRistoratore);</span>
+
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if(ristoranti.isEmpty())</span>
+<span class="nc" id="L109">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L111">        return new ResponseEntity&lt;&gt;(ristoranti.get(), HttpStatus.OK);</span>
+    }
+
+    /**
+     * Firma del metodo per recuperare i dettagli di un ristorante
+     *
+     * @param idRistorante rappresenta l'id del ristorante per il quale si vuole recuperarne i dettagli
+     * @return ResponseEntity&lt;Ristorante&gt; ResponseEntity contenente i dettagli del ristorante
+     */
+    @Override
+    public ResponseEntity&lt;Ristorante&gt; getRistoranteByID(Integer idRistorante) {
+<span class="fc" id="L122">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findById(idRistorante);</span>
+
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if(ristorante.isEmpty())</span>
+<span class="nc" id="L125">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L127">        return new ResponseEntity&lt;&gt;(ristorante.get(), HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per recuperare i ristoranti dato una serie di parametri in input
+     *
+     * @param searchRistoranteRequest rappresenta la richiesta di ricerca di un ristorante
+     * @param nomeRistorante          nome del ristorante da cercare
+     * @return ResponseEntity&lt;Set &lt; Ristorante&gt;&gt; ResponseEntity contenente la lista dei ristoranti trovati
+     */
+    @Override
+    public ResponseEntity&lt;Set&lt;Ristorante&gt;&gt; searchRistorante(SearchRistoranteRequest searchRistoranteRequest, String nomeRistorante) {
+<span class="nc" id="L139">        Optional&lt;Set&lt;Ristorante&gt;&gt; ristoranti = ristoranteDAO.findRistoranteByNomeAndVia(nomeRistorante, searchRistoranteRequest.getVia(),</span>
+<span class="nc" id="L140">                searchRistoranteRequest.getN_Civico(), searchRistoranteRequest.getProvincia(), searchRistoranteRequest.getCap());</span>
+
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if(ristoranti.isEmpty())</span>
+<span class="nc" id="L143">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="nc" id="L145">        return new ResponseEntity&lt;&gt;(ristoranti.get(), HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per aggiungere un menu ad un ristorante
+     *
+     * @param insertMenuRequest rappresenta la richiesta di inserimento di un menu
+     * @param email
+     * @return
+     */
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; insertMenu(InsertMenuRequest insertMenuRequest, String email) {
+<span class="fc" id="L157">        Ristoratore ristoratore = dashboardPersonaleService.getAllRistoratoreDetails(email);</span>
+
+<span class="fc" id="L159">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findByIdAndAndOwnersID(insertMenuRequest.getIdRistorante(), ristoratore.getId());</span>
+
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if(ristorante.isEmpty())</span>
+<span class="nc" id="L162">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+        var menu = Menu
+<span class="fc" id="L165">                .builder()</span>
+                //.fk_id_ristorante(ristorante.get().getId())
+<span class="fc" id="L167">                .Categoria(insertMenuRequest.getDescrizione())</span>
+<span class="fc" id="L168">                .Nome(insertMenuRequest.getNome())</span>
+<span class="fc" id="L169">                .build();</span>
+
+<span class="fc" id="L171">        menu.setRistorante(ristorante.get());</span>
+<span class="fc" id="L172">        Menu newMenu = menuDAO.save(menu);</span>
+<span class="fc" id="L173">        ristorante.get().getMenus().add(newMenu);</span>
+
+<span class="fc" id="L175">        return dashboardPersonaleService.saveRistoratore(ristoratore);</span>
+    }
+
+    /**
+     * Metodo per aggiungere un prodotto ad un menu
+     *
+     * @param idMenu Identificativo del menu per il quale si intende aggiungere un prodotto
+     * @param idProdotto Identificativo del prodotto da aggiungere al menu
+     * @param email Email del ristoratore
+     * @return ResponseEntity HttpStatus Codice di stato HTTP
+     */
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; addProductToMenu(Integer idMenu, Integer idProdotto, Integer idRistorante, String email) {
+<span class="fc" id="L188">        Optional&lt;Menu&gt; menu = menuDAO.findById(idMenu);</span>
+<span class="fc" id="L189">        Optional&lt;Prodotto&gt; newProdotto = prodottoService.getProdotto(idProdotto);</span>
+
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if(menu.isEmpty())</span>
+<span class="nc" id="L192">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        if(newProdotto.isEmpty())</span>
+<span class="nc" id="L195">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L197">        Ristoratore ristoratore = dashboardPersonaleService.getAllRistoratoreDetails(email);</span>
+
+<span class="fc" id="L199">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findByIdAndAndOwnersID(idRistorante, ristoratore.getId());</span>
+
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        if(ristorante.isEmpty())</span>
+<span class="nc" id="L202">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        if(menu.get().getRistorante().getId() != ristorante.get().getId())</span>
+<span class="nc" id="L206">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L208">        menu.get().getProdottiMenu().add(newProdotto.get());</span>
+<span class="fc" id="L209">        menuDAO.save(menu.get());</span>
+
+<span class="fc" id="L211">        return new ResponseEntity&lt;&gt;(HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per rimuovere un prodotto ad un menu
+     *
+     * @param idMenu       ID del menu per il quale si intende rimuovere un prodotto
+     * @param idProdotto   ID del prodotto da rimuovere
+     * @param idRistorante ID del ristorante
+     * @return HttpStatusCode ResponseEntity Codice di stato http
+     */
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; removeProductFromMenu(Integer idMenu, Integer idProdotto, Integer idRistorante, String email) {
+<span class="fc" id="L224">        Optional&lt;Menu&gt; menu = menuDAO.findById(idMenu);</span>
+<span class="fc" id="L225">        Optional&lt;Prodotto&gt; removeProdotto = prodottoService.getProdotto(idProdotto);</span>
+
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">        if(menu.isEmpty())</span>
+<span class="nc" id="L228">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">        if(removeProdotto.isEmpty())</span>
+<span class="nc" id="L231">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L233">        Ristoratore ristoratore = dashboardPersonaleService.getAllRistoratoreDetails(email);</span>
+
+<span class="fc" id="L235">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findByIdAndAndOwnersID(idRistorante, ristoratore.getId());</span>
+
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">        if(ristorante.isEmpty())</span>
+<span class="nc" id="L238">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if(menu.get().getRistorante().getId() != ristorante.get().getId())</span>
+<span class="nc" id="L242">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L244">        menu.get().getProdottiMenu().remove(removeProdotto.get());</span>
+<span class="fc" id="L245">        menuDAO.save(menu.get());</span>
+
+<span class="fc" id="L247">        return new ResponseEntity&lt;&gt;(HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per ottenere i menu associati ad un ristorante
+     *
+     * @param ID Id del ristorante per il quale si vuole recuperare la lista dei menu
+     * @return ResponseEntity&lt;Set &lt; Menu&gt;&gt; ResponseEntity contenente la lista dei menu associati
+     */
+    @Override
+    public ResponseEntity&lt;Set&lt;Menu&gt;&gt; getMenusByRistoranteID(Integer ID) {
+<span class="fc" id="L258">        Optional&lt;Set&lt;Menu&gt;&gt; menus = menuDAO.findMenusByRistoranteId(ID);</span>
+
+<span class="pc bpc" id="L260" title="1 of 2 branches missed.">        if(menus.isEmpty())</span>
+<span class="nc" id="L261">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L263">        return new ResponseEntity&lt;&gt;(menus.get(), HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per ottenere il menu associato ad un dato id
+     *
+     * @param idMenu Id del ristorante per il quale si vuole recuperare la lista dei menu
+     * @return ResponseEntity&lt;Set &lt; Menu&gt;&gt; ResponseEntity contenente la lista dei menu associati
+     */
+    @Override
+    public ResponseEntity&lt;Menu&gt; getMenusByID(Integer idMenu) {
+<span class="fc" id="L274">        Optional&lt;Menu&gt; menu = menuDAO.findById(idMenu);</span>
+
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">        if(menu.isEmpty())</span>
+<span class="nc" id="L277">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L279">        return new ResponseEntity&lt;&gt;(menu.get(), HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per ottenere i prodotti associati ad un dato menu
+     *
+     * @param idMenu Id del menu per il quale si vuole recuperare la lista dei prodotti
+     * @return ResponseEntity&lt;Set &lt; Prodotto&gt;&gt; ResponseEntity contenente la lista dei prodotti associati
+     */
+    @Override
+    public ResponseEntity&lt;Set&lt;Prodotto&gt;&gt; getProdottiByMenuID(Integer idMenu) {
+<span class="fc" id="L290">        Optional&lt;Menu&gt; menu = menuDAO.findById(idMenu);</span>
+
+<span class="pc bpc" id="L292" title="1 of 2 branches missed.">        if(menu.isEmpty())</span>
+<span class="nc" id="L293">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L295">        return new ResponseEntity&lt;&gt;(menu.get().getProdottiMenu(), HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per inserire un nuovo tavolo
+     *
+     * @param insertTavoloRequest Oggetto che rappresenta una richiesta di inserimento
+     * @param email               Email del ristoratore che effettua la richiesta
+     * @return ResponseEntity HttpStatus Codice di stato HTTP
+     **/
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; insertTavolo(InsertTavoloRequest insertTavoloRequest, String email) {
+<span class="fc" id="L307">        Ristoratore ristoratore = dashboardPersonaleService.getAllRistoratoreDetails(email);</span>
+
+<span class="fc" id="L309">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findByIdAndAndOwnersID(insertTavoloRequest.getIdRistorante(), ristoratore.getId());</span>
+
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">        if(ristorante.isEmpty())</span>
+<span class="nc" id="L312">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+        var tavolo = Tavolo
+<span class="fc" id="L315">                .builder()</span>
+<span class="fc" id="L316">                .NumeroTavolo(insertTavoloRequest.getNumeroTavolo())</span>
+<span class="fc" id="L317">                .Stato(insertTavoloRequest.getStato())</span>
+<span class="fc" id="L318">                .Capacita(insertTavoloRequest.getCapacita())</span>
+<span class="fc" id="L319">                .build();</span>
+
+<span class="fc" id="L321">        tavolo.setRistoranteProp(ristorante.get());</span>
+<span class="fc" id="L322">        tavoloDAO.save(tavolo);</span>
+<span class="fc" id="L323">        ristorante.get().getTables().add(tavolo);</span>
+<span class="fc" id="L324">        ristoranteDAO.save(ristorante.get());</span>
+
+
+<span class="fc" id="L327">        return new ResponseEntity&lt;&gt;(HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per recuperare i tavoli associati ad un ristorante
+     *
+     * @param idRistorante ID del ristorante per il quale si vuole ottenere la lista dei tavoli
+     * @return ResponseEntity&lt;Set &lt; Tavolo&gt;&gt; Set contenente la lista dei tavoli
+     **/
+    @Override
+    public ResponseEntity&lt;Set&lt;Tavolo&gt;&gt; getTavoliRistorante(Integer idRistorante) {
+<span class="fc" id="L338">        Optional&lt;Ristorante&gt; ristorante = ristoranteDAO.findById(idRistorante);</span>
+
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">        if(ristorante.isEmpty())</span>
+<span class="nc" id="L341">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L343">        Optional&lt;Set&lt;Tavolo&gt;&gt; tavoli = tavoloDAO.findByRistorantePropId(idRistorante);</span>
+
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        if(tavoli.isEmpty())</span>
+<span class="nc" id="L346">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L348">        return new ResponseEntity&lt;&gt;(tavoli.get(), HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo per recuperare i dettagli di un tavolo dato il suo ID
+     *
+     * @param idTavolo     ID del ristorante per il quale si vuole ottenere la lista dei tavoli
+     * @param idRistorante ID del ristorante
+     * @return ResponseEntity&lt;Tavolo&gt;
+     **/
+    @Override
+    public ResponseEntity&lt;Tavolo&gt; getTavoloByID(String idTavolo, Integer idRistorante) {
+<span class="fc" id="L360">        Optional&lt;Tavolo&gt; tavolo = tavoloDAO.findByNumeroTavoloAndRistorantePropId(idTavolo, idRistorante);</span>
+
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">        if(tavolo.isEmpty())</span>
+<span class="nc" id="L363">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+
+<span class="fc" id="L365">        return new ResponseEntity&lt;&gt;(tavolo.get(), HttpStatus.OK);</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

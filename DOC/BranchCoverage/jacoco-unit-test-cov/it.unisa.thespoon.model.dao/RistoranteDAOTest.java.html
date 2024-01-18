@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RistoranteDAOTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TestAll Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.unisa.thespoon.model.dao</a> &gt; <span class="el_source">RistoranteDAOTest.java</span></div><h1>RistoranteDAOTest.java</h1><pre class="source lang-java linenums">package it.unisa.thespoon.model.dao;
+
+import it.unisa.thespoon.login.service.UserService;
+import it.unisa.thespoon.model.entity.Ristorante;
+import it.unisa.thespoon.model.entity.Ristoratore;
+import it.unisa.thespoon.model.entity.Role;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * @author Jacopo Gennaro Esposito
+ * Classe che implementa il test del DAO Ristoratore.
+ * */
+@SpringBootTest
+<span class="fc" id="L25">class RistoranteDAOTest {</span>
+
+    @Autowired
+    private RistoranteDAO underTest;
+
+    @Autowired
+    private UserService userService;
+
+    private Set&lt;Ristoratore&gt; RisSet;
+
+    private Set&lt;Ristorante&gt; Ristoranti;
+
+
+    @BeforeEach
+    void setUp() {
+<span class="fc" id="L40">        RisSet = new HashSet&lt;Ristoratore&gt;();</span>
+<span class="fc" id="L41">        Ristoranti = new HashSet&lt;Ristorante&gt;();</span>
+<span class="fc" id="L42">    }</span>
+
+    @AfterEach
+    void tearDown(){
+<span class="fc" id="L46">        underTest.deleteAll();</span>
+<span class="fc" id="L47">    }</span>
+
+    /** Verifica la correttezza del valore tornato per la query di
+     * ricerca ristorante mediante ID Ristoratore
+    */
+     @Test
+    void findRistoranteByOwners() {
+<span class="fc" id="L54">        Ristorante ristorante = new Ristorante(10, &quot;Pizzeria Tuino&quot;, &quot;12&quot;, 80056, &quot;Via E Caianiello&quot;, &quot;SA&quot;, &quot;003930090004356&quot;, null);</span>
+<span class="fc" id="L55">        Ristoratore ristoratore = new Ristoratore(1, &quot;KimDami98&quot;, &quot;Jacopo&quot;</span>
+<span class="fc" id="L56">                , &quot;Espsosito&quot;, &quot;shen@yue.it&quot;, &quot;3510857328&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+
+<span class="fc" id="L58">        underTest.save(ristorante);</span>
+
+<span class="fc" id="L60">        ristoratore.getRistoranti().add(ristorante);</span>
+<span class="fc" id="L61">        userService.save(ristoratore);</span>
+
+        //When
+<span class="fc" id="L64">        Optional&lt;Set&lt;Ristorante&gt;&gt; ristoranti = underTest.findRistoranteByOwners(ristoratore.getId());</span>
+
+        //Then
+<span class="fc" id="L67">        assertTrue(ristoranti.isPresent());</span>
+<span class="fc" id="L68">        assertEquals(ristorante.getNome(), ristoranti.get().iterator().next().getNome());</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Verifica la correttezza del valore tornato per la query di ricerca ristorante mediante ID e ID Ristoratore
+     * */
+    @Test
+    void findByIdAndAndOwnersID() {
+<span class="fc" id="L76">        Ristorante ristorante = new Ristorante(10, &quot;Pizzeria Tuino&quot;, &quot;12&quot;, 80056, &quot;Via E Caianiello&quot;, &quot;SA&quot;, &quot;003930090004356&quot;, null);</span>
+<span class="fc" id="L77">        Ristoratore ristoratore = new Ristoratore(1, &quot;KimDami98&quot;, &quot;Jacopo&quot;</span>
+<span class="fc" id="L78">                , &quot;Espsosito&quot;, &quot;shen@yue.it&quot;, &quot;3510857328&quot;, LocalDate.now(), Role.ROLE_RISTORATORE, Ristoranti);</span>
+
+<span class="fc" id="L80">        underTest.save(ristorante);</span>
+
+<span class="fc" id="L82">        ristoratore.getRistoranti().add(ristorante);</span>
+<span class="fc" id="L83">        userService.save(ristoratore);</span>
+
+        //When
+<span class="fc" id="L86">        Optional&lt;Ristorante&gt; ristoranti = underTest.findByIdAndAndOwnersID(ristorante.getId(), ristoratore.getId());</span>
+
+        //Then
+<span class="fc" id="L89">        assertEquals(ristorante.getNome(), ristoranti.get().getNome());</span>
+<span class="fc" id="L90">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

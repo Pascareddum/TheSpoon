@@ -206,5 +206,14 @@ public class OrdiniServiceImpl implements OrdiniService{
         return ordiniDAO.getByIdordineAndIdristorante(idOrdine, idRistorante);
     }
 
+    /**
+     * @param stato
+     */
+    @Override
+    public void setStato(Byte stato, Ordine ordine) {
+        ordine.setStato(stato);
+        ordiniDAO.save(ordine);
+    }
+
 
 }

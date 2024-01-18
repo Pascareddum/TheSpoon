@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RistoratoreDAOTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TestAll Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.unisa.thespoon.model.dao</a> &gt; <span class="el_source">RistoratoreDAOTest.java</span></div><h1>RistoratoreDAOTest.java</h1><pre class="source lang-java linenums">package it.unisa.thespoon.model.dao;
+
+import it.unisa.thespoon.model.entity.Ristoratore;
+import it.unisa.thespoon.model.entity.Role;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * @author Jacopo Gennaro Esposito
+ * Classe che implementa il test del DAO Ristoratore,
+ * in particolare verifica la correttezza della query custom utilizzata
+ * per recuperare un account in base all'indirizzo email.
+ * */
+@SpringBootTest
+<span class="fc" id="L22">class RistoratoreDAOTest {</span>
+    @Autowired
+    private RistoratoreDAO underTest;
+<span class="fc" id="L25">    String email = &quot;jaco@jaco.it&quot;;</span>
+
+    @AfterEach
+    void tearDown(){
+<span class="fc" id="L29">        underTest.deleteAll();</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * Verifica la correttezza del valore tornato in caso di email presente nel DB
+     * */
+    @Test
+    void findByEmail() {
+        //Given
+<span class="fc" id="L38">        Ristoratore ristoratore = new Ristoratore(1, &quot;PasswordPassword&quot;, &quot;Jacopo&quot;</span>
+<span class="fc" id="L39">        , &quot;Espsosito&quot;, email, &quot;3510857328&quot;, LocalDate.now(), Role.ROLE_RISTORATORE);</span>
+
+<span class="fc" id="L41">        underTest.save(ristoratore);</span>
+
+        //When
+<span class="fc" id="L44">        Optional&lt;Ristoratore&gt; result = underTest.findByEmail(email);</span>
+
+        //Then
+<span class="fc" id="L47">        assertTrue(result.isPresent());</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Verifica la correttezza del valore tornato in caso di email non presente nel DB
+     * */
+    @Test
+    void NotFoundByEmail() {
+
+        //When
+<span class="fc" id="L57">        Optional&lt;Ristoratore&gt; result = underTest.findByEmail(email);</span>
+
+        //Then
+<span class="fc" id="L60">        assertTrue(result.isEmpty());</span>
+<span class="fc" id="L61">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
