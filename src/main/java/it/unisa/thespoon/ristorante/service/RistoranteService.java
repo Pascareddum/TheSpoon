@@ -39,7 +39,7 @@ public interface RistoranteService {
      * Firma del metodo per recuperare tutti i ristoranti associati ad un dato ristoratore
      *
      * @param idRistoratore rappresenta l'id del ristoratore per il quale si vuole recuperare la lista dei ristoranti
-     * @return ResponseEntity<Set<Ristorante>> ResponseEntity contenente la lista dei ristoranti associati
+     * @return ResponseEntity ResponseEntity contenente la lista dei ristoranti associati
      */
     ResponseEntity<Set<Ristorante>> getAllRistorantiByRistoratore(Integer idRistoratore);
 
@@ -47,7 +47,7 @@ public interface RistoranteService {
      * Firma del metodo per recuperare i dettagli di un ristorante
      *
      * @param idRistorante rappresenta l'id del ristorante per il quale si vuole recuperarne i dettagli
-     * @return ResponseEntity<Ristorante> ResponseEntity contenente i dettagli del ristorante
+     * @return ResponseEntity ResponseEntity contenente i dettagli del ristorante
      */
     ResponseEntity<Ristorante> getRistoranteByID(Integer idRistorante);
 
@@ -56,7 +56,7 @@ public interface RistoranteService {
      *
      * @param searchRistoranteRequest rappresenta la richiesta di ricerca di un ristorante
      * @param nomeRistorante nome del ristorante da cercare
-     * @return ResponseEntity<Set<Ristorante>> ResponseEntity contenente la lista dei ristoranti trovati
+     * @return ResponseEntity ResponseEntity contenente la lista dei ristoranti trovati
      */
     ResponseEntity<Set<Ristorante>> searchRistorante(SearchRistoranteRequest searchRistoranteRequest, String nomeRistorante);
 
@@ -93,7 +93,7 @@ public interface RistoranteService {
      * Firma del metodo per ottenere i menu associati ad un ristorante
      *
      * @param ID Id del ristorante per il quale si vuole recuperare la lista dei menu
-     * @return ResponseEntity<Set<Menu>> ResponseEntity contenente la lista dei menu associati
+     * @return ResponseEntity ResponseEntity contenente la lista dei menu associati
      */
     ResponseEntity<Set<Menu>> getMenusByRistoranteID(Integer ID);
 
@@ -101,7 +101,7 @@ public interface RistoranteService {
      * Firma del metodo per ottenere il menu associato ad un dato id
      *
      * @param idMenu Id del ristorante per il quale si vuole recuperare la lista dei menu
-     * @return ResponseEntity<Set<Menu>> ResponseEntity contenente la lista dei menu associati
+     * @return ResponseEntity ResponseEntity contenente la lista dei menu associati
      */
     ResponseEntity<Menu> getMenusByID(Integer idMenu);
 
@@ -109,7 +109,7 @@ public interface RistoranteService {
      * Firma del metodo per ottenere i prodotti associati ad un dato menu
      *
      * @param idMenu Id del menu per il quale si vuole recuperare la lista dei prodotti
-     * @return ResponseEntity<Set<Prodotto>> ResponseEntity contenente la lista dei prodotti associati
+     * @return ResponseEntity ResponseEntity contenente la lista dei prodotti associati
      */
     ResponseEntity<Set<Prodotto>> getProdottiByMenuID(Integer idMenu);
 
@@ -126,7 +126,7 @@ public interface RistoranteService {
      * Firma del metodo per recuperare i tavoli associati ad un ristorante
      *
      * @param idRistorante ID del ristorante per il quale si vuole ottenere la lista dei tavoli
-     * @return ResponseEntity<Set<Tavolo>> Set contenente la lista dei tavoli
+     * @return ResponseEntity Set contenente la lista dei tavoli
      **/
     ResponseEntity<Set<Tavolo>> getTavoliRistorante(Integer idRistorante);
 
@@ -135,7 +135,7 @@ public interface RistoranteService {
      *
      * @param idTavolo ID del ristorante per il quale si vuole ottenere la lista dei tavoli
      * @param idRistorante ID del ristorante
-     * @return ResponseEntity<Tavolo>
+     * @return ResponseEntity Response entity contenente i dettagli del tavolo
      **/
     ResponseEntity<Tavolo> getTavoloByID(String idTavolo, Integer idRistorante);
 }

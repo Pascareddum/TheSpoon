@@ -23,11 +23,21 @@ public class OrdineObserverServiceImpl implements OrdineObserverService {
 
     private Map<Class<?>, List<OrdineObserver>> observersMap = new HashMap<>();
 
+    /**
+     * Metodo che permette di aggiungere un observer per una data classe
+     * @param entityType Classe da osservare
+     * @param observer L'oggetto ordine observer da aggiungere
+     * */
     @Override
     public void addObserver(Class<?> entityType, OrdineObserver observer) {
         observersMap.computeIfAbsent(entityType, k -> new ArrayList<>()).add(observer);
     }
 
+    /**
+     * Metodo che permette di rimuovere un observer per una data classe
+     * @param entityType Classe da osservare
+     * @param observer L'oggetto ordine observer da rimuovere
+     * */
     @Override
     public void removeObserver(Class<?> entityType, OrdineObserver observer) {
         observersMap.computeIfPresent(entityType, (k, observers) -> {
@@ -36,6 +46,11 @@ public class OrdineObserverServiceImpl implements OrdineObserverService {
         });
     }
 
+    /**
+     * Metodo che notifica gli Observer per la classe ordine
+     * @param ordine Dettagli ordine
+     * @param ristorante Dettagli ristorante
+     * */
     @Override
     public void notifyObservers(Ordine ordine, Ristorante ristorante) {
         List<OrdineObserver> observers = observersMap.get(ordine.getClass());

@@ -47,7 +47,7 @@ public class DashboardPersonaleImpl implements DashboardPersonaleService{
      *
      * @param updateRistoratoreRequest rappresenta la richiesta di modifica dei dati associati al profilo dell'utente
      * @param email Stringa della email associata al ristoratore
-     * @return <HttpStatus> Risposta HTTP
+     * @return ResponseEntity Risposta HTTP
      */
     @Override
     public ResponseEntity<HttpStatus> updateRistoratoreDetails(UpdateRistoratoreRequest updateRistoratoreRequest, String email) {
@@ -81,7 +81,7 @@ public class DashboardPersonaleImpl implements DashboardPersonaleService{
      *
      * @param updatePasswordRequest rappresenta la richiesta di modifica della password dell'account
      * @param email Stringa della email associata al ristoratore
-     * @return <HttpStatus> Risposta HTTP
+     * @return ResponseEntity Risposta HTTP
      */
     @SneakyThrows
     @Override
@@ -118,7 +118,7 @@ public class DashboardPersonaleImpl implements DashboardPersonaleService{
      * Metodo adibito a salvare le modifiche apportate al ristoratore
      *
      * @param ristoratore Entità rappresentate il ristoratore
-     * @return HttpStatus codice di stato HTTP OK
+     * @return ResposeEntity codice di stato HTTP OK
      */
     @Override
     public ResponseEntity<HttpStatus> saveRistoratore(Ristoratore ristoratore) {
