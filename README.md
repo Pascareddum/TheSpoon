@@ -31,7 +31,15 @@ Build with Java, Javascript, MySQL and love :heart:
 ## Documentation
 
 * Process documentation can be found in *DOC*  directory. (**In Italian :it:**)
-* TheSpoonAPI documentation can be found [here](https://github.com/Pascareddum/TheSpoon/blob/develop/DOC/TheSpoonAPI.md) directory. (**In English :uk:**)
+* TheSpoon software documentation, including: TheSpoonAPI, JaCoCo coverage and JavaDoc can be found [here](https://jacopoesposito.github.io/thespoon). (**In English :uk:**)
+
+## The Spoon Ecosystem 
+
+The Spoon consists of three main components: TheSpoon (Rest Server API), TheSpoonFrontend (SolidJS Frontend) and TheSpoonBot (Telegram Bot Server)
+
+* [TheSpoonBot](https://github.com/jacopoesposito/TheSpoonBot)
+* [TheSpoonFrontend](https://github.com/pascareddum/TheSpoonFrontend)
+* [TheSpoonApiRestServer](https://github.com/pascareddum/TheSpoon)
 
 ## Requirements
 
