@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrdiniServiceImplTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TestAll Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.unisa.thespoon.ordini.service</a> &gt; <span class="el_source">OrdiniServiceImplTest.java</span></div><h1>OrdiniServiceImplTest.java</h1><pre class="source lang-java linenums">package it.unisa.thespoon.ordini.service;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import static org.mockito.Mockito.*;
+
+import it.unisa.thespoon.model.dao.OrdiniDAO;
+import it.unisa.thespoon.model.dao.RistoranteDAO;
+import it.unisa.thespoon.model.dao.RistoratoreDAO;
+import it.unisa.thespoon.model.entity.*;
+import it.unisa.thespoon.model.request.InsertOrdineRequest;
+import it.unisa.thespoon.model.response.ProdottoOrdineInfo;
+import it.unisa.thespoon.notifiche.service.TelegramAdapter;
+import it.unisa.thespoon.prodotto.service.ProdottoService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * @author Jacopo Gennaro Esposito
+ * Classe che implementa il test per la classe Ordini
+ * */
+<span class="fc" id="L29">public class OrdiniServiceImplTest {</span>
+
+    private OrdiniServiceImpl ordiniService;
+    private RistoranteDAO ristoranteDAO;
+    private RistoratoreDAO ristoratoreDAO;
+    private OrdiniDAO ordiniDAO;
+    private ProdottoService prodottoService;
+    private TelegramAdapter telegramAdapter;
+    private OrdineObserverService ordineObserverService;
+
+    @BeforeEach
+    void setUp() {
+<span class="fc" id="L41">        ristoranteDAO = mock(RistoranteDAO.class);</span>
+<span class="fc" id="L42">        ristoratoreDAO = mock(RistoratoreDAO.class);</span>
+<span class="fc" id="L43">        ordiniDAO = mock(OrdiniDAO.class);</span>
+<span class="fc" id="L44">        prodottoService = mock(ProdottoService.class);</span>
+<span class="fc" id="L45">        telegramAdapter = mock(TelegramAdapter.class);</span>
+<span class="fc" id="L46">        ordineObserverService = mock(OrdineObserverService.class);</span>
+
+<span class="fc" id="L48">        ordiniService = new OrdiniServiceImpl(</span>
+                ristoranteDAO,
+                ristoratoreDAO,
+                ordiniDAO,
+                prodottoService,
+                telegramAdapter
+        );
+
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Test per la funzionalità di inserimento ordine
+     * effettuando una richiesta con parametri validi
+     * */
+    @Test
+    void insertOrdine() {
+        // Given
+<span class="fc" id="L65">        InsertOrdineRequest request = createValidInsertOrdineRequest();</span>
+<span class="fc" id="L66">        when(ristoranteDAO.findById(any())).thenReturn(Optional.of(new Ristorante()));</span>
+<span class="fc" id="L67">        when(prodottoService.getProdotto(any())).thenReturn(Optional.of(createProdotto()));</span>
+
+        // When
+<span class="fc" id="L70">        ResponseEntity&lt;Ordine&gt; response = ordiniService.insertOrdine(request);</span>
+
+        // Then
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        assert response.getStatusCode() == HttpStatus.OK;</span>
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * Test per la funzionalità di inserimento ordine
+     * effettuando una richiesta inserendo con un IdRistorante non
+     * associato ad un ristorante presente nella piattaforma
+     * */
+    @Test
+    void failedInsertOrdineRistoranteNotFound() {
+        // Given
+<span class="fc" id="L84">        InsertOrdineRequest request = createValidInsertOrdineRequest();</span>
+<span class="fc" id="L85">        when(ristoranteDAO.findById(any())).thenReturn(Optional.empty());</span>
+
+        // When
+<span class="fc" id="L88">        ResponseEntity&lt;Ordine&gt; response = ordiniService.insertOrdine(request);</span>
+
+        // Then
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        assert response.getStatusCode() == HttpStatus.NOT_FOUND;</span>
+<span class="fc" id="L92">    }</span>
+
+    /** Testa la funzionalità di conferma ordine
+     * inserendo parametri validi
+     */
+    @Test
+    void confermaOrdine() {
+        // Given
+<span class="fc" id="L100">        Integer orderId = 1;</span>
+<span class="fc" id="L101">        String email = &quot;test@example.com&quot;;</span>
+<span class="fc" id="L102">        when(ordiniDAO.findById(any())).thenReturn(Optional.of(new Ordine()));</span>
+<span class="fc" id="L103">        when(ristoratoreDAO.findByEmail(any())).thenReturn(Optional.of(new Ristoratore()));</span>
+<span class="fc" id="L104">        when(ristoranteDAO.findByIdAndAndOwnersID(any(), any())).thenReturn(Optional.of(new Ristorante()));</span>
+
+        // When
+<span class="fc" id="L107">        ResponseEntity&lt;HttpStatus&gt; response = ordiniService.confermaOrdine(orderId, email);</span>
+
+        // Then
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        assert response.getStatusCode() == HttpStatus.OK;</span>
+<span class="fc" id="L111">    }</span>
+
+    /**
+     * Testa la funzionalità di conferma ordine
+     * inserendo un IDOrdine che non corrisponde a nesun
+     * ordine presente nel sistema
+     */
+    @Test
+    void failedConfermaOrdineOrdineNotFound() {
+<span class="fc" id="L120">        Integer orderId = 1;</span>
+<span class="fc" id="L121">        String email = &quot;test@example.com&quot;;</span>
+<span class="fc" id="L122">        when(ordiniDAO.findById(any())).thenReturn(Optional.empty());</span>
+
+<span class="fc" id="L124">        ResponseEntity&lt;HttpStatus&gt; response = ordiniService.confermaOrdine(orderId, email);</span>
+
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        assert response.getStatusCode() == HttpStatus.NOT_FOUND;</span>
+<span class="fc" id="L127">    }</span>
+
+    /**
+     * Testa la funzionalità di inserimento ordine
+     * inserendo un IDProdotto che non corrisponde a nesun
+     * prodotto presente nel sistema
+     */
+    @Test
+    void failedInsertOrdineProductNotFound() {
+        // Given
+<span class="fc" id="L137">        InsertOrdineRequest request = createValidInsertOrdineRequest();</span>
+<span class="fc" id="L138">        when(ristoranteDAO.findById(any())).thenReturn(Optional.of(new Ristorante()));</span>
+<span class="fc" id="L139">        when(prodottoService.getProdotto(any())).thenReturn(Optional.empty());</span>
+
+        // When
+<span class="fc" id="L142">        ResponseEntity&lt;Ordine&gt; response = ordiniService.insertOrdine(request);</span>
+
+        // Then
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        assert response.getStatusCode() == HttpStatus.OK;</span>
+<span class="fc" id="L146">    }</span>
+
+    /**
+     * Testa la funzionalità di recupero ordini di
+     * un ristorante inserendo una mail non associata ad un ristoratore
+     */
+    @Test
+    void failedOrdiniByRistoranteRistoratoreNotFound() {
+        // Given
+<span class="fc" id="L155">        Integer idRistorante = 1;</span>
+<span class="fc" id="L156">        String email = &quot;nonexistent@example.com&quot;;</span>
+<span class="fc" id="L157">        when(ristoratoreDAO.findByEmail(any())).thenReturn(Optional.empty());</span>
+
+        // When
+<span class="fc" id="L160">        ResponseEntity&lt;List&lt;Ordine&gt;&gt; response = ordiniService.ordiniByRistorante(idRistorante, email);</span>
+
+        // Then
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        assert response.getStatusCode() == HttpStatus.NOT_FOUND;</span>
+<span class="fc" id="L164">    }</span>
+
+    /**
+     * Testa la funzionalità di recupero prodotti di
+     * un ordine inserendo un IDOrdine e un IDRistorante non validi
+     */
+    @Test
+    void failedGetProdottiByIdOrdineIdRistoranteOrdineNotFound() {
+        // Given
+<span class="fc" id="L173">        Integer idRistorante = 1;</span>
+<span class="fc" id="L174">        Integer idOrdine = 1;</span>
+<span class="fc" id="L175">        String email = &quot;test@example.com&quot;;</span>
+<span class="fc" id="L176">        when(ordiniDAO.findById(any())).thenReturn(Optional.empty());</span>
+
+        // When
+<span class="fc" id="L179">        ResponseEntity&lt;List&lt;ProdottoOrdineInfo&gt;&gt; response = ordiniService.getProdottiByIdOrdineIdRistorante(idRistorante, idOrdine, email);</span>
+
+        // Then
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">        assert response.getStatusCode() == HttpStatus.NOT_FOUND;</span>
+<span class="fc" id="L183">    }</span>
+
+
+    private InsertOrdineRequest createValidInsertOrdineRequest() {
+<span class="fc" id="L187">        Byte tipologia = 0;</span>
+<span class="fc" id="L188">        List&lt;Integer&gt; productsID = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L189">        productsID.add(1);</span>
+<span class="fc" id="L190">        InsertOrdineRequest request = new InsertOrdineRequest(productsID, null, 11122, 16, tipologia);</span>
+<span class="fc" id="L191">        return request;</span>
+    }
+
+    private Prodotto createProdotto() {
+<span class="fc" id="L195">        List&lt;ProdottoOrdine&gt; containedOrders = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L196">        Prodotto prodotto = new Prodotto(1, &quot;Pizza Fritta&quot;, &quot;Pizza fritta con cicoli e ricotta&quot;, BigDecimal.valueOf(5.50), null, containedOrders);</span>
+<span class="fc" id="L197">        return prodotto;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

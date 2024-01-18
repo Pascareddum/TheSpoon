@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DashboardPersonaleImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TestAll Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.unisa.thespoon.dashboardpersonale.service</a> &gt; <span class="el_source">DashboardPersonaleImpl.java</span></div><h1>DashboardPersonaleImpl.java</h1><pre class="source lang-java linenums">package it.unisa.thespoon.dashboardpersonale.service;
+
+import it.unisa.thespoon.exceptionhandler.PasswordDontMatchException;
+import it.unisa.thespoon.model.dao.DashboardPersonaleDAO;
+import it.unisa.thespoon.model.entity.Ristoratore;
+import it.unisa.thespoon.model.request.UpdatePasswordRequest;
+import it.unisa.thespoon.model.request.UpdateRistoratoreRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * @author Jacopo Gennaro Esposito
+ * Implementa la classe che esplicita i metodi dell'interfaccia di Servizio per
+ * il sottosistema DashboardPersonale, che gestice l'area utente del ristoratore
+ * */
+@Service
+<span class="fc" id="L25">@RequiredArgsConstructor</span>
+public class DashboardPersonaleImpl implements DashboardPersonaleService{
+
+    private final DashboardPersonaleDAO dashboardPersonaleDAO;
+    private final PasswordEncoder passwordEncoder;
+
+    /**
+     * Metodo adibito ad ottennere i dettagli del ristoratore
+     *
+     * @param email Stringa della email associata al ristoratore
+     * @return Ristoratore.RistoratoreDataDisplay Proiezione di Ristoratore contenente i dati da visualizzare
+     */
+    @Override
+    public ResponseEntity&lt;Ristoratore.RistoratoreDataDisplay&gt; getRistoratoreDetails(String email) {
+<span class="fc" id="L39">        Optional&lt;Ristoratore.RistoratoreDataDisplay&gt; ristoratore = dashboardPersonaleDAO.findDetailsByEmail(email);</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        if(ristoratore.isEmpty())</span>
+<span class="fc" id="L41">            throw new UsernameNotFoundException(&quot;Account not registered at The Spoon&quot;);</span>
+<span class="fc" id="L42">        return new ResponseEntity&lt;&gt;(ristoratore.get(), HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo adibito alla modifica dei dettagli del ristoratore
+     *
+     * @param updateRistoratoreRequest rappresenta la richiesta di modifica dei dati associati al profilo dell'utente
+     * @param email Stringa della email associata al ristoratore
+     * @return &lt;HttpStatus&gt; Risposta HTTP
+     */
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; updateRistoratoreDetails(UpdateRistoratoreRequest updateRistoratoreRequest, String email) {
+<span class="fc" id="L54">        Optional&lt;Ristoratore&gt; ristoratore = dashboardPersonaleDAO.findAllDetailsByEmail(email);</span>
+
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if(ristoratore.isEmpty())</span>
+<span class="fc" id="L57">            throw new UsernameNotFoundException(&quot;Account not registered at The Spoon&quot;);</span>
+
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if(updateRistoratoreRequest.getNome()!=null){</span>
+<span class="fc" id="L60">            ristoratore.get().setNome(updateRistoratoreRequest.getNome());</span>
+        }
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if(updateRistoratoreRequest.getCognome()!=null){</span>
+<span class="fc" id="L63">            ristoratore.get().setCognome(updateRistoratoreRequest.getCognome());</span>
+        }
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if(updateRistoratoreRequest.getTelefono()!=null){</span>
+<span class="fc" id="L66">            ristoratore.get().setTelefono(updateRistoratoreRequest.getTelefono());</span>
+        }
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if(updateRistoratoreRequest.getData_Nascita()!=null){</span>
+<span class="fc" id="L69">            ristoratore.get().setData_Nascita(updateRistoratoreRequest.getData_Nascita());</span>
+        }
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if(updateRistoratoreRequest.getEmail()!=null){</span>
+<span class="nc" id="L72">            ristoratore.get().setEmail(updateRistoratoreRequest.getEmail());</span>
+        }
+
+<span class="fc" id="L75">        dashboardPersonaleDAO.save(ristoratore.get());</span>
+<span class="fc" id="L76">        return new ResponseEntity&lt;&gt;(HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo adibito alla modifica della password dell'account ristoratore
+     *
+     * @param updatePasswordRequest rappresenta la richiesta di modifica della password dell'account
+     * @param email Stringa della email associata al ristoratore
+     * @return &lt;HttpStatus&gt; Risposta HTTP
+     */
+<span class="fc" id="L86">    @SneakyThrows</span>
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; updatePassword(UpdatePasswordRequest updatePasswordRequest, String email) {
+<span class="fc" id="L89">        Optional&lt;Ristoratore&gt; ristoratore = dashboardPersonaleDAO.findAllDetailsByEmail(email);</span>
+
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if(ristoratore.isEmpty())</span>
+<span class="fc" id="L92">            throw new UsernameNotFoundException(&quot;Account not registered at The Spoon&quot;);</span>
+
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if(!Objects.equals(updatePasswordRequest.getPassword(), updatePasswordRequest.getRePassword()))</span>
+<span class="fc" id="L95">            throw new PasswordDontMatchException(&quot;Le password inserite non corrispondono&quot;, new Throwable(&quot;Le password inserite non corrispondono&quot;));</span>
+
+<span class="fc" id="L97">        ristoratore.get().setPassword(passwordEncoder.encode(updatePasswordRequest.getPassword()));</span>
+<span class="fc" id="L98">        dashboardPersonaleDAO.save(ristoratore.get());</span>
+
+<span class="fc" id="L100">        return new ResponseEntity&lt;&gt;(HttpStatus.OK);</span>
+    }
+
+    /**
+     * Metodo adibito ad ottennere tutti i dettagli del ristoratore
+     *
+     * @param email Stringa della email associata al ristoratore
+     * @return Ristoratore Entità ristoratore contenente i dettagli
+     */
+    @Override
+    public Ristoratore getAllRistoratoreDetails(String email) {
+<span class="fc" id="L111">        Optional&lt;Ristoratore&gt; ristoratore = dashboardPersonaleDAO.findAllDetailsByEmail(email);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if(ristoratore.isEmpty())</span>
+<span class="fc" id="L113">            throw new UsernameNotFoundException(&quot;Account not registered at The Spoon&quot;);</span>
+<span class="fc" id="L114">        return ristoratore.get();</span>
+    }
+
+    /**
+     * Metodo adibito a salvare le modifiche apportate al ristoratore
+     *
+     * @param ristoratore Entità rappresentate il ristoratore
+     * @return HttpStatus codice di stato HTTP OK
+     */
+    @Override
+    public ResponseEntity&lt;HttpStatus&gt; saveRistoratore(Ristoratore ristoratore) {
+<span class="fc" id="L125">        dashboardPersonaleDAO.save(ristoratore);</span>
+<span class="fc" id="L126">        return new ResponseEntity&lt;&gt;(HttpStatus.OK);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

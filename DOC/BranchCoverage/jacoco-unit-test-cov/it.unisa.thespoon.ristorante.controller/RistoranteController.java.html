@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RistoranteController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TestAll Coverage Results</a> &gt; <a href="index.source.html" class="el_package">it.unisa.thespoon.ristorante.controller</a> &gt; <span class="el_source">RistoranteController.java</span></div><h1>RistoranteController.java</h1><pre class="source lang-java linenums">package it.unisa.thespoon.ristorante.controller;
+
+
+import it.unisa.thespoon.model.entity.Menu;
+import it.unisa.thespoon.model.entity.Prodotto;
+import it.unisa.thespoon.model.entity.Ristorante;
+import it.unisa.thespoon.model.entity.Tavolo;
+import it.unisa.thespoon.model.request.*;
+import it.unisa.thespoon.ristorante.service.RistoranteService;
+import jakarta.validation.Valid;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
+
+/**
+ * @author Jacopo Gennaro Esposito
+ * Controller contenente gli endpoint delle API di TheSpoon per il sottosistema Ristorante
+ * */
+@Validated
+@RestController
+<span class="fc" id="L28">@RequiredArgsConstructor</span>
+@RequestMapping(&quot;/ristorante&quot;)
+public class RistoranteController {
+
+    private final RistoranteService ristoranteService;
+
+    @PostMapping(&quot;/insertRistorante&quot;)
+    public ResponseEntity&lt;HttpStatus&gt; InsertRistorante(@Valid @RequestBody InsertRistoranteRequest insertRistoranteRequest, Authentication authentication){
+<span class="fc" id="L36">        return ristoranteService.insertRistorante(insertRistoranteRequest, authentication.getName());</span>
+    }
+
+    @GetMapping(&quot;/getRistorante/{id_ristorante}&quot;)
+    public ResponseEntity&lt;Ristorante&gt; GetRistorante(@PathVariable(value = &quot;id_ristorante&quot;) Integer id_ristorante){
+<span class="fc" id="L41">        return ristoranteService.getRistoranteByID(id_ristorante);</span>
+    }
+
+    @GetMapping(&quot;/restaurantsList/{id_ristoratore}&quot;)
+    public ResponseEntity&lt;Set&lt;Ristorante&gt;&gt; GetAllRistorantiByRistoratore(@PathVariable(value = &quot;id_ristoratore&quot;) Integer id_ristoratore){
+<span class="fc" id="L46">        return ristoranteService.getAllRistorantiByRistoratore(id_ristoratore);</span>
+    }
+
+    @PostMapping(&quot;/updateRistorante/{id_ristorante}&quot;)
+    public ResponseEntity&lt;HttpStatus&gt; UpdateRistorante(@Valid @RequestBody UpdateRistoranteRequest updateRistoranteRequest,
+                                                       @PathVariable(value = &quot;id_ristorante&quot;) Integer idRistorante,
+                                                       Authentication authentication){
+<span class="fc" id="L53">        return ristoranteService.updateRistorante(updateRistoranteRequest, idRistorante, authentication.getName());</span>
+    }
+
+    @GetMapping(&quot;/ricercaRistorante/{nome_ristorante}&quot;)
+    public ResponseEntity&lt;Set&lt;Ristorante&gt;&gt; SearchRistorante(@Valid @RequestBody SearchRistoranteRequest searchRistoranteRequest,
+                                                       @PathVariable(value = &quot;nome_ristorante&quot;) String nomeRistorante){
+<span class="nc" id="L59">        return ristoranteService.searchRistorante(searchRistoranteRequest, nomeRistorante);</span>
+    }
+
+    @GetMapping(&quot;/ricercaRistorante/&quot;)
+    public ResponseEntity&lt;Set&lt;Ristorante&gt;&gt; SearchRistorante(@Valid @RequestBody SearchRistoranteRequest searchRistoranteRequest){
+<span class="nc" id="L64">        return ristoranteService.searchRistorante(searchRistoranteRequest, null);</span>
+    }
+
+    @PostMapping(&quot;/insertMenu&quot;)
+    public ResponseEntity&lt;HttpStatus&gt; InsertMenu(@Valid @RequestBody InsertMenuRequest insertMenuRequest, Authentication authentication){
+<span class="fc" id="L69">        return ristoranteService.insertMenu(insertMenuRequest, authentication.getName());</span>
+    }
+
+    @PostMapping(&quot;/addProductToMenu/{id_menu}/{id_prodotto}/{id_ristorante}&quot;)
+    public ResponseEntity&lt;HttpStatus&gt; AddProductToMenu(@PathVariable(value = &quot;id_menu&quot;) Integer idMenu, @PathVariable
+            (value = &quot;id_prodotto&quot;) Integer idProdotto, @PathVariable(value = &quot;id_ristorante&quot;) Integer idRistorante,
+                                                       Authentication authentication){
+<span class="fc" id="L76">        return ristoranteService.addProductToMenu(idMenu, idProdotto, idRistorante, authentication.getName());</span>
+    }
+
+    @DeleteMapping(&quot;/removeProductMenu/{id_menu}/{id_prodotto}/{id_ristorante}&quot;)
+    public ResponseEntity&lt;HttpStatus&gt; RemoveProductFromMenu(@PathVariable(value = &quot;id_menu&quot;) Integer idMenu,
+                                                            @PathVariable(value = &quot;id_prodotto&quot;) Integer idProdotto,
+                                                            @PathVariable(value = &quot;id_ristorante&quot;) Integer idRistorante,
+                                                            Authentication authentication){
+<span class="fc" id="L84">        return ristoranteService.removeProductFromMenu(idMenu, idProdotto, idRistorante, authentication.getName());</span>
+    }
+
+    @GetMapping(&quot;/getMenuByIDRistorante/{id_ristorante}&quot;)
+    public ResponseEntity&lt;Set&lt;Menu&gt;&gt; GetMenuByIdRistorante(@PathVariable(value = &quot;id_ristorante&quot;) Integer idRistorante){
+<span class="fc" id="L89">        return ristoranteService.getMenusByRistoranteID(idRistorante);</span>
+    }
+
+    @GetMapping(&quot;/getMenuByID/{id_menu}&quot;)
+    public ResponseEntity&lt;Menu&gt; GetMenuByIdMenu(@PathVariable(value = &quot;id_menu&quot;) Integer idMenu){
+<span class="fc" id="L94">        return ristoranteService.getMenusByID(idMenu);</span>
+    }
+
+    @GetMapping(&quot;/getProdottiByIDMenu/{id_menu}&quot;)
+    public ResponseEntity&lt;Set&lt;Prodotto&gt;&gt; GetProdottiByIdMenu(@PathVariable(value = &quot;id_menu&quot;) Integer idMenu){
+<span class="fc" id="L99">        return ristoranteService.getProdottiByMenuID(idMenu);</span>
+    }
+
+    @PostMapping(&quot;/insertTavolo&quot;)
+    public ResponseEntity&lt;HttpStatus&gt; InsertTavolo(@Valid @RequestBody InsertTavoloRequest insertTavoloRequest, Authentication authentication){
+<span class="fc" id="L104">        return ristoranteService.insertTavolo(insertTavoloRequest, authentication.getName());</span>
+    }
+
+    @GetMapping(&quot;/getTavoliRistorante/{id_ristorante}&quot;)
+    public ResponseEntity&lt;Set&lt;Tavolo&gt;&gt; GetTavoliRistorante(@PathVariable(value = &quot;id_ristorante&quot;) Integer idRistorante){
+<span class="fc" id="L109">        return ristoranteService.getTavoliRistorante(idRistorante);</span>
+    }
+
+    @GetMapping(&quot;/getTavoloById/{id_tavolo}/{id_ristorante}&quot;)
+    public ResponseEntity&lt;Tavolo&gt; GetTavoloByID(@PathVariable(value = &quot;id_tavolo&quot;) String idTavolo, @PathVariable(value = &quot;id_ristorante&quot;)
+                                                Integer idRistorante){
+<span class="fc" id="L115">        return ristoranteService.getTavoloByID(idTavolo, idRistorante);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
