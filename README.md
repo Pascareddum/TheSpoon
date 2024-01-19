@@ -46,7 +46,7 @@ The Spoon consists of three main components: TheSpoon (Rest Server API), TheSpoo
 * JDK 21 
 * Maven 
 * Spring Boot
-* A Telegram bot created on Telegram and its API key/token.
+* A Telegram bot created on Telegram and its API key/token, installation guide [here](https://github.com/jacopoesposito/TheSpoonBot).
 * A developer account on Stripe and its API key.
 * MySQL, installed and configured.
 
@@ -136,12 +136,15 @@ installation guide [here](https://github.com/jacopoesposito/TheSpoonBot)
 
 
 ## Buid with 
+
 * [Java](https://jdk.java.net/21/) - The programming language used for the back-end development.
 * [Maven](https://maven.apache.org) - The dependency management tool.
 * [Spring Framework](https://spring.io) - The java framework used (MVC/Web).
 * [HTML5](https://en.wikipedia.org/wiki/HTML5) - The markup language used for the front-end. 
 * [Javascript](https://ecma-international.org/publications-and-standards/standards/ecma-262/) - The programming language used for the front-end development.
-* [Bootsrap](https://getbootstrap.com) - The framework used for the front-end.
+* [SolidJS](https://www.solidjs.com/) - The js framework used for the front-end.
+* [TailwindCSS](https://tailwindcss.com/) - The CSS framework used for the front-end.
+* [TelegramBotAPI](https://core.telegram.org/bots/api) - The Telegram Bot Api used to build [TheSpoonBot](https://github.com/jacopoesposito/TheSpoonBot)
 * [MySQL](https://dev.mysql.com/doc/) - The RDBMS used for the persistent data.
 * **Love** :heart:
 
