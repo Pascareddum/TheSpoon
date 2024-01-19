@@ -142,6 +142,7 @@ public class Ristoratore implements UserDetails {
      * necessari alla visualizzazione dei dettagli del ristoratore
      * */
     public interface RistoratoreDataDisplay{
+        Integer getId();
         String getNome();
         String getCognome();
         String getEmail();

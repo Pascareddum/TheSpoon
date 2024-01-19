@@ -15,7 +15,7 @@ public interface DashboardPersonaleDAO extends JpaRepository<Ristoratore, Intege
     /**
      * Query per recuperare un ristoratore data una mail
      */
-    @Query(value = "SELECT Nome, Cognome, Email, Telefono, Data_Nascita FROM Ristoratore r where r.Email=?", nativeQuery = true)
+    @Query(value = "SELECT Id, Nome, Cognome, Email, Telefono, Data_Nascita FROM Ristoratore r where r.Email=?", nativeQuery = true)
     Optional<Ristoratore.RistoratoreDataDisplay> findDetailsByEmail(String Email);
 
     /** Query per recuperare i dettagli completi di un ristoratore data una mail */

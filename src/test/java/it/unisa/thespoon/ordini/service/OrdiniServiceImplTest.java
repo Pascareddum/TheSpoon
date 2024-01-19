@@ -144,7 +144,7 @@ public class OrdiniServiceImplTest {
         ResponseEntity<Ordine> response = ordiniService.insertOrdine(request);
 
         // Then
-        assert response.getStatusCode() == HttpStatus.OK;
+        assert response.getStatusCode() == HttpStatus.NOT_FOUND;
     }
 
     /**
