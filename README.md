@@ -73,7 +73,7 @@ Note: This guide is for Unix-like system on Windows, you can use the set command
 1. Set the environment variable for the Telegram bot API key:
 
 ```
-export TELEGRAMBOTAPI=your_telegram_bot_token
+export TELEGRAMTOKEN=your_telegram_bot_token
 ```
 
 Replace your_telegram_bot_token with the actual token obtained from BotFather.
