@@ -43,7 +43,97 @@ The Spoon consists of three main components: TheSpoon (Rest Server API), TheSpoo
 
 ## Requirements
 
+* JDK 21 
+* Maven 
+* Spring Boot
+* A Telegram bot created on Telegram and its API key/token.
+* A developer account on Stripe and its API key.
+* MySQL, installed and configured.
+
 ## Installation
+
+### Clone this repository
+
+* First make a clone of the repository
+
+```
+git clone https://github.com/jacopoesposito/TheSpoon.git
+```
+
+### Run the database script 
+
+```
+mysql -u your-mysql-username -p < thespoon.sql
+```
+
+### Set Up Environment Variables
+
+Note: This guide is for Unix-like system on Windows, you can use the set command instead of export.
+
+1. Set the environment variable for the Telegram bot API key:
+
+```
+export TELEGRAMBOTAPI=your_telegram_bot_token
+```
+
+Replace your_telegram_bot_token with the actual token obtained from BotFather.
+
+2. Set the environment variable for the Stripe API Key:
+
+```
+export STRIPEKEY=your-stripe-api-key
+```
+
+Replace your-stripe-api-key with the actual API Key obtained from [Stripe Developer Dashboard](https://dashboard.stripe.com/).
+
+3. Set the environment variable for the Stripe Webhook Secret 
+
+```
+export WEBHOKSTRIPESECRET=your-stripe-webhook-secret
+```
+
+Replace your-stripe-webhook-secret with the actual Webhook secret obtained from [Stripe Developer Dashboard](https://dashboard.stripe.com/).
+
+4. Set the environment variable for the Database Password
+
+```
+export DBPASS=your-mysql-password
+```
+
+Replace your-mysql-password with the actual Password of your database.
+
+5. Set the environment variable for the JWT Secret.
+
+```
+export SECRETJWT=your-jwt-secret
+```
+
+Replace your-jwt-secret with a Base64 encoded 32 character string 
+
+### Build the project 
+
+1. Move to the project directory and use maven to build it
+
+```
+mvn clean install
+```
+
+### Run it
+
+```
+java -jar target/your-application.jar
+```
+
+### Post-installation 
+
+1. Start TheSpoonBot, companion Telegram Bot to receive notification regarding food order and reservation, 
+installation guide [here](https://github.com/jacopoesposito/TheSpoonBot)
+
+2. Start TheSpoonFrontend, SolidJS frontend for TheSpoon, installation guide [here](https://github.com/pascareddum/TheSpoonFrontend)
+
+3. **Have fun!**
+
+
 
 ## Buid with 
 * [Java](https://jdk.java.net/21/) - The programming language used for the back-end development.
