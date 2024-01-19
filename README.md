@@ -144,7 +144,8 @@ installation guide [here](https://github.com/jacopoesposito/TheSpoonBot)
 * [Javascript](https://ecma-international.org/publications-and-standards/standards/ecma-262/) - The programming language used for the front-end development.
 * [SolidJS](https://www.solidjs.com/) - The js framework used for the front-end.
 * [TailwindCSS](https://tailwindcss.com/) - The CSS framework used for the front-end.
-* [TelegramBotAPI](https://core.telegram.org/bots/api) - The Telegram Bot Api used to build [TheSpoonBot](https://github.com/jacopoesposito/TheSpoonBot)
+* [TelegramBotAPI](https://core.telegram.org/bots/api) - The Telegram Bot Api used to build [TheSpoonBot](https://github.com/jacopoesposito/TheSpoonBot).
+* [StripeAPI](https://stripe.com) - The Stripe API used to enable payments.
 * [MySQL](https://dev.mysql.com/doc/) - The RDBMS used for the persistent data.
 * **Love** :heart:
 
