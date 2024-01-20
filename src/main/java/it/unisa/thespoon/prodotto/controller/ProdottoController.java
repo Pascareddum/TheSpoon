@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,8 +29,8 @@ public class ProdottoController {
     private final ProdottoService prodottoService;
 
     @PostMapping("/insertProdotto")
-    public ResponseEntity<HttpStatus> InsertProdotto(@Valid @RequestBody InsertProdottoRequest insertProdottoRequest){
-        return prodottoService.insertProdotto(insertProdottoRequest);
+    public ResponseEntity<HttpStatus> InsertProdotto(@Valid @RequestBody InsertProdottoRequest insertProdottoRequest, Authentication authentication){
+        return prodottoService.insertProdotto(insertProdottoRequest, authentication.getName());
     }
 
     @DeleteMapping("/removeProdotto/{id_prodotto}")
@@ -44,5 +45,10 @@ public class ProdottoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(prodotto.get(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllProdottiByIdRistorante/{id_ristorante}")
+    public ResponseEntity<List<Prodotto>> GetAllProdottiByIdRistorante(@PathVariable(value = "id_ristorante") Integer idRistorante){
+        return prodottoService.getAllProdottiByIdRistorante(idRistorante);
     }
 }

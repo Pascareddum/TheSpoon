@@ -28,7 +28,7 @@ import java.util.*;
 
 /**
  *
- * Classe che implementa i metodi del sottosistema Prodotto
+ * Classe che implementa i metodi del sottosistema Ordini
  * @author Jacopo Gennaro Esposito
  */
 @Service

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 /**
  *
- * Interfaccia per i metodi del sottosistema Prodotto
+ * Interfaccia per i metodi del sottosistema Ordini
  * @author Jacopo Gennaro Esposito
  */
 public interface OrdiniService {

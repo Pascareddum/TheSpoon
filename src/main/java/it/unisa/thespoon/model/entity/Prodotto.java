@@ -28,6 +28,7 @@ public class Prodotto {
     private String Nome;
     private String Descrizione;
     private BigDecimal Prezzo;
+    private Integer idristorante;
 
     @ManyToMany(mappedBy = "prodottiMenu", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
@@ -51,6 +52,16 @@ public class Prodotto {
         Nome = nome;
         Descrizione = descrizione;
         Prezzo = prezzo;
+        Contained = contained;
+        ContainedOrders = containedOrders;
+    }
+
+    public Prodotto(Integer id, String nome, String descrizione, BigDecimal prezzo, Integer idristorante, Set<Menu> contained, List<ProdottoOrdine> containedOrders) {
+        Id = id;
+        Nome = nome;
+        Descrizione = descrizione;
+        Prezzo = prezzo;
+        this.idristorante = idristorante;
         Contained = contained;
         ContainedOrders = containedOrders;
     }

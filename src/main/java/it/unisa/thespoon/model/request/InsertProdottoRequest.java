@@ -25,6 +25,9 @@ public class InsertProdottoRequest {
     @PositiveOrZero
     BigDecimal prezzo;
 
+    @NotNull
+    Integer idRistorante;
+
     public InsertProdottoRequest(String nome, String descrizione, BigDecimal prezzo) {
         Nome = nome;
         Descrizione = descrizione;
@@ -41,5 +44,9 @@ public class InsertProdottoRequest {
 
     public BigDecimal getPrezzo() {
         return prezzo;
+    }
+
+    public Integer getIdRistorante() {
+        return idRistorante;
     }
 }

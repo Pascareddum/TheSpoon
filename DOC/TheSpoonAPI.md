@@ -95,6 +95,7 @@ There was an internal server error while we were processing your request.
     1. [Insert Prodotto](#1-insert-prodotto)
     1. [Remove Prodotto](#2-remove-prodotto)
     1. [Get Prodotto By ID Prodotto](#3-get-prodotto-by-id-prodotto)
+    1. [Get Prodotti By Id Ristorante](#4-get-prodotti-by-id-ristorante)
 * [Ordini](#ordini)
     1. [Inserisci Ordine](#1-inserisci-ordine)
     1. [Conferma Ordine](#2-conferma-ordine)
@@ -1044,7 +1045,7 @@ The restaurant's ID as a path variable.
 ```bash
 Method: GET
 Type: 
-URL: 
+URL: http://localhost:8080/ristorante/getTavoliRistorante/{id_ristorante}
 ```
 
 
@@ -1109,6 +1110,7 @@ This endpoint allows users to add a product into TheSpoon's services.
 | Nome | String | The product name |
 | Descrizione | String | A description of the product |
 | Prezzo | Float | The product's price |
+| Id Ristorante | Integer | The restaurant's id for which users want to add the product |
 
 Authentication token inside the header's authentication field.
 
@@ -1121,6 +1123,7 @@ Authentication token inside the header's authentication field.
 | Code | Type | Description |
 | --- | --- | --- |
 | 403 | Forbidden | Your authentication token is not valid |
+| 404 | Not Found | Can't find any restaurant with the given ID owned by the user that made the request |
 | 400 | Bad Request | The request body was not valid, some field are missing or malformed |
 
 
@@ -1138,9 +1141,10 @@ URL: http://localhost:8080/prodotto/insertProdotto
 
 ```js        
 {
-    "nome": "Pizza Fritta con cicoli",
-    "descrizione": "Pizza fritta con pomodoro, mozzarella, ricotta, cicoli e doppio olio",
-    "prezzo": 5.50
+    "nome": "Bubble Tea The Verde Medio",
+    "descrizione": "Bubble Tea, gusto the verde con palline di tapioca, medio",
+    "prezzo": 5.49,
+    "idRistorante": 10
 }
 ```
 
@@ -1219,6 +1223,57 @@ URL: http://localhost:8080/prodotto/getProdotto/{id_prodotto}
 
 
 
+### 4. Get Prodotti By Id Ristorante
+
+
+This endpoint allows users to retrieve all the restaurant's products given his ID
+
+### Params
+
+The restaurant's ID as a path variable.
+
+### Response
+
+200 OK
+
+``` json
+[
+    {
+        "idristorante": 16,
+        "id": 7,
+        "nome": "Bubble Tea The Verde Grande",
+        "descrizione": "Bubble Tea, gusto the verde con palline di tapioca, grande",
+        "prezzo": 7.49
+    },
+    {
+        "idristorante": 16,
+        "id": 8,
+        "nome": "Bubble Tea The Verde Medio",
+        "descrizione": "Bubble Tea, gusto the verde con palline di tapioca, medio",
+        "prezzo": 5.49
+    }
+]
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request was not valid, some field are missing or malformed |
+| 404 | Not Found | Can't find any restaurants with the given ID |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/prodotto/getAllProdottiByIdRistorante/{id_ristorante}
+```
+
+
+
 ## Ordini
 
 The following methods are related to the Ordini subsystem and contain endpoints for inserting, and retrieving data orders.
@@ -1257,10 +1312,11 @@ The numeroTavolo is optional.
     "nr_Tavolo": "20",
     "totale": 5.50,
     "stato": 0,
-    "chatId": 111367823,
+    "chatId": 0000000,
     "ora": "13:16:08"
 }
-```
+
+ ```
 
 ### Possible Errors
 
@@ -1284,10 +1340,10 @@ URL: http://localhost:8080/ordini/insertOrdine
 
 ```js        
 {
-  "productsIDs": [1],
-  "numeroTavolo": "2",
-  "chatID": 123456789,
-  "idRistorante": 11,
+  "productsIDs": [4],
+  "numeroTavolo": "20",
+  "chatID": 1234567,
+  "idRistorante": 16,
   "tipologia": 0
 }
 
@@ -1491,4 +1547,4 @@ URL: http://localhost:8080/pagamenti/pay/{id_ordine}/{id_ristorante}
 ---
 [Back to top](#thespoonapi)
 
->Generated at 2024-01-18 20:16:18 by [docgen](https://github.com/thedevsaddam/docgen)
+>Generated at 2024-01-20 13:17:55 by [docgen](https://github.com/thedevsaddam/docgen)

@@ -2,19 +2,6 @@ DROP DATABASE IF EXISTS thespoon;
 CREATE DATABASE thespoon;
 use thespoon;
 
--- thespoon.prenotazione definition
-
-CREATE TABLE `prenotazione` (
-  `IdPrenotazione` int NOT NULL AUTO_INCREMENT,
-  `Data` date NOT NULL,
-  `Ora` time NOT NULL,
-  `Nr_Persone` int NOT NULL,
-  `Email` varchar(100) NOT NULL,
-  `Cellulare` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`IdPrenotazione`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
 -- thespoon.prodotto definition
 
 CREATE TABLE `prodotto` (
@@ -22,8 +9,9 @@ CREATE TABLE `prodotto` (
   `Nome` char(30) NOT NULL,
   `Descrizione` varchar(2000) NOT NULL,
   `Prezzo` decimal(10,2) NOT NULL,
+  `idristorante` int NOT NULL,
   PRIMARY KEY (`id_prodotto`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 -- thespoon.ristorante definition
@@ -68,7 +56,7 @@ CREATE TABLE `menu` (
   PRIMARY KEY (`id_menu`),
   KEY `menu_ristorante_FK` (`fk_id_ristorante`),
   CONSTRAINT `menu_ristorante_FK` FOREIGN KEY (`fk_id_ristorante`) REFERENCES `ristorante` (`id_ristorante`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 -- thespoon.menuprodotto definition
@@ -113,15 +101,20 @@ CREATE TABLE `possiede` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- thespoon.prenota definition
+-- thespoon.prenotazione definition
 
-CREATE TABLE `prenota` (
-  `IdPrenotazione` int NOT NULL,
+CREATE TABLE `prenotazione` (
+  `IdPrenotazione` int NOT NULL AUTO_INCREMENT,
+  `Data` date NOT NULL,
+  `Ora` time NOT NULL,
+  `Nr_Persone` int NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Cellulare` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `chatid` int NOT NULL,
   `IdRistorante` int NOT NULL,
-  KEY `IdPrenotazione` (`IdPrenotazione`),
-  KEY `IdRistorante` (`IdRistorante`),
-  CONSTRAINT `prenota_ibfk_1` FOREIGN KEY (`IdPrenotazione`) REFERENCES `prenotazione` (`IdPrenotazione`),
-  CONSTRAINT `prenota_ibfk_2` FOREIGN KEY (`IdRistorante`) REFERENCES `ristorante` (`id_ristorante`)
+  PRIMARY KEY (`IdPrenotazione`),
+  KEY `prenotazione_ristorante_FK` (`IdRistorante`),
+  CONSTRAINT `prenotazione_ristorante_FK` FOREIGN KEY (`IdRistorante`) REFERENCES `ristorante` (`id_ristorante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -151,16 +144,25 @@ CREATE TABLE `tavolo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+-- thespoon.prenota definition
+
+CREATE TABLE `prenota` (
+  `IdPrenotazione` int NOT NULL,
+  `IdRistorante` int NOT NULL,
+  KEY `IdPrenotazione` (`IdPrenotazione`),
+  KEY `IdRistorante` (`IdRistorante`),
+  CONSTRAINT `prenota_ibfk_1` FOREIGN KEY (`IdPrenotazione`) REFERENCES `prenotazione` (`IdPrenotazione`),
+  CONSTRAINT `prenota_ibfk_2` FOREIGN KEY (`IdRistorante`) REFERENCES `ristorante` (`id_ristorante`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 -- thespoon.prenotazionetavolo definition
 
 CREATE TABLE `prenotazionetavolo` (
-  `IdRistorante` int DEFAULT NULL,
   `IdPrenotazione` int DEFAULT NULL,
   `NumeroTavolo` varchar(2) DEFAULT NULL,
-  KEY `IdRistorante` (`IdRistorante`),
   KEY `IdPrenotazione` (`IdPrenotazione`),
   KEY `NumeroTavolo` (`NumeroTavolo`),
-  CONSTRAINT `prenotazionetavolo_ibfk_1` FOREIGN KEY (`IdRistorante`) REFERENCES `ristorante` (`id_ristorante`),
   CONSTRAINT `prenotazionetavolo_ibfk_2` FOREIGN KEY (`IdPrenotazione`) REFERENCES `prenotazione` (`IdPrenotazione`),
   CONSTRAINT `prenotazionetavolo_ibfk_3` FOREIGN KEY (`NumeroTavolo`) REFERENCES `tavolo` (`NumeroTavolo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

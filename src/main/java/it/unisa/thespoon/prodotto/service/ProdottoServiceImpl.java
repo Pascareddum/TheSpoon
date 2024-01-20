@@ -2,13 +2,18 @@ package it.unisa.thespoon.prodotto.service;
 
 import it.unisa.thespoon.model.dao.ProdottoDAO;
 
+import it.unisa.thespoon.model.dao.RistoranteDAO;
+import it.unisa.thespoon.model.dao.RistoratoreDAO;
 import it.unisa.thespoon.model.entity.Prodotto;
+import it.unisa.thespoon.model.entity.Ristorante;
+import it.unisa.thespoon.model.entity.Ristoratore;
 import it.unisa.thespoon.model.request.InsertProdottoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,21 +26,32 @@ import java.util.Optional;
 public class ProdottoServiceImpl implements ProdottoService {
 
     private final ProdottoDAO prodottoDAO;
+    private final RistoranteDAO ristoranteDAO;
+    private final RistoratoreDAO ristoratoreDAO;
 
 
     /**
      * Metodo adibito all'inserimento di un nuovo prodotto nel sistema
      *
      * @param insertProdottoRequest Oggetto che rappresenta una richiesta di inserimento
+     * @param email Email del ristoratore che effettua la richiesta
      * @return ResponseEntity HttpStatus Codice di stato HTTP
      **/
     @Override
-    public ResponseEntity<HttpStatus> insertProdotto(InsertProdottoRequest insertProdottoRequest) {
+    public ResponseEntity<HttpStatus> insertProdotto(InsertProdottoRequest insertProdottoRequest, String email) {
+        Optional<Ristoratore> ristoratore = ristoratoreDAO.findByEmail(email);
+        if(ristoratore.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Optional<Ristorante> ristorante = ristoranteDAO.findByIdAndAndOwnersID(insertProdottoRequest.getIdRistorante(), ristoratore.get().getId());
+        if(ristorante.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         var prodotto = Prodotto.builder()
                 .Nome(insertProdottoRequest.getNome())
                 .Descrizione(insertProdottoRequest.getDescrizione())
                 .Prezzo(insertProdottoRequest.getPrezzo())
+                .idristorante(insertProdottoRequest.getIdRistorante())
                 .build();
 
         prodottoDAO.save(prodotto);
@@ -79,5 +95,16 @@ public class ProdottoServiceImpl implements ProdottoService {
     @Override
     public Prodotto saveProdotto(Prodotto prodotto) {
         return prodottoDAO.save(prodotto);
+    }
+
+    /**
+     * Metodo per recuperare una lista di prodotti associati ad un dato ID ristorante
+     * @param idRistorante Id del ristorante per il quale si intende recuperare i prodotti
+     * @return ResponseEntity contenente la lista di prodotti assciati.
+     */
+    @Override
+    public ResponseEntity<List<Prodotto>> getAllProdottiByIdRistorante(Integer idRistorante) {
+        List<Prodotto> prodotti = prodottoDAO.findAllByIdristorante(idRistorante);
+        return new ResponseEntity<>(prodotti, HttpStatus.OK);
     }
 }
