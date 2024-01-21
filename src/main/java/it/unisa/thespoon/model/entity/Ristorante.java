@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,6 +42,9 @@ public class Ristorante {
     @OneToMany(mappedBy = "ristoranteProp", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Tavolo> Tables;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "ownerPrenotazione")
+    private List<Prenotazione> prenotazioni;
 
 
     public Ristorante(Integer id, String nome, String n_Civico, Integer cap, String via, String provincia, String telefono,
@@ -78,6 +82,20 @@ public class Ristorante {
         Owners = owners;
         Menus = menus;
         Tables = tables;
+    }
+
+    public Ristorante(Integer id, String nome, String n_Civico, Integer cap, String via, String provincia, String telefono, Set<Ristoratore> owners, Set<Menu> menus, Set<Tavolo> tables, List<Prenotazione> ownerPrenotazione) {
+        Id = id;
+        Nome = nome;
+        N_Civico = n_Civico;
+        Cap = cap;
+        Via = via;
+        Provincia = provincia;
+        Telefono = telefono;
+        Owners = owners;
+        Menus = menus;
+        Tables = tables;
+        prenotazioni = ownerPrenotazione;
     }
 
     public Ristorante(){

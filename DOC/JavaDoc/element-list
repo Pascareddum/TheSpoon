@@ -17,6 +17,9 @@ it.unisa.thespoon.ordini.controller
 it.unisa.thespoon.ordini.service
 it.unisa.thespoon.pagamenti.controller
 it.unisa.thespoon.pagamenti.service
+it.unisa.thespoon.prenotazioni
+it.unisa.thespoon.prenotazioni.controller
+it.unisa.thespoon.prenotazioni.service
 it.unisa.thespoon.prodotto.controller
 it.unisa.thespoon.prodotto.service
 it.unisa.thespoon.ristorante.controller

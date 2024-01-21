@@ -102,6 +102,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/ordini/confermaOrdine/").hasRole("RISTORATORE")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/pagamenti/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/prenotazioni/insertPrenotazione").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/prenotazioni/updatePrenotazione").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

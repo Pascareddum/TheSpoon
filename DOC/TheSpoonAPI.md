@@ -103,6 +103,12 @@ There was an internal server error while we were processing your request.
     1. [Get Prodotti By IDOrdine and IDRistorante](#4-get-prodotti-by-idordine-and-idristorante)
 * [Pagamenti](#pagamenti)
     1. [Pay](#1-pay)
+* [Prenotazioni](#prenotazioni)
+    1. [Insert Prenotazione](#1-insert-prenotazione)
+    1. [Update Prenotazione](#2-update-prenotazione)
+    1. [Get All Prenotazioni By ID Ristorante](#3-get-all-prenotazioni-by-id-ristorante)
+    1. [Get Tavoli By ID prenotazione](#4-get-tavoli-by-id-prenotazione)
+    1. [Conferma Prenotazione](#5-conferma-prenotazione)
 
 --------
 
@@ -1369,7 +1375,7 @@ Response
 
 | Code | Type | Description |
 | --- | --- | --- |
-| 403 | Forbidden | Authentication token inside the header's authentication field. |
+| 403 | Forbidden | The authentication token is not valid |
 | 404 | Not Found | Can't find any product or restaurants with the associated IDs.  <br>The restaurant is not owned by the user that made the request |
 
 
@@ -1390,14 +1396,14 @@ This endpoint allows users to retrieve a list of orders associated with a Ristor
 
 ### Params
 
-The Ristorante ID as a path variable.
+The Ristorante ID as a path variable.  
 Authentication token inside the header's authentication field.
 
 ### Response
 
 200 OK
 
-```json  
+``` json
 [  
 {  
 "idordine": 1,  
@@ -1422,15 +1428,15 @@ Authentication token inside the header's authentication field.
 "idristorante": 16  
 }  
 ]
-```
+
+ ```
 
 ### Possible Errors
 
 | Code | Type | Description |
 | --- | --- | --- |
-| 403 | Forbidden | Authentication token inside the header's authentication field. |
+| 403 | Forbidden | The authentication token is not valid |
 | 404 | Not Found | Can't find any Ristoratore or Restaurant with the associated IDs.  <br>The restaurant is not owned by the user that made the request |
-
 
 
 ***Endpoint:***
@@ -1489,7 +1495,7 @@ Authentication token inside the header's authentication field.
 
 | Code | Type | Description |
 | --- | --- | --- |
-| 403 | Forbidden | Authentication token inside the header's authentication field. |
+| 403 | Forbidden | The authentication token is not valid |
 | 404 | Not Found | Can't find any Ristoratore or Restaurant with the associated IDs.  <br>The restaurant is not owned by the user that made the request  <br>Can't find any Order associated with the restaurant |
 
 
@@ -1544,7 +1550,327 @@ URL: http://localhost:8080/pagamenti/pay/{id_ordine}/{id_ristorante}
 
 
 
+## Prenotazioni
+
+The following methods are related to the Prenotazioni subsystem and contain endpoints for inserting, and retrieving reservations data.
+
+These endpoints are crucial for managing reservations data stored within TheSpoon's services.
+
+
+
+### 1. Insert Prenotazione
+
+
+This endpoint allows users to add a reservation to a restautant.
+
+### Params
+
+| Name | Type | Description |
+| --- | --- | --- |
+| TableIDs | List(String) | List of table IDs to reserve |
+| Data | LocalDate | The reservation's date |
+| Hour | Time | The hour of the reservation |
+| Nr_Persone | Integer | Total amount of people that intend to reserve tables |
+| Email | String | Email of the user that intend to reserve tables |
+| Telefono | String | Italian mobile phone number to be used for TheSpoon for TheSpoon services |
+| ChatID | Integer | The ChatID of the conversation between the User and TheSpoonBot |
+| IdRistorante | Integer | The Restaurant's ID at which the user is placing the reservation |
+
+### Response
+
+200 OK
+
+``` json
+{
+    "data": [
+        2024,
+        1,
+        23
+    ],
+    "ora": "16:28:00",
+    "id": 9,
+    "email": "kim@dami.it",
+    "stato": 1,
+    "chatId": 123456789,
+    "nr_Persone": 12,
+    "cellulare": "00390000000000",
+    "passwordprenotazione": "MnC4LzltqiiN"
+}
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 404 | Not Found | Can't find any restaurant or tables with the associated IDs |
+| 409 | Conflict | It'already present a reservetion for the given params |
+| 406 | Not Acceptable | The total capacity of the tables doesn't match the amount of people |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: RAW
+URL: http://localhost:8080/prenotazioni/insertPrenotazione
+```
+
+
+
+***Body:***
+
+```js        
+{
+    "tableIDs": [1, 2, 3],
+    "data": "2024-01-23",
+    "ora": "16:28:00",
+    "nr_Persone": 12,
+    "email": "kim@dami.it",
+    "telefono": "00393458091047",
+    "idRistorante": 11,
+    "chatID": 000000000
+}
+```
+
+
+
+### 2. Update Prenotazione
+
+
+This endpoint allows users to update their reservation to a restautant.
+
+### Params
+
+All the params are optional except for ID Prenotazione and Password.
+
+| Name | Type | Description |
+| --- | --- | --- |
+| TableIDs | List(String) | List of table IDs to reserve |
+| Data | LocalDate | The reservation's date |
+| Hour | Time | The hour of the reservation |
+| Nr_Persone | Integer | The amount of people that intend to make a reservation |
+| IdPrenotazione | Integer | The Reservation's ID that the user intend to update |
+| Password | String | The reservation password |
+### Response
+
+200 OK
+
+``` json
+{
+    "data": [
+        2024,
+        1,
+        23
+    ],
+    "ora": "16:28:00",
+    "id": 9,
+    "email": "kim@dami.it",
+    "stato": 1,
+    "chatId": 123456789,
+    "nr_Persone": 12,
+    "cellulare": "00390000000000",
+    "passwordprenotazione": "MnC4LzltqiiN"
+}
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 400 | Bad Request | The request body was not valid, some field are missing or malformed |
+| 404 | Not Found | Can't find any restaurant or tables with the associated IDs |
+| 409 | Conflict | It'already present a reservetion for the given params |
+| 406 | Not Acceptable | The total capacity of the tables doesn't match the amount of people |
+| 405 | Unauthorized | The reservation is already confirmed or the password/reservation id isn't correct |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: RAW
+URL: http://localhost:8080/prenotazioni/updatePrenotazione
+```
+
+
+
+***Body:***
+
+```js        
+{
+    "tableIDs": [1, 2],
+    "data": "2024-01-25",
+    "ora": "14:30",
+    "nr_Persone": 8,
+    "idPrenotazione": 8,
+    "password": "MnC4LzltqiiN"
+}
+```
+
+
+
+### 3. Get All Prenotazioni By ID Ristorante
+
+
+This endpoint allows users to retrieve a list of reservation associated with a Reservation ID
+
+### Params
+
+The Reservation ID as a path variable.  
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+``` json
+[
+    {
+        "data": [
+            2024,
+            1,
+            21
+        ],
+        "email": "kim@dami.it",
+        "ora": "13:24:00",
+        "idPrenotazione": 1,
+        "cellulare": "00393458091047",
+        "statoPrenotazione": 0,
+        "nrPersone": 5
+    },
+    {
+        "data": [
+            2024,
+            1,
+            21
+        ],
+        "email": "kim@dami.it",
+        "ora": "15:24:00",
+        "idPrenotazione": 2,
+        "cellulare": "00393458091047",
+        "statoPrenotazione": 0,
+        "nrPersone": 5
+    },
+    {
+        "data": [
+            2024,
+            1,
+            21
+        ],
+        "email": "kim@dami.it",
+        "ora": "16:25:00",
+        "idPrenotazione": 3,
+        "cellulare": "00393458091047",
+        "statoPrenotazione": 0,
+        "nrPersone": 5
+    }
+]
+
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | The authentication token is not valid |
+| 404 | Not Found | Can't find any Ristoratore or Reservation with the associated IDs.  <br>The restaurant is not owned by the user that made the request |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/prenotazioni/getAllPrenotazioni/{id_ristorante}
+```
+
+
+
+### 4. Get Tavoli By ID prenotazione
+
+
+This endpoint allows users to retrieve a list of table associated with a Reservation ID
+
+### Params
+
+The Reservation ID as a path variable.  
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+``` json
+[
+    {
+        "numeroTavolo": "1",
+        "stato": 1,
+        "capacita": 4
+    },
+    {
+        "numeroTavolo": "2",
+        "stato": 1,
+        "capacita": 4
+    }
+]
+ ```
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | The authentication token is not valid |
+| 404 | Not Found | Can't find any Ristoratore or Reservation with the associated IDs.  <br>The restaurant is not owned by the user that made the request |
+| 400 | Bad Request | Some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: http://localhost:8080/prenotazioni/getAllTavoliByIdPrenotazione/{id_prenotazione}
+```
+
+
+
+### 5. Conferma Prenotazione
+
+
+This endpoint allows users to confirm a Reservation.
+
+### Params
+
+The Reservation ID as a path variable.  
+Authentication token inside the header's authentication field.
+
+### Response
+
+200 OK
+
+### Possible Errors
+
+| Code | Type | Description |
+| --- | --- | --- |
+| 403 | Forbidden | The authentication token is not valid |
+| 404 | Not Found | Can't find any Ristoratore or Reservation with the associated IDs.  <br>The restaurant is not owned by the user that made the request |
+| 400 | Bad Request | Some field are missing or malformed |
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: 
+URL: http://localhost:8080/prenotazioni/confermaPrenotazione/{id_prenotazione}
+```
+
+
+
 ---
 [Back to top](#thespoonapi)
 
->Generated at 2024-01-20 13:17:55 by [docgen](https://github.com/thedevsaddam/docgen)
+>Generated at 2024-01-21 21:40:46 by [docgen](https://github.com/thedevsaddam/docgen)

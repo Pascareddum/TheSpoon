@@ -11,7 +11,7 @@ CREATE TABLE `prodotto` (
   `Prezzo` decimal(10,2) NOT NULL,
   `idristorante` int NOT NULL,
   PRIMARY KEY (`id_prodotto`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 -- thespoon.ristorante definition
@@ -86,7 +86,7 @@ CREATE TABLE `ordine` (
   PRIMARY KEY (`IdOrdine`),
   KEY `IdRistorante` (`IdRistorante`),
   CONSTRAINT `ordine_ibfk_1` FOREIGN KEY (`IdRistorante`) REFERENCES `ristorante` (`id_ristorante`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 -- thespoon.possiede definition
@@ -112,10 +112,12 @@ CREATE TABLE `prenotazione` (
   `Cellulare` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `chatid` int NOT NULL,
   `IdRistorante` int NOT NULL,
+  `Stato` tinyint NOT NULL,
+  `PasswordPrenotazione` varchar(100) NOT NULL,
   PRIMARY KEY (`IdPrenotazione`),
   KEY `prenotazione_ristorante_FK` (`IdRistorante`),
   CONSTRAINT `prenotazione_ristorante_FK` FOREIGN KEY (`IdRistorante`) REFERENCES `ristorante` (`id_ristorante`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 -- thespoon.prodotto_ordine definition

@@ -1,9 +1,13 @@
 package it.unisa.thespoon.config;
 
 import it.unisa.thespoon.model.entity.Ordine;
+import it.unisa.thespoon.model.entity.Prenotazione;
 import it.unisa.thespoon.notifiche.service.TelegramAdapter;
 import it.unisa.thespoon.ordini.OrdineStatoObserver;
 import it.unisa.thespoon.ordini.service.OrdineObserverService;
+import it.unisa.thespoon.prenotazioni.PrenotazioniObserver;
+import it.unisa.thespoon.prenotazioni.PrenotazioniStatoObserver;
+import it.unisa.thespoon.prenotazioni.service.PrenotazioneObserverService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +26,9 @@ public class ObserverConfig {
     private OrdineObserverService ordineObserverService;
 
     @Autowired
+    private PrenotazioneObserverService prenotazioneObserverService;
+
+    @Autowired
     private TelegramAdapter telegramAdapter;
 
     /**
@@ -31,6 +38,8 @@ public class ObserverConfig {
     @PostConstruct
     public void registerObservers() {
         OrdineStatoObserver osservatore = new OrdineStatoObserver(telegramAdapter);
+        PrenotazioniStatoObserver osservatorePrenotazioni = new PrenotazioniStatoObserver(telegramAdapter);
         ordineObserverService.addObserver(Ordine.class, osservatore);
+        prenotazioneObserverService.addObserver(Prenotazione.class, osservatorePrenotazioni);
     }
 }
