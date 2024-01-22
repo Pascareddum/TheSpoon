@@ -72,8 +72,8 @@ public class PagamentiServiceImpl implements PagamentiService {
                                 .setQuantity(1L)
                                 .build()
                 )
-                .setSuccessUrl("https://tuo-sito.com/success")
-                .setCancelUrl("https://tuo-sito.com/cancel")
+                .setSuccessUrl("http://localhost:3000/success")
+                .setCancelUrl("http://localhost:3000/cancel")
                 .putMetadata("restaurant_name", ristorante.get().getNome())
                 .putMetadata("restaurant_address", ristorante.get().getVia())
                 .putMetadata("restaurant_id", ristorante.get().getId().toString())
@@ -82,7 +82,7 @@ public class PagamentiServiceImpl implements PagamentiService {
 
         Session session = Session.create(params);
 
-        return new ResponseEntity<>(session.getId(), HttpStatus.OK);
+        return new ResponseEntity<>(session.getUrl(), HttpStatus.OK);
     }
 
     /**
