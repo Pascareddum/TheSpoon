@@ -581,7 +581,7 @@ URL: http://localhost:8080/ristorante/updateRistorante/{id_ristorante}
 ### 4. Search Ristorante
 
 
-This endpoint allows users to serach restaurants registered into TheSpoon services.
+This endpoint allows users to search restaurants registered into TheSpoon services.
 
 ### Params
 
@@ -1654,6 +1654,7 @@ All the params are optional except for ID Prenotazione and Password.
 | Nr_Persone | Integer | The amount of people that intend to make a reservation |
 | IdPrenotazione | Integer | The Reservation's ID that the user intend to update |
 | Password | String | The reservation password |
+
 ### Response
 
 200 OK
@@ -1874,4 +1875,4 @@ URL: http://localhost:8080/prenotazioni/confermaPrenotazione/{id_prenotazione}
 ---
 [Back to top](#thespoonapi)
 
->Generated at 2024-01-22 11:16:56 by [docgen](https://github.com/thedevsaddam/docgen)
+>Generated at 2024-01-22 11:39:12 by [docgen](https://github.com/thedevsaddam/docgen)
