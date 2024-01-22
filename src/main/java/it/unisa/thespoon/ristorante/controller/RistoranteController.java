@@ -53,13 +53,13 @@ public class RistoranteController {
         return ristoranteService.updateRistorante(updateRistoranteRequest, idRistorante, authentication.getName());
     }
 
-    @GetMapping("/ricercaRistorante/{nome_ristorante}")
+    @PostMapping("/ricercaRistorante/{nome_ristorante}")
     public ResponseEntity<Set<Ristorante>> SearchRistorante(@Valid @RequestBody SearchRistoranteRequest searchRistoranteRequest,
                                                        @PathVariable(value = "nome_ristorante") String nomeRistorante){
         return ristoranteService.searchRistorante(searchRistoranteRequest, nomeRistorante);
     }
 
-    @GetMapping("/ricercaRistorante/")
+    @PostMapping("/ricercaRistorante/")
     public ResponseEntity<Set<Ristorante>> SearchRistorante(@Valid @RequestBody SearchRistoranteRequest searchRistoranteRequest){
         return ristoranteService.searchRistorante(searchRistoranteRequest, null);
     }

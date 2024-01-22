@@ -97,7 +97,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "prodotto/removeProdotto/**").hasRole("RISTORATORE")
                         .requestMatchers(HttpMethod.GET, "prodotto/getProdotto/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "prodotto/getAllProdottiByIdRistorante/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/ristorante/ricercaRistorante/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/ristorante/ricercaRistorante/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/ordini/insertOrdine").permitAll()
                         .requestMatchers(HttpMethod.POST, "/ordini/confermaOrdine/").hasRole("RISTORATORE")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

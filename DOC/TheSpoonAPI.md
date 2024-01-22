@@ -581,13 +581,13 @@ URL: http://localhost:8080/ristorante/updateRistorante/{id_ristorante}
 ### 4. Search Ristorante
 
 
-This endpoint allows users to update the details of their own restaurant.
+This endpoint allows users to serach restaurants registered into TheSpoon services.
 
 ### Params
 
 The Restaurant name as a path variable.
 
-All parameters are optional, and users can choose which ones to include for the fields they want to update. The JSON must be always provided, even if empty.
+All parameters are optional, and users can choose which ones to include for the fields they want to search. The JSON must be always provided, even if empty.
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -643,9 +643,9 @@ All parameters are optional, and users can choose which ones to include for the 
 ***Endpoint:***
 
 ```bash
-Method: GET
+Method: POST
 Type: RAW
-URL: http://localhost:8080/ristorante/ricercaRistorante/"Pizzeria"
+URL: http://localhost:8080/ristorante/ricercaRistorante/{nome_ristorante}
 ```
 
 
@@ -659,6 +659,7 @@ URL: http://localhost:8080/ristorante/ricercaRistorante/"Pizzeria"
     "via": "Xipu Street, Pidu District",
     "provincia": "CD"
 }
+
 ```
 
 
@@ -1873,4 +1874,4 @@ URL: http://localhost:8080/prenotazioni/confermaPrenotazione/{id_prenotazione}
 ---
 [Back to top](#thespoonapi)
 
->Generated at 2024-01-21 21:40:46 by [docgen](https://github.com/thedevsaddam/docgen)
+>Generated at 2024-01-22 11:16:56 by [docgen](https://github.com/thedevsaddam/docgen)
